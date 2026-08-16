@@ -940,9 +940,15 @@ def page_my_booking():
         st.error("Backend offline.")
         return
 
-    st.markdown('<div class="search-card">', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="search-card">'
+        '<div class="chip-label">🎫 Find your e-ticket</div>'
+        '<div style="color:var(--muted);font-size:0.88rem;margin:-0.3rem 0 0.9rem;">'
+        'Enter the booking reference you received at checkout — your ticket unlocks instantly.</div>',
+        unsafe_allow_html=True,
+    )
     ref = st.text_input("Booking reference", key="lookup_ref", placeholder="e.g. CINE7PN9N8")
-    if st.button("Check status", use_container_width=True) and ref.strip():
+    if st.button("Check status", use_container_width=True, type="primary") and ref.strip():
         try:
             data = api_get(f"/bookings/{ref.strip()}")
             if not data:
@@ -952,6 +958,16 @@ def page_my_booking():
         except Exception:
             st.error("Booking not found.")
     st.markdown("</div>", unsafe_allow_html=True)
+
+    if not ref.strip():
+        st.markdown(
+            '<div class="empty-state">'
+            '<div class="empty-icon">🎟️</div>'
+            '<div class="empty-title">No ticket yet?</div>'
+            '<div>Complete a booking and your e-ticket reference will unlock it here.</div>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
     _footer()
 
 
