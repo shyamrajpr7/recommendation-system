@@ -53,6 +53,13 @@ def get_recommendations(payload: RecommendationRequest):
     genre = payload.genre.strip() if payload.genre and payload.genre.strip() else None
     item_type = payload.item_type.strip() if payload.item_type and payload.item_type.strip() else None
 
+    known_genres = {g.lower(): g for g in get_genres()}
+    if genre and genre.lower() != "all" and genre.lower() not in known_genres:
+        raise HTTPException(status_code=400, detail=f"Unknown genre '{genre}'. Known genres: {', '.join(sorted(known_genres.values()))}.")
+
+    if item_type and item_type.lower() not in ("all", "movie", "book"):
+        raise HTTPException(status_code=400, detail="item_type must be one of: Movie, Book, All.")
+
     # Step 4: In-Memory Cache Check
     cached_data = cache_instance.get(query, genre, item_type)
     if cached_data:
