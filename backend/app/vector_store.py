@@ -1,4 +1,3 @@
-import os
 import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer
@@ -80,8 +79,9 @@ class VectorStore:
         query_emb = self.model.encode([normalize_text(query)], show_progress_bar=False, convert_to_numpy=True).astype(np.float32)
         faiss.normalize_L2(query_emb)
 
-        # Retrieve a larger pool (e.g. 20) to handle genre/type filtering
-        fetch_k = min(self.index.ntotal, max(top_k * 5, 20))
+        # Search the entire index so genre/type filtering can never silently
+        # drop matching items that fall outside a truncated candidate pool.
+        fetch_k = self.index.ntotal
         distances, indices = self.index.search(query_emb, fetch_k)
 
         results = []

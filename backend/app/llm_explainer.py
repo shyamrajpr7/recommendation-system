@@ -3,9 +3,6 @@ import json
 import re
 from typing import List, Dict, Any, Optional
 
-# Check for Gemini API key
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-
 # Common function words that never count as evidence of fabrication.
 _STOP_WORDS = {
     "the", "a", "an", "and", "or", "but", "of", "in", "on", "for", "to", "is",
@@ -36,11 +33,13 @@ def generate_explanations(query: str, candidates: List[Dict[str, Any]]) -> List[
     if not candidates:
         return []
 
-    # Attempt Gemini API call if key is available
-    if GEMINI_API_KEY:
+    # Attempt Gemini API call if key is available (read at call time so a
+    # key exported after import is still picked up).
+    gemini_api_key = os.environ.get("GEMINI_API_KEY")
+    if gemini_api_key:
         try:
             from google import genai
-            client = genai.Client(api_key=GEMINI_API_KEY)
+            client = genai.Client(api_key=gemini_api_key)
 
             prompt_context = []
             for i, cand in enumerate(candidates, 1):
@@ -74,8 +73,8 @@ def generate_explanations(query: str, candidates: List[Dict[str, Any]]) -> List[
                 config={'response_mime_type': 'application/json'}
             )
 
-            raw_text = response.text.strip()
-            parsed = json.loads(raw_text)
+            raw_text = (response.text or "").strip()
+            parsed = json.loads(_strip_code_fences(raw_text))
             explanations_list = parsed.get("explanations", [])
 
             exp_by_id = {item["id"]: item["explanation"] for item in explanations_list if "id" in item and "explanation" in item}
@@ -147,6 +146,11 @@ def _strip_fabricated(query: str, item: Dict[str, Any], explanation: str) -> str
     return grounded if len(grounded) >= 10 else ""
 
 _CAP_WORD = re.compile(r"\b[A-Z][a-zA-Z]*\b")
+
+def _strip_code_fences(text: str) -> str:
+    """Remove markdown code fences so ````json\n{...}\n```` parses cleanly."""
+    text = re.sub(r"```(?:json)?\s*", "", text)
+    return text.strip()
 
 def _capitalized_tokens(text: str) -> set:
     """Lowercased capitalized words in a text, ignoring sentence-initial capitals."""

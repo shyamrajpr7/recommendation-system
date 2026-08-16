@@ -345,7 +345,23 @@ with st.sidebar:
 st.markdown('<div class="search-card">', unsafe_allow_html=True)
 st.markdown('<div class="chip-label">Popular Search Ideas</div>', unsafe_allow_html=True)
 
+st.session_state.setdefault("input_text", "")
 st.session_state.setdefault("query_to_search", "")
+
+
+def _apply_preset(query):
+    st.session_state.input_text = query
+    st.session_state.query_to_search = query
+
+
+def _find():
+    st.session_state.query_to_search = st.session_state.input_text.strip()
+
+
+def _clear():
+    st.session_state.input_text = ""
+    st.session_state.query_to_search = ""
+
 
 preset_cols = st.columns(4)
 PRESETS = {
@@ -355,23 +371,17 @@ PRESETS = {
     "⚡ Habit Mastery": "practical framework for self improvement daily habits",
 }
 for col, (label, q) in zip(preset_cols, PRESETS.items()):
-    if col.button(label, use_container_width=True):
-        st.session_state.query_to_search = q
+    col.button(label, use_container_width=True, on_click=_apply_preset, args=(q,))
 
-with st.form("recommendation_form"):
-    user_query = st.text_input(
-        "Search by title, plot concept, or mood:",
-        value=st.session_state.query_to_search,
-        placeholder="e.g. 'dream within a dream corporate heist' or 'wizard school fantasy quest'",
-    )
-    c1, c2 = st.columns([4, 1])
-    submitted = c1.form_submit_button("✨ Find Recommendations", use_container_width=True)
-    cleared = c2.form_submit_button("🗑 Clear", use_container_width=True)
+st.text_input(
+    "Search by title, plot concept, or mood:",
+    key="input_text",
+    placeholder="e.g. 'dream within a dream corporate heist' or 'wizard school fantasy quest'",
+)
 
-    if submitted:
-        st.session_state.query_to_search = user_query.strip()
-    if cleared:
-        st.session_state.query_to_search = ""
+c1, c2 = st.columns([4, 1])
+c1.button("✨ Find Recommendations", use_container_width=True, on_click=_find)
+c2.button("🗑 Clear", use_container_width=True, on_click=_clear)
 
 st.markdown("</div>", unsafe_allow_html=True)
 
