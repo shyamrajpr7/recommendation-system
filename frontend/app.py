@@ -315,6 +315,46 @@ st.markdown(
     }
     .legend { display: flex; gap: 1.3rem; justify-content: center; color: var(--muted); font-size: 0.8rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
     .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .seat-legend-dot { width: 18px; height: 18px; border-radius: 6px; display: inline-block; }
+    .legend-avail { background: #16233f; border: 1px solid #2c3f66; }
+    .legend-sel { background: linear-gradient(135deg, #38bdf8, #818cf8); }
+    .legend-occ { background: repeating-linear-gradient(45deg, rgba(248,113,113,0.35), rgba(248,113,113,0.35) 3px, rgba(248,113,113,0.12) 3px, rgba(248,113,113,0.12) 6px); border: 1px solid rgba(248,113,113,0.4); }
+    .legend-blk { background: #0a101d; border: 1px dashed #2c3f66; }
+
+    .st-key-seat_map { padding: 1.2rem 0.4rem 0.2rem; }
+    .st-key-seat_map [data-testid="stBaseButton"] {
+        min-height: 40px; border-radius: 9px; font-size: 0.82rem; font-weight: 700;
+        transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .st-key-seat_map [data-testid="stBaseButton"]:hover:not(:disabled) { transform: translateY(-2px); }
+    .st-key-seat_map [data-testid="stBaseButton-secondary"] {
+        background: #16233f; color: #c9d8f2; border: 1px solid #2c3f66;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .st-key-seat_map [data-testid="stBaseButton-secondary"]:hover {
+        background: #1c2b4e; border-color: #3c5290; box-shadow: 0 6px 18px rgba(56, 189, 248, 0.2);
+    }
+    .st-key-seat_map [data-testid="stBaseButton-primary"] {
+        background: linear-gradient(135deg, #38bdf8, #818cf8); color: #08111f;
+        border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 6px 22px rgba(129, 140, 248, 0.4);
+    }
+    .seat-rowlabel { color: var(--muted-2); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem; text-align: center; padding-top: 0.55rem; }
+    .seat-chip { height: 40px; border-radius: 9px; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; }
+    .seat-occ { background: repeating-linear-gradient(45deg, rgba(248,113,113,0.35), rgba(248,113,113,0.35) 3px, rgba(248,113,113,0.12) 3px, rgba(248,113,113,0.12) 6px); color: rgba(248, 113, 113, 0.75); border: 1px solid rgba(248,113,113,0.35); }
+    .seat-blk { background: #0a101d; color: #33415f; border: 1px dashed #223052; }
+    .seat-cols-header { color: var(--muted-2); font-size: 0.75rem; text-align: center; padding-bottom: 0.3rem; }
+
+    .booking-bar {
+        position: sticky; bottom: 14px; z-index: 40; margin-top: 1.1rem;
+        display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+        padding: 0.95rem 1.4rem; border-radius: 16px;
+        border: 1px solid rgba(129, 140, 248, 0.35);
+        background: rgba(13, 20, 36, 0.88);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+    }
+    .booking-bar .bb-total { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700; color: #a7f3d0; }
+    .booking-bar .bb-seats { color: var(--muted); font-size: 0.88rem; }
 
     .empty-state { text-align: center; padding: 3.4rem 1.5rem; color: var(--muted); }
     .empty-icon { font-size: 3.2rem; margin-bottom: 0.7rem; }
@@ -529,13 +569,15 @@ def page_now_showing():
         st.rerun()
 
     seat_map = api_get(f"/seats?showtime_id={showtime['id']}")
+    _stepper(["Movie", "Showtime", "Seats", "Payment"], 2)
     st.markdown('<div class="panel">', unsafe_allow_html=True)
     st.markdown('<div class="chip-label">Booking Summary</div>', unsafe_allow_html=True)
     st.markdown(
-        f'<div class="movie-title">{html.escape(movie["title"])}</div>'
-        f'<div class="showtime-info">{html.escape(showtime["theater_name"])} · {html.escape(showtime["screen_name"])} · '
-        f'{html.escape(showtime["city"])} · {showtime["show_date"]} {showtime["show_time"]} · '
-        f'<span class="showtime-price">₹{int(showtime["base_price"])}/seat</span></div>',
+        f'<div style="font-size:1.35rem;font-weight:700;color:#fff;">{html.escape(movie["title"])}</div>'
+        f'<div class="showtime-info" style="margin-top:0.25rem;">{html.escape(showtime["theater_name"])} · '
+        f'{html.escape(showtime["screen_name"])} · {html.escape(showtime["city"])} · '
+        f'{showtime["show_date"]} at <strong style="color:var(--accent-1);">{showtime["show_time"]}</strong> · '
+        f'<span style="color:#a7f3d0;font-weight:700;">₹{int(showtime["base_price"])}/seat</span></div>',
         unsafe_allow_html=True,
     )
     st.markdown("</div>", unsafe_allow_html=True)
@@ -546,8 +588,12 @@ def page_now_showing():
 
     st.markdown('<div class="screen-block">Screen this way</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div class="legend"><span>🟩 Available</span><span>🟦 Selected</span>'
-        '<span>🟥 Occupied</span><span>⬛ Blocked</span></div>',
+        '<div class="legend">'
+        '<span><span class="seat-legend-dot legend-avail"></span>Available</span>'
+        '<span><span class="seat-legend-dot legend-sel"></span>Selected</span>'
+        '<span><span class="seat-legend-dot legend-occ"></span>Occupied</span>'
+        '<span><span class="seat-legend-dot legend-blk"></span>Blocked</span>'
+        '</div>',
         unsafe_allow_html=True,
     )
 
@@ -556,31 +602,52 @@ def page_now_showing():
         for s in row:
             seat_status[s["seat"]] = s["status"]
 
-    for row in seat_map["seats"]:
-        cols = st.columns(len(row))
-        for col, s in zip(cols, row):
-            seat = s["seat"]
-            disabled = s["status"] in ("occupied", "blocked")
-            selected = seat in st.session_state.selected_seats
-            if disabled:
-                label = "🟥" if s["status"] == "occupied" else "⬛"
-            else:
-                label = "🟦" if selected else "🟩"
-            col.button(f"{label} {seat}", key=f"seat_{seat}", disabled=disabled,
-                       on_click=_toggle_seat, args=(seat,), use_container_width=True)
+    with st.container(key="seat_map"):
+        rows_n = len(seat_map["seats"])
+        cols_n = len(seat_map["seats"][0]) if rows_n else 0
+
+        header_cols = st.columns(cols_n + 1)
+        header_cols[0].markdown("")
+        for c_idx, s in enumerate(seat_map["seats"][0]):
+            with header_cols[c_idx + 1]:
+                st.markdown(f'<div class="seat-cols-header">{c_idx + 1}</div>', unsafe_allow_html=True)
+
+        for r_idx, row in enumerate(seat_map["seats"]):
+            cols = st.columns(cols_n + 1)
+            cols[0].markdown(f'<div class="seat-rowlabel">{chr(65 + r_idx)}</div>', unsafe_allow_html=True)
+            for c_idx, s in enumerate(row):
+                with cols[c_idx + 1]:
+                    seat = s["seat"]
+                    if s["status"] == "occupied":
+                        st.markdown(f'<div class="seat-chip seat-occ">✕</div>', unsafe_allow_html=True)
+                    elif s["status"] == "blocked":
+                        st.markdown(f'<div class="seat-chip seat-blk">·</div>', unsafe_allow_html=True)
+                    else:
+                        selected = seat in st.session_state.selected_seats
+                        st.button(
+                            seat,
+                            key=f"seat_{seat}",
+                            type="primary" if selected else "secondary",
+                            use_container_width=True,
+                            on_click=_toggle_seat,
+                            args=(seat,),
+                        )
 
     selected = st.session_state.selected_seats
     total = len(selected) * showtime["base_price"]
-    st.markdown(
-        f'<div class="showtime-info" style="margin-top:0.8rem;"><strong style="color:#f8fafc;">{len(selected)}</strong> seat(s) selected: '
-        f'<strong style="color:#fbbf24;">{", ".join(sorted(selected)) if selected else "—"}</strong> · '
-        f'Total <strong style="color:#a7f3d0;">₹{int(total)}</strong></div>',
-        unsafe_allow_html=True,
-    )
 
     c1, c2, c3 = st.columns([1, 1, 3])
-    c1.button("↩ Back to movie", on_click=_pick_movie, args=(movie["id"],))
-    c2.button("↩ Back to showtimes", on_click=lambda: st.session_state.update(selected_showtime_id=None))
+    c1.button("↩ Back to movies", on_click=_pick_movie, args=(movie["id"],))
+    c2.button("↩ Showtimes", on_click=lambda: st.session_state.update(selected_showtime_id=None))
+
+    st.markdown(
+        f'<div class="booking-bar">'
+        f'<div><div class="bb-seats">{"No seats selected" if not selected else f"{len(selected)} seat(s): " + ", ".join(sorted(selected))}</div>'
+        f'<div style="color:var(--muted);font-size:0.8rem;">Confirm seats to continue</div></div>'
+        f'<div class="bb-total">₹{int(total)}</div>'
+        f'</div>',
+        unsafe_allow_html=True,
+    )
     if c3.button("Continue to payment →", use_container_width=True, disabled=not selected,
                  key="continue_to_payment"):
         st.session_state["show_payment_form"] = True
