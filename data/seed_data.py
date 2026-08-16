@@ -1,3 +1,41 @@
+# ---------------------------------------------------------------------------
+# Cinema ticketing seed data
+# ---------------------------------------------------------------------------
+
+THEATERS = [
+    {"name": "Grand Cineplex", "city": "Koramangala"},
+    {"name": "Starlight Cinemas", "city": "Indiranagar"},
+    {"name": "ScreenWorld", "city": "MG Road"},
+]
+
+# (theater_name, screen_name, rows, cols, base_price_inr)
+SCREENS = [
+    ("Grand Cineplex", "Screen 1", 6, 8, 200),
+    ("Grand Cineplex", "Screen 2", 8, 10, 250),
+    ("Grand Cineplex", "Screen 3", 5, 7, 180),
+    ("Starlight Cinemas", "IMAX 1", 8, 12, 350),
+    ("Starlight Cinemas", "Screen 2", 6, 8, 220),
+    ("ScreenWorld", "Screen 1", 7, 9, 240),
+    ("ScreenWorld", "Screen 2", 5, 6, 160),
+]
+
+SHOW_TIMES = ["10:30", "13:15", "16:00", "19:30", "22:00"]
+SHOWTIME_DAYS_AHEAD = 4
+
+# Movies with showtimes scheduled (subset of the catalog that is "now showing")
+NOW_SHOWING = [
+    "Inception",
+    "Interstellar",
+    "The Dark Knight",
+    "Dune: Part Two",
+    "Oppenheimer",
+    "Everything Everywhere All at Once",
+    "Spider-Man: Into the Spider-Verse",
+    "Parasite",
+    "The Matrix",
+    "Blade Runner 2049",
+]
+
 SEED_ITEMS = [
     # Movies
     {
