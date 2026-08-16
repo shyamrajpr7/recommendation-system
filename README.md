@@ -48,11 +48,15 @@ seats as soon as created and release seat conflicts with a 409.
 pip install -r requirements.txt
 ```
 
-Optional (but recommended) environment keys:
+Optional (but recommended) environment keys — add them to a `.env` file in the
+project root (loaded automatically; `.env` is gitignored):
 
 ```bash
-export XAI_API_KEY="your-xai-key"            # Grok (xAI) — AI explanations & chat
+GROQ_API_KEY="your-groq-key"                 # AI explanations & chat (preferred)
+# or the xAI alternative:
+export XAI_API_KEY="your-xai-key"            # Grok (xAI)
 export XAI_MODEL="grok-2-latest"             # optional model override
+export GROQ_MODEL="llama-3.3-70b-versatile"  # optional Groq model override
 export RAZORPAY_KEY_ID="rzp_test_..."
 export RAZORPAY_KEY_SECRET="your-secret"     # real payment; absent = simulated
 ```

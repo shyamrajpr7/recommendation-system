@@ -4,6 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from typing import List, Optional
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from backend.app.database import (
     init_db,
     get_items_by_ids,
