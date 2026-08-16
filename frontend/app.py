@@ -161,34 +161,36 @@ with st.sidebar:
 # Sample Query Presets
 st.markdown("##### 🔍 Popular Search Ideas:")
 preset_cols = st.columns(4)
-sample_query = ""
+
+st.session_state.setdefault("query_to_search", "")
 
 if preset_cols[0].button("🪐 Space & Time Dilations"):
-    sample_query = "mind bending sci-fi about space exploration and time dilation"
+    st.session_state.query_to_search = "mind bending sci-fi about space exploration and time dilation"
 if preset_cols[1].button("🕵️ Dark Crime & Mystery"):
-    sample_query = "dark atmospheric psychological thriller with serial killer detective mystery"
+    st.session_state.query_to_search = "dark atmospheric psychological thriller with serial killer detective mystery"
 if preset_cols[2].button("💻 Cyberpunk Dystopia"):
-    sample_query = "cyberpunk computer hackers entering virtual matrix reality"
+    st.session_state.query_to_search = "cyberpunk computer hackers entering virtual matrix reality"
 if preset_cols[3].button("⚡ Self Habit Mastery"):
-    sample_query = "practical framework for self improvement daily habits"
+    st.session_state.query_to_search = "practical framework for self improvement daily habits"
 
 # Search Form
 with st.form("recommendation_form"):
     user_query = st.text_input(
         "Enter a title, plot concept, or mood preference:",
-        value=sample_query if sample_query else "",
+        value=st.session_state.query_to_search,
         placeholder="e.g. 'dream within a dream corporate heist' or 'magic wizard school fantasy quest'",
     )
-    submit_button = st.form_submit_button("✨ Find Recommendations", use_container_width=True)
+    if st.form_submit_button("✨ Find Recommendations", use_container_width=True):
+        st.session_state.query_to_search = user_query.strip()
 
 # Process Search
-if submit_button or user_query:
-    if not user_query.strip():
+if st.session_state.query_to_search:
+    if not st.session_state.query_to_search.strip():
         st.warning("Please enter a search query or select a preset idea above.")
     else:
         with st.spinner("Retrieving vector matches & generating grounded explanations..."):
             payload = {
-                "query": user_query.strip(),
+                "query": st.session_state.query_to_search,
                 "genre": selected_genre if selected_genre != "All" else None,
                 "item_type": selected_type if selected_type != "All" else None,
                 "top_k": 3
