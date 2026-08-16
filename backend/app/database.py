@@ -268,7 +268,7 @@ def get_showtime(showtime_id: int) -> Optional[Dict[str, Any]]:
 def get_booked_seats(showtime_id: int) -> List[str]:
     conn = _get_conn()
     rows = conn.execute(
-        "SELECT seats FROM bookings WHERE showtime_id = ? AND status = 'confirmed'",
+        "SELECT seats FROM bookings WHERE showtime_id = ? AND status IN ('pending', 'confirmed')",
         (showtime_id,)).fetchall()
     conn.close()
     booked = []
@@ -360,6 +360,14 @@ def update_booking_payment(booking_ref: str, payment_status: str, status: str,
     conn.execute(
         "UPDATE bookings SET payment_status = ?, status = ?, payment_id = COALESCE(?, payment_id) WHERE booking_ref = ?",
         (payment_status, status, payment_id, booking_ref))
+    conn.commit()
+    conn.close()
+
+
+def set_booking_payment_link(booking_ref: str, payment_link_id: str):
+    conn = _get_conn()
+    conn.execute("UPDATE bookings SET payment_link_id = ? WHERE booking_ref = ?",
+                 (payment_link_id, booking_ref))
     conn.commit()
     conn.close()
 
