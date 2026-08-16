@@ -9,6 +9,7 @@ from backend.app.database import (
     get_items_by_ids,
     get_genres,
     get_movies,
+    get_theaters,
     get_showtimes,
     get_showtime,
     get_seat_map,
