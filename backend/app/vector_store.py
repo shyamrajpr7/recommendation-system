@@ -7,6 +7,14 @@ from backend.app.database import get_all_items
 
 MODEL_NAME = "all-MiniLM-L6-v2"
 
+def normalize_text(text: str) -> str:
+    """Clean/normalize raw input: collapse whitespace, strip punctuation edges, lowercase."""
+    if not text:
+        return ""
+    text = " ".join(text.strip().split())
+    text = text.rstrip(".!?,;:")
+    return text.strip().lower()
+
 class VectorStore:
     _instance = None
 
@@ -69,7 +77,7 @@ class VectorStore:
             return []
 
         # Encode and normalize query
-        query_emb = self.model.encode([query], show_progress_bar=False, convert_to_numpy=True).astype(np.float32)
+        query_emb = self.model.encode([normalize_text(query)], show_progress_bar=False, convert_to_numpy=True).astype(np.float32)
         faiss.normalize_L2(query_emb)
 
         # Retrieve a larger pool (e.g. 20) to handle genre/type filtering
