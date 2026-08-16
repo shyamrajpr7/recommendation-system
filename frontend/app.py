@@ -1,5 +1,6 @@
 import html
 import json
+import zlib
 import requests
 import streamlit as st
 
@@ -81,6 +82,29 @@ def _toggle_seat(seat):
         st.session_state.selected_seats.remove(seat)
     else:
         st.session_state.selected_seats.append(seat)
+
+
+# ----------------------------------------------------------- helpers ----
+_PALETTES = [
+    ("#0ea5e9", "#6366f1"),
+    ("#8b5cf6", "#ec4899"),
+    ("#f59e0b", "#ef4444"),
+    ("#10b981", "#0ea5e9"),
+    ("#f43f5e", "#8b5cf6"),
+    ("#14b8a6", "#6366f1"),
+    ("#f97316", "#eab308"),
+    ("#06b6d4", "#3b82f6"),
+]
+
+
+def _palette(title: str):
+    c1, c2 = _PALETTES[zlib.crc32(title.encode()) % len(_PALETTES)]
+    return f"linear-gradient(135deg, {c1} 0%, {c2} 100%)"
+
+
+def _stars(rating: float) -> str:
+    filled = round(rating / 2)
+    return "★" * filled + "☆" * (5 - filled)
 
 
 # ---------------------------------------------------------------- CSS ----
@@ -363,6 +387,19 @@ def _footer():
     )
 
 
+def _stepper(steps: list, current: int):
+    parts = []
+    for i, name in enumerate(steps):
+        state = "active" if i == current else ("done" if i < current else "")
+        dot = "✓" if i < current else str(i + 1)
+        parts.append(
+            f'<div class="step {state}"><span class="step-dot">{dot}</span>{name}</div>'
+        )
+        if i < len(steps) - 1:
+            parts.append('<div class="step-line"></div>')
+    st.markdown(f'<div class="stepper">{"".join(parts)}</div>', unsafe_allow_html=True)
+
+
 # ============================================================ NOW SHOWING
 def page_now_showing():
     _hero("Now Showing", "CineRead", "Book movie tickets — AI recommendations, live seat maps, instant confirmation")
@@ -383,11 +420,9 @@ def page_now_showing():
 
     # --- Step 0/1: pick a movie ---
     if st.session_state.selected_movie_id is None:
-        st.markdown('<div class="chip-label">Now Showing</div>', unsafe_allow_html=True)
-        genre_filters = ["All"] + sorted({m["genre"] for m in movies})
-        cols = st.columns(4)
-        filter_col = cols[0]
-        sel_genre = filter_col.selectbox("Filter by genre", genre_filters)
+        st.markdown('<div class="chip-label">Filter <span>by genre</span></div>', unsafe_allow_html=True)
+        genres = ["All"] + sorted({m["genre"] for m in movies})
+        sel_genre = st.pills("Genre", genres, key="genre_pill", default="All", label_visibility="collapsed")
 
         st.markdown('<div class="movie-grid">', unsafe_allow_html=True)
         for m in movies:
@@ -395,20 +430,18 @@ def page_now_showing():
                 continue
             title = html.escape(m["title"])
             synopsis = html.escape(m["synopsis"])
-            stars = "★" * round(m["rating"] / 2) + "☆" * (5 - round(m["rating"] / 2))
+            stars = _stars(m["rating"])
+            grad = _palette(m["title"])
             st.markdown(
-                f"""
-                <div class="movie-card">
-                    <div class="movie-title">{title}</div>
-                    <div class="movie-meta">
-                        <span class="badge-genre">{html.escape(m['genre'])}</span>
-                        <span class="badge-year">{m['year']}</span>
-                        <span class="stars">{stars}</span>
-                        <span><strong>{m['rating']}/10</strong></span>
-                    </div>
-                    <div class="synopsis">{synopsis}</div>
-                </div>
-                """,
+                f'<div class="movie-card">'
+                f'<div class="movie-poster" style="background:{grad};"><h3>{title}</h3></div>'
+                f'<div class="movie-body">'
+                f'<div class="movie-meta"><span class="badge badge-genre">{html.escape(m["genre"])}</span>'
+                f'<span class="badge badge-year">{m["year"]}</span>'
+                f'<span class="stars">{stars}</span>'
+                f'<span style="color:var(--muted);font-weight:700;">{m["rating"]}/10</span></div>'
+                f'<div class="synopsis">{synopsis}</div>'
+                f'</div></div>',
                 unsafe_allow_html=True,
             )
             st.button("🎟️ Book Tickets", key=f"book_{m['id']}", use_container_width=True,
