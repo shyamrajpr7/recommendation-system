@@ -465,9 +465,39 @@ st.markdown(
     .step.done .step-dot { background: rgba(52, 211, 153, 0.18); border-color: rgba(52, 211, 153, 0.4); color: #6ee7b7; }
     .step-line { flex: 1; height: 1px; background: #1a2744; margin: 0 0.8rem; min-width: 22px; }
 
-    .chat-bubble { padding: 0.75rem 1.05rem; border-radius: 14px; margin-bottom: 0.7rem; font-size: 0.92rem; line-height: 1.6; max-width: 84%; }
-    .chat-user { background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(129, 140, 248, 0.14)); color: #cfe8ff; margin-left: auto; border: 1px solid rgba(56, 189, 248, 0.25); }
+    .chat-row { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.8rem; }
+    .chat-row.user { justify-content: flex-end; }
+    .chat-avatar {
+        width: 34px; height: 34px; border-radius: 50%; flex: 0 0 auto;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1rem; margin-top: 0.15rem;
+    }
+    .chat-avatar.user { background: linear-gradient(135deg, #38bdf8, #818cf8); }
+    .chat-avatar.ai { background: linear-gradient(135deg, #6366f1, #a855f7); }
+    .chat-bubble { padding: 0.75rem 1.05rem; border-radius: 16px; font-size: 0.92rem; line-height: 1.6; max-width: 78%; }
+    .chat-user { background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(129, 140, 248, 0.14)); color: #cfe8ff; border: 1px solid rgba(56, 189, 248, 0.25); }
     .chat-ai { background: var(--surface-2); border: 1px solid var(--border-soft); color: #dbe7f5; }
+    .chat-wrap {
+        background: linear-gradient(150deg, rgba(13, 20, 38, 0.55), rgba(9, 14, 26, 0.55));
+        border: 1px solid var(--border-soft);
+        border-radius: 18px;
+        padding: 1.1rem 1.2rem;
+        margin-bottom: 1rem;
+    }
+    .chat-chip {
+        display: inline-block;
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        color: #7dd3fc;
+        border-radius: 999px;
+        padding: 6px 14px;
+        margin: 0 0.4rem 0.4rem 0;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+    .chat-chip:hover { background: rgba(56, 189, 248, 0.2); }
 
     .footer {
         margin-top: 2.6rem;
@@ -868,17 +898,38 @@ def page_chat():
         except Exception as e:
             st.session_state.chat_history.append({"role": "assistant", "content": f"Error: {e}"})
 
-    for msg in st.session_state.chat_history[-20:]:
-        cls = "chat-user" if msg["role"] == "user" else "chat-ai"
-        prefix = "🧑 " if msg["role"] == "user" else "🤖 "
+    if not st.session_state.chat_history:
         st.markdown(
-            f'<div class="chat-bubble {cls}">{prefix}{html.escape(msg["content"]).replace(chr(10), "<br>")}</div>',
+            '<div class="empty-state">'
+            '<div class="empty-icon">🤖</div>'
+            '<div class="empty-title">Ask the concierge</div>'
+            '<div>Showtimes, movie picks, booking help — grounded in tonight\'s schedule.</div>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            '<div style="margin-bottom:1.2rem;text-align:center;">'
+            '<span class="chat-chip">🎬 what sci-fi is on tonight?</span>'
+            '<span class="chat-chip">🍿 best family movie today</span>'
+            '<span class="chat-chip">🕗 what time is Oppenheimer?</span>'
+            '</div>',
             unsafe_allow_html=True,
         )
 
+    msgs = "".join(
+        f'<div class="chat-row {"user" if m["role"] == "user" else "ai"}">'
+        f'<div class="chat-avatar {"user" if m["role"] == "user" else "ai"}">{"🧑" if m["role"] == "user" else "🤖"}</div>'
+        f'<div class="chat-bubble {"chat-user" if m["role"] == "user" else "chat-ai"}">'
+        f'{html.escape(m["content"]).replace(chr(10), "<br>")}</div>'
+        f'</div>'
+        for m in st.session_state.chat_history[-20:]
+    )
+    if msgs:
+        st.markdown(f'<div class="chat-wrap">{msgs}</div>', unsafe_allow_html=True)
+
     st.text_input("Message", key="chat_input", placeholder="e.g. 'what sci-fi is showing tonight?'")
     st.button("Send", on_click=_send_chat, use_container_width=True)
-    st.caption("Powered by Grok (xAI). Requires XAI_API_KEY in the backend environment.")
+    st.caption("Powered by Groq. Responses are grounded in tonight's schedule.")
     _footer()
 
 
