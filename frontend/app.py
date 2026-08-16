@@ -428,37 +428,37 @@ with st.spinner("Retrieving vector matches & generating grounded explanations...
                 year = html.escape(str(rec.get("year", "")))
                 genre = html.escape(str(rec["genre"]))
                 creator = html.escape(str(rec["creator"]))
-                synopsis = html.escape(str(rec["synopsis"]))
-                explanation = html.escape(str(rec["ai_explanation"]))
+                synopsis = " ".join(html.escape(str(rec["synopsis"])).split())
+                explanation = " ".join(html.escape(str(rec["ai_explanation"])).split())
                 rating = float(rec["rating"])
                 sim = int(float(rec["similarity_score"]) * 100)
                 type_badge = "badge-movie" if rec["item_type"] == "Movie" else "badge-book"
                 type_icon = "🎬" if rec["item_type"] == "Movie" else "📚"
 
                 cards.append(f"""
-                <div class="rec-card">
-                    <div class="card-top">
-                        <div class="rank">#{idx}</div>
-                        <div class="card-title">{title}</div>
-                        <div class="card-year">{year}</div>
+                    <div class="rec-card">
+                        <div class="card-top">
+                            <div class="rank">#{idx}</div>
+                            <div class="card-title">{title}</div>
+                            <div class="card-year">{year}</div>
+                        </div>
+                        <div>
+                            <span class="{type_badge}">{type_icon} {html.escape(str(rec['item_type']))}</span>
+                        </div>
+                        <div class="meta-row">
+                            <span>Genre: <strong>{genre}</strong></span>
+                            <span>By <strong>{creator}</strong></span>
+                            <span class="stars">{stars(rating)}</span>
+                            <span><strong>{rating}/10</strong></span>
+                        </div>
+                        <div class="score-box">
+                            <div class="score-label"><span>Semantic match</span><b>{sim}%</b></div>
+                            <div class="score-track"><div class="score-fill" style="width:{sim}%"></div></div>
+                        </div>
+                        <div class="synopsis-box"><b>Synopsis:</b> {synopsis}</div>
+                        <div class="ai-box"><b>💡 Why recommended:</b> {explanation}</div>
                     </div>
-                    <div>
-                        <span class="{type_badge}">{type_icon} {html.escape(str(rec['item_type']))}</span>
-                    </div>
-                    <div class="meta-row">
-                        <span>Genre: <strong>{genre}</strong></span>
-                        <span>By <strong>{creator}</strong></span>
-                        <span class="stars">{stars(rating)}</span>
-                        <span><strong>{rating}/10</strong></span>
-                    </div>
-                    <div class="score-box">
-                        <div class="score-label"><span>Semantic match</span><b>{sim}%</b></div>
-                        <div class="score-track"><div class="score-fill" style="width:{sim}%"></div></div>
-                    </div>
-                    <div class="synopsis-box"><b>Synopsis:</b> {synopsis}</div>
-                    <div class="ai-box"><b>💡 Why recommended:</b> {explanation}</div>
-                </div>
-                """)
+                """.strip())
 
             st.markdown(f'<div class="rec-grid">{"".join(cards)}</div>', unsafe_allow_html=True)
 
