@@ -1,7 +1,7 @@
-import os
-import json
 import re
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
+
+from backend.app.grok_client import grok_json
 
 # Common function words that never count as evidence of fabrication.
 _STOP_WORDS = {
@@ -28,64 +28,54 @@ _STOP_WORDS = {
 def generate_explanations(query: str, candidates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
     Generates grounded natural-language explanations for recommendations.
-    Uses Google Gemini API if GEMINI_API_KEY is configured, otherwise uses structured fallback.
+    Uses xAI Grok if XAI_API_KEY is configured, otherwise uses structured fallback.
     """
     if not candidates:
         return []
 
-    # Attempt Gemini API call if key is available (read at call time so a
-    # key exported after import is still picked up).
-    gemini_api_key = os.environ.get("GEMINI_API_KEY")
-    if gemini_api_key:
-        try:
-            from google import genai
-            client = genai.Client(api_key=gemini_api_key)
+    prompt_context = []
+    for i, cand in enumerate(candidates, 1):
+        prompt_context.append(
+            f"Candidate {i} (ID: {cand['id']}):\n"
+            f"- Title: {cand['title']}\n"
+            f"- Type: {cand['item_type']}\n"
+            f"- Genre: {cand['genre']}\n"
+            f"- Creator: {cand['creator']}\n"
+            f"- Rating: {cand['rating']}/10\n"
+            f"- Synopsis: {cand['synopsis']}\n"
+        )
 
-            prompt_context = []
-            for i, cand in enumerate(candidates, 1):
-                prompt_context.append(
-                    f"Candidate {i} (ID: {cand['id']}):\n"
-                    f"- Title: {cand['title']}\n"
-                    f"- Type: {cand['item_type']}\n"
-                    f"- Genre: {cand['genre']}\n"
-                    f"- Creator: {cand['creator']}\n"
-                    f"- Rating: {cand['rating']}/10\n"
-                    f"- Synopsis: {cand['synopsis']}\n"
-                )
+    formatted_candidates = "\n".join(prompt_context)
 
-            formatted_candidates = "\n".join(prompt_context)
+    system_prompt = (
+        "You are a recommendation explanation system. You never recommend anything "
+        "yourself; you only explain why the retrieved candidates were matched."
+    )
+    user_prompt = (
+        f"User Query: \"{query}\"\n\n"
+        f"Here are the top retrieved recommendations based on vector similarity:\n\n"
+        f"{formatted_candidates}\n"
+        f"STRICT RULES:\n"
+        f"1. Provide a concise 2-3 sentence explanation for why each item fits the user's query.\n"
+        f"2. Use ONLY facts provided in the supplied metadata above. Do NOT invent plot details, actors, cast, or unmentioned awards.\n"
+        f"3. Return the output strictly as a JSON object matching this schema:\n"
+        f"   {{\"explanations\": [{{\"id\": <item_id>, \"explanation\": \"<explanation_text>\"}}]}}\n"
+    )
 
-            prompt = (
-                f"You are a recommendation explanation system.\n"
-                f"User Query: \"{query}\"\n\n"
-                f"Here are the top retrieved recommendations based on vector similarity:\n\n"
-                f"{formatted_candidates}\n"
-                f"STRICT RULES:\n"
-                f"1. Provide a concise 2-3 sentence explanation for why each item fits the user's query.\n"
-                f"2. Use ONLY facts provided in the supplied metadata above. Do NOT invent plot details, actors, cast, or unmentioned awards.\n"
-                f"3. Return the output strictly as a JSON object matching this schema:\n"
-                f"   {{\"explanations\": [{{\"id\": <item_id>, \"explanation\": \"<explanation_text>\"}}]}}\n"
-            )
+    parsed = grok_json([
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt},
+    ], temperature=0.2, max_tokens=1024)
 
-            response = client.models.generate_content(
-                model='gemini-2.5-flash',
-                contents=prompt,
-                config={'response_mime_type': 'application/json'}
-            )
+    exp_by_id = {}
+    if parsed and isinstance(parsed.get("explanations"), list):
+        exp_by_id = {
+            item["id"]: item["explanation"]
+            for item in parsed["explanations"]
+            if "id" in item and "explanation" in item
+        }
 
-            raw_text = (response.text or "").strip()
-            parsed = json.loads(_strip_code_fences(raw_text))
-            explanations_list = parsed.get("explanations", [])
-
-            exp_by_id = {item["id"]: item["explanation"] for item in explanations_list if "id" in item and "explanation" in item}
-
-            return _validate_candidates(query, candidates, exp_by_id)
-
-        except Exception as e:
-            print(f"[LLM Explainer] Gemini API call failed or unavailable ({e}). Using grounded fallback explanations.")
-
-    # Fallback when API key is missing or call fails
-    return _validate_candidates(query, candidates, {})
+    return _validate_candidates(query, candidates, exp_by_id)
 
 def _validate_candidates(query: str, candidates: List[Dict[str, Any]], exp_by_id: Dict[Any, str]) -> List[Dict[str, Any]]:
     """
@@ -146,11 +136,6 @@ def _strip_fabricated(query: str, item: Dict[str, Any], explanation: str) -> str
     return grounded if len(grounded) >= 10 else ""
 
 _CAP_WORD = re.compile(r"\b[A-Z][a-zA-Z]*\b")
-
-def _strip_code_fences(text: str) -> str:
-    """Remove markdown code fences so ````json\n{...}\n```` parses cleanly."""
-    text = re.sub(r"```(?:json)?\s*", "", text)
-    return text.strip()
 
 def _capitalized_tokens(text: str) -> set:
     """Lowercased capitalized words in a text, ignoring sentence-initial capitals."""
