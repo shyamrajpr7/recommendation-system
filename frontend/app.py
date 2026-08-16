@@ -320,6 +320,19 @@ st.markdown(
     .empty-icon { font-size: 3.2rem; margin-bottom: 0.7rem; }
     .empty-title { font-size: 1.45rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; font-family: 'Space Grotesk', sans-serif; }
 
+    .stepper { display: flex; align-items: center; gap: 0; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .step { display: flex; align-items: center; gap: 0.5rem; color: var(--muted-2); font-size: 0.82rem; font-weight: 600; }
+    .step .step-dot {
+        width: 26px; height: 26px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.78rem; font-weight: 700;
+        background: #0a101d; border: 1px solid #223052; color: var(--muted-2);
+    }
+    .step.active { color: var(--text); }
+    .step.active .step-dot { background: linear-gradient(135deg, #38bdf8, #818cf8); border-color: transparent; color: #08111f; }
+    .step.done .step-dot { background: rgba(52, 211, 153, 0.18); border-color: rgba(52, 211, 153, 0.4); color: #6ee7b7; }
+    .step-line { flex: 1; height: 1px; background: #1a2744; margin: 0 0.8rem; min-width: 22px; }
+
     .chat-bubble { padding: 0.75rem 1.05rem; border-radius: 14px; margin-bottom: 0.7rem; font-size: 0.92rem; line-height: 1.6; max-width: 84%; }
     .chat-user { background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(129, 140, 248, 0.14)); color: #cfe8ff; margin-left: auto; border: 1px solid rgba(56, 189, 248, 0.25); }
     .chat-ai { background: var(--surface-2); border: 1px solid var(--border-soft); color: #dbe7f5; }
@@ -457,29 +470,41 @@ def page_now_showing():
 
     # --- Step 2: pick a date + showtime ---
     if st.session_state.selected_showtime_id is None:
+        _stepper(["Movie", "Showtime", "Seats", "Payment"], 1)
         st.markdown('<div class="panel">', unsafe_allow_html=True)
         st.markdown('<div class="chip-label">Selected Movie</div>', unsafe_allow_html=True)
         title = html.escape(movie["title"])
         synopsis = html.escape(movie["synopsis"])
+        grad = _palette(movie["title"])
         st.markdown(
-            f'<div class="movie-title">{title}</div>'
-            f'<div class="movie-meta"><span class="badge-genre">{html.escape(movie["genre"])}</span>'
-            f'<span class="badge-year">{movie["year"]}</span>'
-            f'<span class="stars">{"★" * round(movie["rating"] / 2) + "☆" * (5 - round(movie["rating"] / 2))}</span></div>'
-            f'<div class="synopsis">{synopsis}</div>',
+            f'<div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">'
+            f'<div style="width:110px;height:150px;border-radius:14px;background:{grad};'
+            f'flex-shrink:0;display:flex;align-items:flex-end;padding:0.7rem;'
+            f'box-shadow:0 12px 34px rgba(0,0,0,0.5);">'
+            f'<span style="color:#fff;font-weight:700;font-family:Space Grotesk;font-size:0.95rem;line-height:1.15;">{title}</span></div>'
+            f'<div style="flex:1;min-width:260px;">'
+            f'<div class="movie-meta" style="margin-bottom:0.5rem;">'
+            f'<span class="badge badge-genre">{html.escape(movie["genre"])}</span>'
+            f'<span class="badge badge-year">{movie["year"]}</span>'
+            f'<span class="stars">{_stars(movie["rating"])}</span></div>'
+            f'<div class="synopsis">{synopsis}</div>'
+            f'</div></div>',
             unsafe_allow_html=True,
         )
         st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown('<div class="chip-label">Pick a Date</div>', unsafe_allow_html=True)
-        cols = st.columns(len(dates))
-        for col, d in zip(cols, dates):
-            col.button(d, use_container_width=True, key=f"date_{d}")
+        sel_date = st.segmented_control("Date", dates, key="date_ctl", default=dates[0] if dates else None,
+                                        label_visibility="collapsed")
 
         st.markdown('<div class="chip-label">Pick a Showtime</div>', unsafe_allow_html=True)
-        showtimes = (api_get(f"/showtimes?movie_id={movie['id']}") or {}).get("showtimes", [])
+        q = f"/showtimes?movie_id={movie['id']}"
+        if sel_date:
+            q += f"&show_date={sel_date}"
+        showtimes = (api_get(q) or {}).get("showtimes", [])
         if not showtimes:
-            st.info("No showtimes scheduled for this movie.")
+            st.info("No showtimes scheduled for this movie on that date.")
+            _footer()
             return
         for st_obj in showtimes:
             left, right = st.columns([3, 1])
