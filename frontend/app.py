@@ -397,6 +397,57 @@ st.markdown(
         opacity: 0.55;
     }
 
+    .rec-poster {
+        position: relative;
+        height: 128px;
+        display: flex; align-items: flex-end;
+        padding: 1rem 1.2rem 0.8rem;
+        overflow: hidden;
+    }
+    .rec-poster::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, rgba(7, 11, 22, 0) 20%, rgba(7, 11, 22, 0.94) 100%);
+    }
+    .rec-poster h3 {
+        position: relative; z-index: 2;
+        color: #fff; font-size: 1.3rem; font-weight: 700; line-height: 1.15;
+        margin: 0; text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+    }
+    .rec-rank {
+        position: absolute; top: 0.7rem; right: 0.9rem; z-index: 3;
+        font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 1.7rem;
+        color: rgba(255, 255, 255, 0.9); text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+    }
+    .rec-type {
+        position: absolute; top: 0.8rem; left: 0.9rem; z-index: 3;
+        background: rgba(7, 11, 22, 0.65); backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: #e2e8f0; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+        padding: 4px 11px; border-radius: 999px;
+    }
+    .match-bar {
+        height: 8px; border-radius: 999px; overflow: hidden;
+        background: #0b1220; border: 1px solid #1c2a49;
+    }
+    .match-fill {
+        height: 100%; border-radius: 999px;
+        background: linear-gradient(90deg, #38bdf8, #818cf8, #a78bfa);
+        box-shadow: 0 0 12px rgba(129, 140, 248, 0.6);
+    }
+    .why-box {
+        background: rgba(99, 102, 241, 0.08);
+        border: 1px solid rgba(129, 140, 248, 0.28);
+        border-left: 3px solid #6366f1;
+        border-radius: 12px;
+        padding: 0.7rem 0.85rem;
+        color: #c7d2fe; font-size: 0.85rem; line-height: 1.55;
+    }
+    .why-box b { color: #a5b4fc; }
+    .search-meta { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; }
+    .match-pct { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #a5b4fc; font-size: 0.85rem; white-space: nowrap; }
+    .match-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-2); margin-bottom: 0.35rem; }
+
     .empty-state { text-align: center; padding: 3.4rem 1.5rem; color: var(--muted); }
     .empty-icon { font-size: 3.2rem; margin-bottom: 0.7rem; }
     .empty-title { font-size: 1.45rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; font-family: 'Space Grotesk', sans-serif; }
@@ -768,17 +819,29 @@ def page_ai_search():
         rating = float(rec["rating"])
         sim = int(float(rec["similarity_score"]) * 100)
         type_label = "🎬 Movie" if rec["item_type"] == "Movie" else "📚 Book"
-        stars = "★" * round(rating / 2) + "☆" * (5 - round(rating / 2))
+        stars = _stars(rating)
+        grad = _palette(str(rec["title"]))
         cards.append(
             f'<div class="movie-card">'
-            f'<div class="movie-title"><span class="badge-year">#{idx}</span> {title}</div>'
-            f'<div class="movie-meta"><span class="badge-genre">{genre_v}</span><span>{type_label}</span>'
-            f'<span>{year}</span><span class="stars">{stars}</span><span><strong>{rating}/10</strong></span>'
-            f'<span>by <strong>{creator}</strong></span></div>'
-            f'<div class="synopsis"><b>Synopsis:</b> {synopsis}</div>'
-            f'<div class="synopsis" style="border-left:3px solid #6366f1;padding-left:0.7rem;color:#c7d2fe;">'
-            f'<b>💡 Why recommended:</b> {explanation}</div>'
-            f'<div class="showtime-info">Semantic match <strong style="color:#a7f3d0;">{sim}%</strong></div>'
+            f'<div class="rec-poster" style="background:{grad};">'
+            f'<div class="rec-rank">#{idx}</div>'
+            f'<div class="rec-type">{type_label}</div>'
+            f'<h3>{title}</h3></div>'
+            f'<div class="movie-body">'
+            f'<div class="movie-meta">'
+            f'<span class="badge-genre">{genre_v}</span>'
+            f'<span>{year}</span>'
+            f'<span class="stars">{stars}</span>'
+            f'<span><strong style="color:#f8fafc;">{rating}/10</strong></span>'
+            f'</div>'
+            f'<div class="synopsis">{synopsis}</div>'
+            f'<div class="match-lbl">Semantic match</div>'
+            f'<div class="match-bar"><div class="match-fill" style="width:{min(sim, 100)}%;"></div></div>'
+            f'<div class="search-meta">'
+            f'<span style="color:var(--muted);font-size:0.82rem;">by <strong style="color:#aebfd8;">{creator}</strong></span>'
+            f'<span class="match-pct">{sim}%</span></div>'
+            f'<div class="why-box"><b>💡 Why recommended:</b> {explanation}</div>'
+            f'</div>'
             f'</div>'
         )
     st.markdown(f'<div class="movie-grid">{"".join(cards)}</div>', unsafe_allow_html=True)
