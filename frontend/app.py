@@ -87,19 +87,25 @@ def _toggle_seat(seat):
 st.markdown(
     """
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
     :root {
-        --bg: #0b1120;
-        --surface: #111a2e;
-        --surface-2: #0f172a;
-        --border: #243049;
-        --text: #e2e8f0;
-        --muted: #94a3b8;
+        --bg: #070b16;
+        --surface: #0d1424;
+        --surface-2: #0a101d;
+        --surface-3: #111a2e;
+        --border: #1e2a44;
+        --border-soft: rgba(148, 163, 184, 0.14);
+        --text: #e6edf7;
+        --muted: #8ba0bf;
+        --muted-2: #5b6f8f;
         --accent-1: #38bdf8;
         --accent-2: #818cf8;
         --accent-3: #c084fc;
-        --green: #10b981;
+        --gold: #fbbf24;
+        --green: #34d399;
+        --red: #f87171;
+        --radius: 18px;
     }
 
     html, body, .stApp {
@@ -110,160 +116,199 @@ st.markdown(
 
     .stApp {
         background:
-            radial-gradient(1200px 600px at 80% -10%, rgba(129, 140, 248, 0.12), transparent 60%),
-            radial-gradient(1000px 500px at 10% 0%, rgba(56, 189, 248, 0.10), transparent 60%),
+            radial-gradient(1100px 520px at 85% -10%, rgba(139, 92, 246, 0.14), transparent 60%),
+            radial-gradient(900px 460px at 5% -5%, rgba(56, 189, 248, 0.10), transparent 60%),
+            radial-gradient(1200px 700px at 50% 120%, rgba(244, 63, 94, 0.05), transparent 55%),
             var(--bg);
     }
 
+    h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
     #MainMenu, footer { visibility: hidden; }
 
-    .hero {
-        text-align: center;
-        padding: 2rem 1.5rem 1.6rem;
-        border-radius: 20px;
-        border: 1px solid var(--border);
-        background: linear-gradient(135deg, rgba(17, 26, 46, 0.9) 0%, rgba(11, 17, 32, 0.9) 100%);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-        margin-bottom: 1.4rem;
-        position: relative;
-        overflow: hidden;
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #223054; border-radius: 999px; border: 2px solid var(--bg); }
+    ::-webkit-scrollbar-thumb:hover { background: #2e3f6e; }
+
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0b1222 0%, #080d1a 100%);
+        border-right: 1px solid var(--border);
     }
-    .hero::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(600px 300px at 50% -20%, rgba(56, 189, 248, 0.18), transparent 70%);
-    }
-    .hero-title {
-        font-size: 2.6rem;
-        font-weight: 800;
+    [data-testid="stSidebar"] .stMarkdown { color: var(--muted); }
+    .brand-block { padding: 0.2rem 0 0.6rem; }
+    .brand-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
         letter-spacing: -0.02em;
-        margin-bottom: 0.3rem;
-        background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc, #38bdf8);
-        background-size: 300% 100%;
+        background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: shimmer 8s linear infinite;
+    }
+    .brand-sub { color: var(--muted-2); font-size: 0.8rem; margin-top: 0.15rem; }
+
+    [data-testid="stSidebar"] .stRadio > label, [data-testid="stSidebar"] [role="radiogroup"] label { color: var(--muted); font-weight: 500; }
+    [data-testid="stSidebar"] [role="radiogroup"] label:hover { color: var(--text); }
+    [data-testid="stSidebar"] [role="radiogroup"] label p { font-size: 0.95rem; }
+
+    .status-pill {
+        display: inline-flex; align-items: center; gap: 0.45rem;
+        padding: 0.35rem 0.8rem; border-radius: 999px;
+        font-size: 0.78rem; font-weight: 700; border: 1px solid;
+    }
+    .status-on { background: rgba(16, 185, 129, 0.12); color: #6ee7b7; border-color: rgba(52, 211, 153, 0.35); }
+    .status-off { background: rgba(248, 113, 113, 0.12); color: #fca5a5; border-color: rgba(248, 113, 113, 0.35); }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+    .status-on .status-dot { background: #34d399; box-shadow: 0 0 8px #34d399; }
+    .status-off .status-dot { background: #f87171; box-shadow: 0 0 8px #f87171; }
+
+    .hero {
+        text-align: center;
+        padding: 2.4rem 1.6rem 2rem;
+        border-radius: 24px;
+        border: 1px solid var(--border-soft);
+        background:
+            radial-gradient(700px 320px at 50% -30%, rgba(129, 140, 248, 0.22), transparent 65%),
+            linear-gradient(135deg, rgba(17, 26, 46, 0.85) 0%, rgba(8, 13, 26, 0.9) 100%);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        margin-bottom: 1.6rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.008) 3px, transparent 4px);
+        pointer-events: none;
+    }
+    .hero-kicker {
+        display: inline-block;
+        font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+        color: var(--accent-1);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        padding: 0.25rem 0.9rem; border-radius: 999px;
+        background: rgba(56, 189, 248, 0.08);
+        margin-bottom: 0.9rem;
+    }
+    .hero-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 3rem; font-weight: 700; letter-spacing: -0.03em;
+        background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc, #38bdf8);
+        background-size: 300% 100%;
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 9s linear infinite;
     }
     @keyframes shimmer {
         0% { background-position: 0% 50%; }
         100% { background-position: 300% 50%; }
     }
-    .hero-sub { color: var(--muted); font-size: 1rem; }
+    .hero-sub { color: var(--muted); font-size: 1rem; margin-top: 0.4rem; }
 
-    .search-card, .panel {
+    .panel, .search-card {
         background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 1.3rem 1.5rem 1.5rem;
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius);
+        padding: 1.4rem 1.6rem 1.6rem;
         margin-bottom: 1.4rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.03);
     }
     .chip-label {
         color: var(--muted);
-        font-size: 0.82rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        margin: 0 0 0.6rem;
+        font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+        margin: 0 0 0.7rem;
     }
+    .chip-label span { color: var(--accent-2); }
 
     .movie-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.3rem;
+        grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+        gap: 1.4rem;
     }
     .movie-card {
         background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        padding: 1.3rem;
+        border: 1px solid var(--border-soft);
+        border-radius: 20px;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
-        gap: 0.7rem;
         transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
     .movie-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-        border-color: rgba(129, 140, 248, 0.6);
+        transform: translateY(-6px);
+        box-shadow: 0 26px 60px rgba(0, 0, 0, 0.55);
+        border-color: rgba(129, 140, 248, 0.55);
     }
-    .movie-title { font-size: 1.2rem; font-weight: 700; color: #f8fafc; line-height: 1.25; }
-    .movie-meta { color: var(--muted); font-size: 0.88rem; display: flex; flex-wrap: wrap; gap: 0.5rem 0.9rem; }
-    .movie-meta strong { color: #cbd5e1; }
-    .badge-genre {
-        display: inline-block;
-        padding: 3px 12px;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        background: #0c4a6e; color: #7dd3fc;
+    .movie-poster {
+        position: relative;
+        height: 150px;
+        display: flex; align-items: flex-end;
+        padding: 1rem 1.2rem 0.85rem;
+        overflow: hidden;
     }
-    .badge-year { background: #134e4a; color: #5eead4; padding: 3px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
-    .stars { color: #fbbf24; letter-spacing: 0.1em; }
-    .synopsis { color: #cbd5e1; font-size: 0.9rem; line-height: 1.55; }
+    .movie-poster::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(180deg, rgba(7, 11, 22, 0) 20%, rgba(7, 11, 22, 0.92) 100%);
+    }
+    .movie-poster h3 {
+        position: relative; z-index: 2;
+        color: #fff; font-size: 1.45rem; font-weight: 700; line-height: 1.15;
+        margin: 0; text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+    }
+    .movie-body { padding: 1.05rem 1.2rem 1.2rem; display: flex; flex-direction: column; gap: 0.7rem; flex: 1; }
+    .movie-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; color: var(--muted); font-size: 0.84rem; }
+    .badge { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
+    .badge-genre { background: rgba(56, 189, 248, 0.12); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.25); }
+    .badge-year { background: rgba(52, 211, 153, 0.12); color: #6ee7b7; border: 1px solid rgba(52, 211, 153, 0.25); }
+    .badge-rank { background: rgba(251, 191, 36, 0.14); color: #fcd34d; border: 1px solid rgba(251, 191, 36, 0.3); }
+    .stars { color: var(--gold); letter-spacing: 0.08em; font-size: 0.82rem; }
+    .synopsis { color: #b6c4da; font-size: 0.9rem; line-height: 1.6; flex: 1; }
 
     .showtime-card {
-        background: var(--surface-2);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 0.9rem 1.1rem;
+        background: linear-gradient(135deg, rgba(14, 22, 40, 0.9), rgba(10, 16, 29, 0.9));
+        border: 1px solid var(--border-soft);
+        border-radius: 14px;
+        padding: 0.95rem 1.2rem;
         margin-bottom: 0.8rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
+        display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+        transition: border-color 0.2s ease;
     }
-    .showtime-time { font-size: 1.25rem; font-weight: 800; color: var(--accent-1); }
-    .showtime-info { color: var(--muted); font-size: 0.85rem; }
-    .showtime-price { color: #a7f3d0; font-weight: 700; }
+    .showtime-card:hover { border-color: rgba(56, 189, 248, 0.45); }
+    .showtime-time { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 700; color: var(--accent-1); }
+    .showtime-info { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
+    .showtime-price { color: #a7f3d0; font-weight: 700; font-size: 1.05rem; }
 
     .screen-block {
         text-align: center;
-        color: var(--muted);
-        font-size: 0.8rem;
-        letter-spacing: 0.5em;
-        text-transform: uppercase;
-        background: var(--surface-2);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 0.5rem;
-        margin: 0 auto 1.2rem;
-        max-width: 70%;
+        color: var(--muted-2); font-size: 0.72rem; letter-spacing: 0.45em; text-transform: uppercase;
+        background: linear-gradient(180deg, rgba(56, 189, 248, 0.10), rgba(56, 189, 248, 0.02));
+        border: 1px solid rgba(56, 189, 248, 0.18);
+        border-radius: 10px; padding: 0.55rem;
+        margin: 0 auto 1.4rem; max-width: 72%;
+        box-shadow: 0 4px 30px rgba(56, 189, 248, 0.08) inset;
     }
-
-    .legend { display: flex; gap: 1.4rem; justify-content: center; color: var(--muted); font-size: 0.82rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .legend { display: flex; gap: 1.3rem; justify-content: center; color: var(--muted); font-size: 0.8rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
     .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
 
-    .ticket-card {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(168, 85, 247, 0.12) 100%);
-        border: 1px solid rgba(168, 85, 247, 0.4);
-        border-radius: 18px;
-        padding: 1.5rem;
-        margin-top: 1rem;
-    }
-    .ticket-ref { font-size: 1.6rem; font-weight: 800; color: #fbbf24; letter-spacing: 0.04em; }
-    .ticket-meta { color: var(--muted); font-size: 0.92rem; line-height: 1.8; }
-    .ticket-meta strong { color: #cbd5e1; }
+    .empty-state { text-align: center; padding: 3.4rem 1.5rem; color: var(--muted); }
+    .empty-icon { font-size: 3.2rem; margin-bottom: 0.7rem; }
+    .empty-title { font-size: 1.45rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; font-family: 'Space Grotesk', sans-serif; }
 
-    .empty-state { text-align: center; padding: 3rem 1.5rem; color: var(--muted); }
-    .empty-icon { font-size: 3rem; margin-bottom: 0.6rem; }
-    .empty-title { font-size: 1.4rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
-
-    .chat-bubble { padding: 0.7rem 1rem; border-radius: 12px; margin-bottom: 0.6rem; font-size: 0.92rem; line-height: 1.55; max-width: 85%; }
-    .chat-user { background: #123042; color: #bae6fd; margin-left: auto; }
-    .chat-ai { background: var(--surface-2); border: 1px solid var(--border); color: #e2e8f0; }
+    .chat-bubble { padding: 0.75rem 1.05rem; border-radius: 14px; margin-bottom: 0.7rem; font-size: 0.92rem; line-height: 1.6; max-width: 84%; }
+    .chat-user { background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(129, 140, 248, 0.14)); color: #cfe8ff; margin-left: auto; border: 1px solid rgba(56, 189, 248, 0.25); }
+    .chat-ai { background: var(--surface-2); border: 1px solid var(--border-soft); color: #dbe7f5; }
 
     .footer {
-        margin-top: 2.4rem;
-        padding-top: 1.1rem;
-        border-top: 1px solid var(--border);
+        margin-top: 2.6rem;
+        padding-top: 1.2rem;
+        border-top: 1px solid var(--border-soft);
         text-align: center;
-        color: var(--muted);
-        font-size: 0.85rem;
+        color: var(--muted-2);
+        font-size: 0.82rem;
     }
-    .footer b { color: #cbd5e1; }
+    .footer b { color: #aebfd8; font-weight: 600; }
 </style>
 """,
     unsafe_allow_html=True,
@@ -272,47 +317,55 @@ st.markdown(
 
 # ------------------------------------------------------------- sidebar ----
 with st.sidebar:
-    st.markdown("### 🎬 CineRead")
+    st.markdown(
+        """
+        <div class="brand-block">
+            <div class="brand-title">CineRead</div>
+            <div class="brand-sub">Cinema booking · AI concierge</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     page = st.radio(
         "Navigate",
         ["🎟️ Now Showing", "✨ AI Search", "🤖 AI Assistant", "🎫 My Booking"],
         label_visibility="collapsed",
     )
-
     online = backend_online()
     st.markdown("---")
-    if online:
-        st.markdown("<span style='color:#10b981;font-weight:700;'>●</span> Backend online", unsafe_allow_html=True)
-    else:
-        st.markdown("<span style='color:#f87171;font-weight:700;'>●</span> Backend offline", unsafe_allow_html=True)
-
-
-def _hero(sub: str):
+    cls = "status-on" if online else "status-off"
+    label = "Backend online" if online else "Backend offline"
     st.markdown(
-        f"""
-        <div class="hero">
-            <div class="hero-title">🎬 CineRead</div>
-            <div class="hero-sub">{sub}</div>
-        </div>
-        """,
+        f'<span class="status-pill {cls}"><span class="status-dot"></span>{label}</span>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        '<div style="color:#5b6f8f;font-size:0.75rem;margin-top:1.1rem;line-height:1.6;">'
+        'FAISS retrieval · Sentence-Transformers · Groq AI · Razorpay</div>',
+        unsafe_allow_html=True,
+    )
+
+
+# ------------------------------------------------------------- chrome ----
+def _hero(kicker: str, title: str, sub: str):
+    st.markdown(
+        f"""<div class="hero"><div class="hero-kicker">{html.escape(kicker)}</div>"""
+        f"""<div class="hero-title">{html.escape(title)}</div>"""
+        f"""<div class="hero-sub">{html.escape(sub)}</div></div>""",
         unsafe_allow_html=True,
     )
 
 
 def _footer():
     st.markdown(
-        """
-        <div class="footer">
-            <b>CineRead Cinema</b> · FAISS + Sentence-Transformers + Grok · Razorpay checkout
-        </div>
-        """,
+        '<div class="footer"><b>CineRead Cinema</b> · FAISS + Sentence-Transformers + Groq AI · Razorpay checkout</div>',
         unsafe_allow_html=True,
     )
 
 
 # ============================================================ NOW SHOWING
 def page_now_showing():
-    _hero("Book movie tickets — AI-powered recommendations & instant confirmation")
+    _hero("Now Showing", "CineRead", "Book movie tickets — AI recommendations, live seat maps, instant confirmation")
     if not backend_online():
         st.error("Backend offline. Start it with `uvicorn backend.app.main:app --port 8000`.")
         return
@@ -481,7 +534,7 @@ def page_now_showing():
 
 # ============================================================ AI SEARCH
 def page_ai_search():
-    _hero("Semantic search across the catalog — grounded AI explanations")
+    _hero("Semantic Search", "Find your next watch", "Vector matching across the catalog — grounded Groq explanations")
     if not backend_online():
         st.error("Backend offline. Start it with `uvicorn backend.app.main:app --port 8000`.")
         return
@@ -568,7 +621,7 @@ def page_ai_search():
 
 # ============================================================ AI ASSISTANT
 def page_chat():
-    _hero("Ask anything — showtimes, movie picks, booking help")
+    _hero("AI Concierge", "Ask anything", "Showtimes, movie picks, booking help — grounded in tonight's schedule")
     if not backend_online():
         st.error("Backend offline.")
         return
@@ -602,7 +655,7 @@ def page_chat():
 
 # ============================================================ MY BOOKING
 def page_my_booking():
-    _hero("Look up a booking by reference")
+    _hero("My Booking", "Your e-tickets", "Look up a booking by its reference")
     if not backend_online():
         st.error("Backend offline.")
         return
