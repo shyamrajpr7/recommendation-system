@@ -356,6 +356,47 @@ st.markdown(
     .booking-bar .bb-total { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700; color: #a7f3d0; }
     .booking-bar .bb-seats { color: var(--muted); font-size: 0.88rem; }
 
+    .ticket-wrap {
+        position: relative;
+        max-width: 640px;
+        margin: 1.2rem auto 0;
+        background: linear-gradient(150deg, #101a30 0%, #0b1323 100%);
+        border: 1px solid rgba(139, 92, 246, 0.35);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+    }
+    .ticket-head {
+        padding: 1.1rem 1.4rem;
+        display: flex; justify-content: space-between; align-items: center;
+        border-bottom: 1px dashed rgba(148, 163, 184, 0.25);
+        background: linear-gradient(90deg, rgba(56,189,248,0.10), rgba(139,92,246,0.10));
+    }
+    .ticket-brand { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--accent-1); font-size: 1rem; letter-spacing: 0.04em; }
+    .ticket-ref { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--gold); letter-spacing: 0.05em; }
+    .ticket-body { padding: 1.3rem 1.4rem 1.1rem; }
+    .ticket-movie { font-size: 1.35rem; font-weight: 700; color: #fff; margin-bottom: 0.15rem; }
+    .ticket-sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.1rem; }
+    .ticket-details { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1.2rem; }
+    .ticket-cell .tc-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-2); margin-bottom: 0.2rem; }
+    .ticket-cell .tc-value { font-weight: 700; color: #dbe7f5; font-size: 0.95rem; }
+    .ticket-status { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; }
+    .ts-confirmed { background: rgba(52, 211, 153, 0.15); color: #6ee7b7; border: 1px solid rgba(52, 211, 153, 0.35); }
+    .ts-pending { background: rgba(251, 191, 36, 0.15); color: #fcd34d; border: 1px solid rgba(251, 191, 36, 0.35); }
+    .ticket-stub {
+        margin: 0.2rem 1.4rem 1.2rem;
+        border-top: 1px dashed rgba(148, 163, 184, 0.25);
+        padding-top: 0.9rem;
+        display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    }
+    .ticket-barcode {
+        height: 42px; flex: 1;
+        background: repeating-linear-gradient(90deg, #dbe7f5 0 2px, transparent 2px 5px, #dbe7f5 5px 6px, transparent 6px 9px, #dbe7f5 9px 12px, transparent 12px 14px);
+        -webkit-mask-image: linear-gradient(90deg, transparent 2%, #000 8%, #000 92%, transparent 98%);
+        mask-image: linear-gradient(90deg, transparent 2%, #000 8%, #000 92%, transparent 98%);
+        opacity: 0.55;
+    }
+
     .empty-state { text-align: center; padding: 3.4rem 1.5rem; color: var(--muted); }
     .empty-icon { font-size: 3.2rem; margin-bottom: 0.7rem; }
     .empty-title { font-size: 1.45rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; font-family: 'Space Grotesk', sans-serif; }
@@ -802,21 +843,27 @@ def page_my_booking():
 
 def _render_ticket(b):
     status_ok = b["status"] == "confirmed"
-    status_color = "#10b981" if status_ok else "#fbbf24"
+    ts_cls = "ts-confirmed" if status_ok else "ts-pending"
+    ts_label = b["status"].upper()
+    seats = ", ".join(b["seats"])
     st.markdown(
-        f"""
-        <div class="ticket-card">
-            <div class="chip-label">Booking Reference</div>
-            <div class="ticket-ref">{html.escape(b['booking_ref'])}</div>
-            <div class="ticket-meta">
-                <div><strong>{html.escape(b['movie_title'])}</strong> · {html.escape(b['movie_genre'])}</div>
-                <div>{html.escape(b['theater_name'])} ({html.escape(b['city'])}) · {html.escape(b['screen_name'])}</div>
-                <div>{b['show_date']} at <strong>{b['show_time']}</strong></div>
-                <div>Seats: <strong>{", ".join(b['seats'])}</strong> · Amount <strong>₹{int(b['total_amount'])}</strong></div>
-                <div>Status: <strong style="color:{status_color};">{html.escape(b['status']).upper()}</strong> · Payment: {html.escape(b['payment_status'])}</div>
-            </div>
-        </div>
-        """,
+        f'<div class="ticket-wrap">'
+        f'<div class="ticket-head"><div class="ticket-brand">🎬 CINEREAD</div>'
+        f'<div class="ticket-ref">{html.escape(b["booking_ref"])}</div></div>'
+        f'<div class="ticket-body">'
+        f'<div class="ticket-movie">{html.escape(b["movie_title"])}</div>'
+        f'<div class="ticket-sub">{html.escape(b["movie_genre"])} · {html.escape(b["theater_name"])} ({html.escape(b["city"])})</div>'
+        f'<div class="ticket-details">'
+        f'<div class="ticket-cell"><div class="tc-label">Screen</div><div class="tc-value">{html.escape(b["screen_name"])}</div></div>'
+        f'<div class="ticket-cell"><div class="tc-label">Show</div><div class="tc-value">{b["show_date"]} · {b["show_time"]}</div></div>'
+        f'<div class="ticket-cell"><div class="tc-label">Seats</div><div class="tc-value">{html.escape(seats)}</div></div>'
+        f'<div class="ticket-cell"><div class="tc-label">Amount</div><div class="tc-value">₹{int(b["total_amount"])}</div></div>'
+        f'<div class="ticket-cell"><div class="tc-label">Payment</div><div class="tc-value" style="text-transform:capitalize;">{html.escape(b["payment_status"])}</div></div>'
+        f'<div class="ticket-cell"><div class="tc-label">Status</div><div class="tc-value"><span class="ticket-status {ts_cls}">{ts_label}</span></div></div>'
+        f'</div></div>'
+        f'<div class="ticket-stub"><div class="ticket-barcode"></div>'
+        f'<div style="font-family:Space Grotesk;font-weight:700;color:#8ba0bf;font-size:0.8rem;white-space:nowrap;">KEEP THIS REFERENCE</div></div>'
+        f'</div>',
         unsafe_allow_html=True,
     )
 
@@ -828,18 +875,20 @@ def render_payment_step(showtime, movie):
     seats = sorted(st.session_state.selected_seats)
     total = len(seats) * showtime["base_price"]
     st.markdown(
-        f'<div class="movie-title">{html.escape(movie["title"])}</div>'
-        f'<div class="showtime-info">{html.escape(showtime["theater_name"])} · {html.escape(showtime["screen_name"])} · '
-        f'{html.escape(showtime["city"])} · {showtime["show_date"]} {showtime["show_time"]}</div>'
-        f'<div class="showtime-info">Seats: <strong style="color:#fbbf24;">{", ".join(seats)}</strong> · '
+        f'<div style="font-size:1.35rem;font-weight:700;color:#fff;">{html.escape(movie["title"])}</div>'
+        f'<div class="showtime-info" style="margin-top:0.25rem;">{html.escape(showtime["theater_name"])} · '
+        f'{html.escape(showtime["screen_name"])} · {html.escape(showtime["city"])} · '
+        f'{showtime["show_date"]} at {showtime["show_time"]}</div>'
+        f'<div class="showtime-info" style="margin-top:0.5rem;">Seats: <strong style="color:var(--gold);">{", ".join(seats)}</strong> · '
         f'Total <strong style="color:#a7f3d0;">₹{int(total)}</strong></div>',
         unsafe_allow_html=True,
     )
     n1, n2 = st.columns(2)
-    name = n1.text_input("Your name", key="book_name")
-    email = n2.text_input("Your email", key="book_email")
+    name = n1.text_input("Your name", key="book_name", placeholder="Full name")
+    email = n2.text_input("Your email", key="book_email", placeholder="you@example.com")
 
-    if st.button("💳 Proceed to payment", use_container_width=True, disabled=not (name.strip() and email.strip())):
+    if st.button("💳 Proceed to payment", use_container_width=True, type="primary",
+                 disabled=not (name.strip() and email.strip())):
         try:
             result = api_post("/bookings", {
                 "showtime_id": showtime["id"],
@@ -860,47 +909,38 @@ def render_payment_step(showtime, movie):
 
 def _render_payment_gateway(b):
     if st.session_state.get("confirmed_booking_ref") == b["booking_ref"]:
-        st.markdown(
-            f"""
-            <div class="ticket-card">
-                <div class="chip-label">✅ Booking Confirmed</div>
-                <div class="ticket-ref">{html.escape(b["booking_ref"])}</div>
-                <div class="ticket-meta">
-                    <div><strong>{html.escape(b["movie_title"])}</strong> · {html.escape(b["movie_genre"])}</div>
-                    <div>{html.escape(b["theater_name"])} ({html.escape(b["city"])}) · {html.escape(b["screen_name"])}</div>
-                    <div>{b["show_date"]} at <strong>{b["show_time"]}</strong></div>
-                    <div>Seats: <strong>{", ".join(b["seats"])}</strong> · Paid <strong>₹{int(b["total_amount"])}</strong></div>
-                    <div>Payment: <strong style="color:#10b981;">PAID</strong> · Ticket shown on the My Booking page</div>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        _render_ticket(b)
         st.success("Your e-ticket is ready. Keep the booking reference for entry.")
         if st.button("🎟️ Book another movie", key="book_again"):
             _clear_booking_flow()
             st.rerun()
         return
 
-    st.markdown('<div class="ticket-card">', unsafe_allow_html=True)
-    st.markdown(f'<div class="chip-label">Payment</div>', unsafe_allow_html=True)
+    st.markdown('<div class="ticket-wrap">', unsafe_allow_html=True)
+    st.markdown('<div class="ticket-head"><div class="ticket-brand">💳 PAYMENT</div>'
+                f'<div class="ticket-ref">{html.escape(b["booking_ref"])}</div></div>', unsafe_allow_html=True)
     st.markdown(
-        f'<div class="ticket-meta">Booking <strong>{html.escape(b["booking_ref"])}</strong> · '
-        f'Amount <strong>₹{int(b["total_amount"])}</strong></div>',
+        f'<div class="ticket-body">'
+        f'<div class="ticket-details">'
+        f'<div class="ticket-cell"><div class="tc-label">Booking</div><div class="tc-value">{html.escape(b["booking_ref"])}</div></div>'
+        f'<div class="ticket-cell"><div class="tc-label">Amount</div><div class="tc-value">₹{int(b["total_amount"])}</div></div>'
+        f'<div class="ticket-cell"><div class="tc-label">Movie</div><div class="tc-value">{html.escape(b["movie_title"])}</div></div>'
+        f'<div class="ticket-cell"><div class="tc-label">Seats</div><div class="tc-value">{", ".join(b["seats"])}</div></div>'
+        f'</div></div>',
         unsafe_allow_html=True,
     )
     if b["payment_mock"]:
         st.warning("Razorpay keys not configured — using simulated payment.")
-        if st.button("✅ Simulate payment & confirm", key="mock_pay"):
+        if st.button("✅ Simulate payment & confirm", key="mock_pay", type="primary", use_container_width=True):
             _do_verify(b["booking_ref"])
     else:
         if b.get("payment_url"):
             st.markdown(
-                f'<a href="{html.escape(b["payment_url"])}" target="_blank" style="display:inline-block;margin:0.6rem 0;">'
-                f'<span style="background:#1c64d8;color:#fff;padding:0.6rem 1.2rem;border-radius:10px;font-weight:700;">💳 Pay with Razorpay</span></a>',
+                f'<a href="{html.escape(b["payment_url"])}" target="_blank" style="display:block;text-align:center;margin:0.8rem 0;">'
+                f'<span style="display:inline-block;background:linear-gradient(135deg,#1c64d8,#2563eb);color:#fff;padding:0.7rem 1.6rem;border-radius:12px;font-weight:700;">💳 Pay with Razorpay</span></a>',
                 unsafe_allow_html=True,
             )
-        if st.button("🔎 I've paid — check confirmation", key="check_pay"):
+        if st.button("🔎 I've paid — check confirmation", key="check_pay", use_container_width=True):
             _do_verify(b["booking_ref"])
     st.markdown("</div>", unsafe_allow_html=True)
 
