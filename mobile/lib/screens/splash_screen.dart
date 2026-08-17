@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/colors.dart';
-import '../services/auth_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -35,20 +34,19 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   Future<void> _checkAuthAndRoute() async {
-    // Wait for animation to feel intentional
     await Future.delayed(const Duration(milliseconds: 2000));
     if (!mounted) return;
 
-    final authService = ref.read(authServiceProvider);
-    final isLoggedIn = await authService.isLoggedIn;
-
-    if (!mounted) return;
-
-    if (isLoggedIn) {
-      context.go('/home');
-    } else {
-      context.go('/login');
-    }
+    // TODO: re-enable real auth check
+    // final authService = ref.read(authServiceProvider);
+    // final isLoggedIn = await authService.isLoggedIn;
+    // if (!mounted) return;
+    // if (isLoggedIn) {
+    //   context.go('/home');
+    // } else {
+    //   context.go('/login');
+    // }
+    context.go('/login');
   }
 
   @override

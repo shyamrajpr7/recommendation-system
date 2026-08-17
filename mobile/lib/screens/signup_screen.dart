@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/colors.dart';
 import '../theme/spacing.dart';
-import '../services/auth_service.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -53,22 +52,26 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       _error = null;
     });
 
-    final auth = ref.read(authServiceProvider);
-    try {
-      await auth.signup(_nameCtrl.text.trim(), _emailCtrl.text.trim(), _passwordCtrl.text);
-      if (!mounted) return;
-      context.go('/home');
-    } on AuthException catch (e) {
-      setState(() {
-        _loading = false;
-        _error = e.message;
-      });
-    } catch (e) {
-      setState(() {
-        _loading = false;
-        _error = 'Connection failed. Please check your network.';
-      });
-    }
+    // TODO: re-enable real auth
+    // final auth = ref.read(authServiceProvider);
+    // try {
+    //   await auth.signup(_nameCtrl.text.trim(), _emailCtrl.text.trim(), _passwordCtrl.text);
+    //   if (!mounted) return;
+    //   context.go('/home');
+    // } on AuthException catch (e) {
+    //   setState(() {
+    //     _loading = false;
+    //     _error = e.message;
+    //   });
+    // } catch (e) {
+    //   setState(() {
+    //     _loading = false;
+    //     _error = 'Connection failed. Please check your network.';
+    //   });
+    // }
+    await Future.delayed(const Duration(milliseconds: 600));
+    if (!mounted) return;
+    context.go('/home');
   }
 
   @override
