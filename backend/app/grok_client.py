@@ -9,7 +9,7 @@ load_dotenv()
 XAI_API_URL = os.environ.get("XAI_API_URL", "https://api.x.ai/v1/chat/completions")
 XAI_MODEL = os.environ.get("XAI_MODEL", "grok-2-latest")
 GROQ_API_URL = os.environ.get("GROQ_API_URL", "https://api.groq.com/openai/v1/chat/completions")
-GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL = os.environ.get("GROQ_MODEL", "qwen/qwen3.6-27b")
 
 
 def _provider_config() -> Dict[str, str]:
