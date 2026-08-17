@@ -5,6 +5,7 @@ import '../theme/colors.dart';
 import '../theme/spacing.dart';
 import '../models/recommendation.dart';
 import '../services/recommendation_service.dart';
+import '../services/search_history.dart';
 
 final searchResultsProvider = StateProvider<RecommendationResponse?>((ref) => null);
 final searchLoadingProvider = StateProvider<bool>((ref) => false);
@@ -49,6 +50,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             itemType: itemType,
           );
       ref.read(searchResultsProvider.notifier).state = result;
+      // Save to history
+      ref.read(searchHistoryProvider.notifier).add(
+            query: q,
+            genre: genre,
+            itemType: itemType,
+            resultCount: result.totalResults,
+          );
     } catch (e) {
       ref.read(searchErrorProvider.notifier).state =
           e is Exception ? e.toString() : 'Search failed. Please try again.';
@@ -147,7 +155,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         else if (results == null)
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.only(top: 80),
+              padding: const EdgeInsets.only(top: 60),
               child: Column(
                 children: [
                   Icon(Icons.explore_rounded, size: 64, color: AppColors.muted2),
@@ -156,6 +164,63 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     'Describe a plot, mood, or title',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.muted),
                   ),
+                  const SizedBox(height: AppSpacing.xxl),
+                  // Search history
+                  Consumer(builder: (_, ref, _) {
+                    final history = ref.watch(searchHistoryProvider);
+                    if (history.isEmpty) return const SizedBox.shrink();
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Recent searches',
+                                style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppColors.muted),
+                              ),
+                              TextButton(
+                                onPressed: () => ref.read(searchHistoryProvider.notifier).clear(),
+                                child: Text('Clear', style: TextStyle(color: AppColors.muted2, fontSize: 12)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ...history.take(5).map((entry) => Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl, vertical: 3),
+                              child: GestureDetector(
+                                onTap: () {
+                                  _queryCtrl.text = entry.query;
+                                  _search();
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.surface,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: AppColors.borderSoft),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.history_rounded, size: 16, color: AppColors.muted2),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(entry.query, style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                                      ),
+                                      Text(
+                                        '${entry.resultCount} results',
+                                        style: TextStyle(color: AppColors.muted2, fontSize: 11),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )),
+                      ],
+                    );
+                  }),
                 ],
               ),
             ),
