@@ -29,42 +29,45 @@ class NowShowingScreen extends ConsumerWidget {
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.xxl, AppSpacing.xxl, AppSpacing.xxl, 0),
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Brand header
                 Row(
                   children: [
                     Container(
-                      width: 40, height: 40,
+                      width: 42, height: 42,
                       decoration: BoxDecoration(
                         gradient: AppColors.primaryGradient,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(13),
+                        boxShadow: [BoxShadow(color: AppColors.accent1.withValues(alpha: 0.25), blurRadius: 12)],
                       ),
-                      child: const Icon(Icons.movie_filter_rounded, size: 22, color: Colors.white),
+                      child: const Icon(Icons.movie_filter_rounded, size: 24, color: Colors.white),
                     ),
                     const SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('CineRead', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700)),
-                        Text('AI-Powered Cinema', style: TextStyle(color: AppColors.muted, fontSize: 12)),
+                        Text('CineRead', style: TextStyle(
+                          fontFamily: 'Space Grotesk', fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.text,
+                        )),
+                        Text('AI-Powered Cinema', style: TextStyle(color: AppColors.muted, fontSize: 11)),
                       ],
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.xxl),
+                const SizedBox(height: 24),
+                // Section title
                 Text('Now Showing', style: Theme.of(context).textTheme.headlineMedium),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  'Tap a movie to see showtimes and book seats',
-                  style: TextStyle(color: AppColors.muted, fontSize: 13),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                // Genre filter pills
+                const SizedBox(height: 4),
+                Text('Tap a movie to see showtimes and book seats',
+                    style: TextStyle(color: AppColors.muted, fontSize: 13)),
+                const SizedBox(height: 16),
+                // Genre pills
                 genresAsync.when(
                   data: (genres) => SizedBox(
-                    height: 36,
+                    height: 34,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: ['All', ...genres].map((g) {
@@ -79,11 +82,11 @@ class NowShowingScreen extends ConsumerWidget {
                               decoration: BoxDecoration(
                                 color: sel ? AppColors.accent1.withValues(alpha: 0.15) : AppColors.surface2,
                                 borderRadius: BorderRadius.circular(99),
-                                border: Border.all(color: sel ? AppColors.accent1.withValues(alpha: 0.4) : AppColors.border),
+                                border: Border.all(color: sel ? AppColors.accent1.withValues(alpha: 0.5) : AppColors.border),
                               ),
                               child: Text(g, style: TextStyle(
                                 color: sel ? AppColors.accent1 : AppColors.muted,
-                                fontSize: 13, fontWeight: FontWeight.w600,
+                                fontSize: 12.5, fontWeight: FontWeight.w600,
                               )),
                             ),
                           ),
@@ -91,14 +94,15 @@ class NowShowingScreen extends ConsumerWidget {
                       }).toList(),
                     ),
                   ),
-                  loading: () => const SizedBox(height: 36),
+                  loading: () => const SizedBox(height: 34),
                   error: (_, __) => const SizedBox.shrink(),
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: 16),
               ],
             ),
           ),
         ),
+        // Movie grid
         moviesAsync.when(
           data: (movies) {
             final filtered = selectedGenre == 'All'
@@ -110,15 +114,11 @@ class NowShowingScreen extends ConsumerWidget {
               );
             }
             return SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
-              sliver: SliverGrid(
-                delegate: SliverChildBuilderDelegate(
-                  (_, i) => _MovieCard(movie: filtered[i]),
-                  childCount: filtered.length,
-                ),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, childAspectRatio: 0.68, crossAxisSpacing: 14, mainAxisSpacing: 14,
-                ),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              sliver: SliverList.separated(
+                itemCount: filtered.length,
+                separatorBuilder: (_, _) => const SizedBox(height: 14),
+                itemBuilder: (_, i) => _MovieCard(movie: filtered[i]),
               ),
             );
           },
@@ -126,7 +126,14 @@ class NowShowingScreen extends ConsumerWidget {
             child: Center(child: CircularProgressIndicator(color: AppColors.accent1)),
           ),
           error: (e, _) => SliverFillRemaining(
-            child: Center(child: Text('Failed to load movies', style: TextStyle(color: AppColors.error))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+                const SizedBox(height: 12),
+                Text('Failed to load movies', style: TextStyle(color: AppColors.error)),
+              ],
+            ),
           ),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: 24)),
@@ -154,79 +161,125 @@ class _MovieCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              flex: 5,
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: colors, begin: Alignment.topLeft, end: Alignment.bottomRight),
-                ),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      bottom: 8, left: 10,
-                      child: Text(
-                        movie.title,
-                        style: const TextStyle(
-                          fontFamily: 'Space Grotesk', fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white,
+            // Gradient poster header
+            Container(
+              height: 130,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: colors, begin: Alignment.topLeft, end: Alignment.bottomRight),
+              ),
+              child: Stack(
+                children: [
+                  // Gradient overlay
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter, end: Alignment.bottomCenter,
+                          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
                         ),
-                        maxLines: 2, overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  // Genre badge
+                  Positioned(
+                    top: 10, left: 12,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.45),
+                        borderRadius: BorderRadius.circular(99),
+                      ),
+                      child: Text(movie.genre, style: const TextStyle(
+                        color: Colors.white70, fontSize: 10.5, fontWeight: FontWeight.w700,
+                      )),
+                    ),
+                  ),
+                  // Year badge
+                  Positioned(
+                    top: 10, right: 12,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.45),
+                        borderRadius: BorderRadius.circular(99),
+                      ),
+                      child: Text('${movie.year}', style: const TextStyle(
+                        color: Colors.white70, fontSize: 10.5, fontWeight: FontWeight.w700,
+                      )),
+                    ),
+                  ),
+                  // Title
+                  Positioned(
+                    bottom: 10, left: 14, right: 14,
+                    child: Text(
+                      movie.title,
+                      style: const TextStyle(
+                        fontFamily: 'Space Grotesk', fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white,
+                      ),
+                      maxLines: 1, overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
             ),
-            Expanded(
-              flex: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        _badge(movie.genre, AppColors.accent1.withValues(alpha: 0.12), AppColors.accent1),
-                        const Spacer(),
-                        Text('${movie.year}', style: TextStyle(color: AppColors.muted, fontSize: 11)),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        Text(_stars(movie.rating), style: TextStyle(color: AppColors.gold, fontSize: 12, letterSpacing: 0.08)),
-                        const SizedBox(width: 4),
-                        Text('${movie.rating}', style: TextStyle(color: AppColors.muted, fontSize: 11, fontWeight: FontWeight.w700)),
-                      ],
-                    ),
-                    const Spacer(),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () => context.push('/showtimes/${movie.id}'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.accent1,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        ),
-                        child: const Text('Book now', style: TextStyle(fontSize: 12, color: Colors.white)),
+            // Body
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Synopsis
+                  Text(
+                    movie.synopsis,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: AppColors.textSecondary, fontSize: 12.5, height: 1.45),
+                  ),
+                  const SizedBox(height: 10),
+                  // Rating row
+                  Row(
+                    children: [
+                      Text(
+                        _stars(movie.rating),
+                        style: TextStyle(color: AppColors.gold, fontSize: 13, letterSpacing: 0.06),
                       ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${movie.rating}/10',
+                        style: TextStyle(color: AppColors.muted, fontSize: 12, fontWeight: FontWeight.w700),
+                      ),
+                      const Spacer(),
+                      // Director
+                      if (movie.director.isNotEmpty)
+                        Text(
+                          movie.director,
+                          style: TextStyle(color: AppColors.muted2, fontSize: 11),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  // Book button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => context.push('/showtimes/${movie.id}'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.accent1,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: const Text('Book now', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _badge(String text, Color bg, Color fg) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(99)),
-      child: Text(text, style: TextStyle(color: fg, fontSize: 10, fontWeight: FontWeight.w700)),
     );
   }
 
