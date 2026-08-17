@@ -30,24 +30,31 @@ class ShowtimeScreen extends ConsumerWidget {
     return moviesAsync.when(
       data: (movies) {
         final movie = movies.firstWhere((m) => m.id == movieId, orElse: () => movies.first);
+        final colors = _palette(movie.title);
         return Scaffold(
           backgroundColor: AppColors.background,
           body: CustomScrollView(
             slivers: [
+              // App bar with gradient
               SliverAppBar(
-                expandedHeight: 180, pinned: true,
+                expandedHeight: 200, pinned: true,
                 backgroundColor: AppColors.background,
                 leading: IconButton(
-                  icon: const Icon(Icons.arrow_back_rounded),
+                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
                   onPressed: () => context.go('/home'),
                 ),
                 flexibleSpace: FlexibleSpaceBar(
-                  title: Text(movie.title, style: const TextStyle(fontFamily: 'Space Grotesk', fontWeight: FontWeight.w700)),
+                  title: Text(movie.title, style: const TextStyle(
+                    fontFamily: 'Space Grotesk', fontWeight: FontWeight.w700, fontSize: 16, color: Colors.white,
+                  )),
                   background: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: _palette(movie.title),
-                        begin: Alignment.topLeft, end: Alignment.bottomRight,
+                    decoration: BoxDecoration(gradient: LinearGradient(colors: colors, begin: Alignment.topLeft, end: Alignment.bottomRight)),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter, end: Alignment.bottomCenter,
+                          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.6)],
+                        ),
                       ),
                     ),
                   ),
@@ -55,49 +62,69 @@ class ShowtimeScreen extends ConsumerWidget {
               ),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.xxl),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Stepper
-                      _Stepper(current: 1),
-                      const SizedBox(height: AppSpacing.xl),
-                      // Movie info
-                      Wrap(
-                        spacing: 8, runSpacing: 6,
-                        children: [
-                          _badge(movie.genre, AppColors.accent1.withValues(alpha: 0.12), AppColors.accent1),
-                          _badge('${movie.year}', AppColors.success.withValues(alpha: 0.12), AppColors.success),
-                          _badge('${movie.rating}/10', AppColors.gold.withValues(alpha: 0.14), AppColors.gold),
-                        ],
+                      // Stepper (step 2 active)
+                      _BookingStepper(current: 1),
+                      const SizedBox(height: 20),
+                      // Movie info card
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.surface,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.borderSoft),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(movie.title, style: const TextStyle(
+                              fontFamily: 'Space Grotesk', fontSize: 18, fontWeight: FontWeight.w700,
+                            )),
+                            const SizedBox(height: 8),
+                            Wrap(
+                              spacing: 8, runSpacing: 6,
+                              children: [
+                                _badge(movie.genre, AppColors.accent1.withValues(alpha: 0.12), AppColors.accent1),
+                                _badge('${movie.year}', AppColors.success.withValues(alpha: 0.12), AppColors.success),
+                                _badge('${movie.rating}/10', AppColors.gold.withValues(alpha: 0.14), AppColors.gold),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Text(movie.synopsis, maxLines: 3, overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: AppColors.textSecondary, fontSize: 12.5, height: 1.5)),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: AppSpacing.md),
-                      Text(movie.synopsis, style: TextStyle(color: AppColors.textSecondary, fontSize: 13, height: 1.5)),
-                      const SizedBox(height: AppSpacing.xxl),
+                      const SizedBox(height: 24),
                       // Date selector
                       Text('Select date', style: Theme.of(context).textTheme.titleSmall),
-                      const SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: 10),
                       datesAsync.when(
                         data: (dates) => SizedBox(
-                          height: 40,
+                          height: 42,
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: dates.map((d) {
                               final sel = selectedDate == d;
                               return Padding(
-                                padding: const EdgeInsets.only(right: 8),
+                                padding: const EdgeInsets.only(right: 10),
                                 child: GestureDetector(
                                   onTap: () => ref.read(selectedDateProvider.notifier).state = d,
                                   child: AnimatedContainer(
                                     duration: const Duration(milliseconds: 200),
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
                                     decoration: BoxDecoration(
-                                      color: sel ? AppColors.accent1.withValues(alpha: 0.15) : AppColors.surface2,
+                                      gradient: sel ? AppColors.primaryGradient : null,
+                                      color: sel ? null : AppColors.surface2,
                                       borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(color: sel ? AppColors.accent1 : AppColors.border),
+                                      border: Border.all(color: sel ? Colors.transparent : AppColors.border),
+                                      boxShadow: sel ? [BoxShadow(color: AppColors.accent1.withValues(alpha: 0.25), blurRadius: 10)] : null,
                                     ),
-                                    child: Text(d, style: TextStyle(
-                                      color: sel ? AppColors.accent1 : AppColors.muted,
+                                    child: Text(_formatDate(d), style: TextStyle(
+                                      color: sel ? Colors.white : AppColors.muted,
                                       fontSize: 13, fontWeight: FontWeight.w600,
                                     )),
                                   ),
@@ -106,15 +133,17 @@ class ShowtimeScreen extends ConsumerWidget {
                             }).toList(),
                           ),
                         ),
-                        loading: () => const SizedBox(height: 40),
+                        loading: () => const SizedBox(height: 42),
                         error: (_, __) => const SizedBox.shrink(),
                       ),
-                      const SizedBox(height: AppSpacing.xl),
+                      const SizedBox(height: 20),
+                      Text('Available showtimes', style: Theme.of(context).textTheme.titleSmall),
+                      const SizedBox(height: 10),
                     ],
                   ),
                 ),
               ),
-              // Showtimes
+              // Showtime list
               _ShowtimeList(movieId: movieId),
             ],
           ),
@@ -126,9 +155,23 @@ class ShowtimeScreen extends ConsumerWidget {
       ),
       error: (_, __) => const Scaffold(
         backgroundColor: AppColors.background,
-        body: Center(child: Text('Error loading movie', style: TextStyle(color: AppColors.error))),
+        body: Center(child: Text('Error loading', style: TextStyle(color: AppColors.error))),
       ),
     );
+  }
+
+  String _formatDate(String d) {
+    try {
+      final dt = DateTime.parse(d);
+      final now = DateTime.now();
+      final names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      final isToday = dt.year == now.year && dt.month == now.month && dt.day == now.day;
+      if (isToday) return 'Today';
+      return '${names[dt.weekday - 1]} ${dt.day} ${months[dt.month - 1]}';
+    } catch (_) {
+      return d;
+    }
   }
 
   List<Color> _palette(String title) {
@@ -153,15 +196,15 @@ class ShowtimeScreen extends ConsumerWidget {
   }
 }
 
-class _Stepper extends StatelessWidget {
+class _BookingStepper extends StatelessWidget {
   final int current;
-  const _Stepper({required this.current});
+  const _BookingStepper({required this.current});
   @override
   Widget build(BuildContext context) {
     final steps = ['Movie', 'Showtime', 'Seats', 'Payment'];
     return Row(
       children: List.generate(steps.length * 2 - 1, (i) {
-        if (i.isOdd) return Expanded(child: Container(height: 1, color: AppColors.borderSoft));
+        if (i.isOdd) return Expanded(child: Container(height: 1.5, color: AppColors.borderSoft));
         final idx = i ~/ 2;
         final done = idx < current;
         final active = idx == current;
@@ -169,12 +212,13 @@ class _Stepper extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 26, height: 26,
+              width: 28, height: 28,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: (done || active) ? AppColors.primaryGradient : null,
                 color: (!done && !active) ? AppColors.surface2 : null,
                 border: (!done && !active) ? Border.all(color: AppColors.border) : null,
+                boxShadow: active ? [BoxShadow(color: AppColors.accent1.withValues(alpha: 0.3), blurRadius: 8)] : null,
               ),
               child: Center(
                 child: done
@@ -185,10 +229,10 @@ class _Stepper extends StatelessWidget {
                       )),
               ),
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: 6),
             Text(steps[idx], style: TextStyle(
               fontSize: 12, fontWeight: FontWeight.w600,
-              color: active ? AppColors.text : AppColors.muted2,
+              color: active ? AppColors.text : done ? AppColors.muted : AppColors.muted2,
             )),
           ],
         );
@@ -210,54 +254,73 @@ class _ShowtimeList extends ConsumerWidget {
       data: (showtimes) {
         final filtered = showtimes.where((s) => s.movieId == movieId).toList();
         if (filtered.isEmpty) {
-          return const SliverToBoxAdapter(
+          return SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(AppSpacing.xxl),
-              child: Center(child: Text('No showtimes available', style: TextStyle(color: AppColors.muted))),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Icon(Icons.event_busy_rounded, size: 48, color: AppColors.muted2),
+                  const SizedBox(height: 12),
+                  Text(date == null ? 'Pick a date to see showtimes' : 'No showtimes for this date',
+                      style: TextStyle(color: AppColors.muted, fontSize: 13)),
+                ],
+              ),
             ),
           );
         }
         return SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           sliver: SliverList.separated(
             itemCount: filtered.length,
-            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
+            separatorBuilder: (_, _) => const SizedBox(height: 10),
             itemBuilder: (_, i) {
               final st = filtered[i];
               return GestureDetector(
                 onTap: () => context.push('/seats/${st.id}'),
                 child: Container(
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: AppColors.borderSoft),
                   ),
                   child: Row(
                     children: [
+                      // Time
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(st.showTime, style: const TextStyle(
-                            fontFamily: 'Space Grotesk', fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.accent1,
+                            fontFamily: 'Space Grotesk', fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.accent1,
                           )),
-                          const SizedBox(height: 2),
-                          Text('${st.theaterName} · ${st.screenName}', style: TextStyle(color: AppColors.muted, fontSize: 12)),
-                          Text(st.city, style: TextStyle(color: AppColors.muted2, fontSize: 11)),
+                          const SizedBox(height: 3),
+                          Text(st.theaterName, style: TextStyle(color: AppColors.muted, fontSize: 12.5)),
+                          Text('${st.screenName} · ${st.city}', style: TextStyle(color: AppColors.muted2, fontSize: 11)),
                         ],
                       ),
                       const Spacer(),
+                      // Price & seats
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text('₹${st.basePrice.toInt()}', style: const TextStyle(
-                            fontFamily: 'Space Grotesk', fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.success,
+                            fontFamily: 'Space Grotesk', fontSize: 17, fontWeight: FontWeight.w700, color: AppColors.success,
                           )),
-                          Text('${st.availableSeats} seats', style: TextStyle(color: AppColors.muted2, fontSize: 11)),
+                          const SizedBox(height: 2),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: AppColors.success.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(99),
+                            ),
+                            child: Text('${st.availableSeats} seats', style: TextStyle(
+                              color: AppColors.success, fontSize: 10.5, fontWeight: FontWeight.w600,
+                            )),
+                          ),
                         ],
                       ),
                       const SizedBox(width: 8),
-                      Icon(Icons.chevron_right_rounded, color: AppColors.muted2),
+                      Icon(Icons.chevron_right_rounded, color: AppColors.muted2, size: 22),
                     ],
                   ),
                 ),
@@ -270,7 +333,7 @@ class _ShowtimeList extends ConsumerWidget {
         child: Center(child: CircularProgressIndicator(color: AppColors.accent1)),
       ),
       error: (_, __) => const SliverToBoxAdapter(
-        child: Center(child: Text('Failed to load showtimes', style: TextStyle(color: AppColors.error))),
+        child: Center(child: Text('Failed to load', style: TextStyle(color: AppColors.error))),
       ),
     );
   }
