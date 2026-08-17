@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/recommendation.dart';
-import 'api_client.dart';
+import '../services/api_client.dart';
 
 class RecommendationService {
   final Dio _dio;

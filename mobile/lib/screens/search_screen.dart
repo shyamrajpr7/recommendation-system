@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/colors.dart';
 import '../theme/spacing.dart';
 import '../models/recommendation.dart';
+import '../services/recommendation_service.dart';
 
-class SearchScreen extends StatefulWidget {
+final searchResultsProvider = StateProvider<RecommendationResponse?>((ref) => null);
+final searchLoadingProvider = StateProvider<bool>((ref) => false);
+final searchErrorProvider = StateProvider<String?>((ref) => null);
+final selectedGenreProvider = StateProvider<String?>((ref) => null);
+final selectedTypeProvider = StateProvider<String?>((ref) => null);
+final genresProvider = FutureProvider<List<String>>((ref) async {
+  return ref.read(recommendationServiceProvider).fetchGenres();
+});
+
+class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  ConsumerState<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _queryCtrl = TextEditingController();
-  RecommendationResponse? _results;
-  bool _loading = false;
-  String? _error;
 
   @override
   void dispose() {
@@ -26,19 +34,36 @@ class _SearchScreenState extends State<SearchScreen> {
   Future<void> _search() async {
     final q = _queryCtrl.text.trim();
     if (q.isEmpty) return;
-    setState(() {
-      _loading = true;
-      _error = null;
-      _results = null;
-    });
-    // TODO: wire to real API in step 7
-    await Future.delayed(const Duration(seconds: 1));
-    if (!mounted) return;
-    setState(() => _loading = false);
+
+    ref.read(searchLoadingProvider.notifier).state = true;
+    ref.read(searchErrorProvider.notifier).state = null;
+    ref.read(searchResultsProvider.notifier).state = null;
+
+    final genre = ref.read(selectedGenreProvider);
+    final itemType = ref.read(selectedTypeProvider);
+
+    try {
+      final result = await ref.read(recommendationServiceProvider).recommend(
+            query: q,
+            genre: genre,
+            itemType: itemType,
+          );
+      ref.read(searchResultsProvider.notifier).state = result;
+    } catch (e) {
+      ref.read(searchErrorProvider.notifier).state =
+          e is Exception ? e.toString() : 'Search failed. Please try again.';
+    } finally {
+      ref.read(searchLoadingProvider.notifier).state = false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loading = ref.watch(searchLoadingProvider);
+    final error = ref.watch(searchErrorProvider);
+    final results = ref.watch(searchResultsProvider);
+    final genresAsync = ref.watch(genresProvider);
+
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
@@ -72,17 +97,39 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
+                // Genre chips
+                genresAsync.when(
+                  data: (genres) => Wrap(
+                    spacing: 8,
+                    runSpacing: 6,
+                    children: [
+                      _FilterChip(
+                        label: 'All genres',
+                        selected: ref.watch(selectedGenreProvider) == null,
+                        onTap: () => ref.read(selectedGenreProvider.notifier).state = null,
+                      ),
+                      ...genres.take(8).map((g) => _FilterChip(
+                            label: g,
+                            selected: ref.watch(selectedGenreProvider) == g,
+                            onTap: () => ref.read(selectedGenreProvider.notifier).state = g,
+                          )),
+                    ],
+                  ),
+                  loading: () => const SizedBox.shrink(),
+                  error: (_, _) => const SizedBox.shrink(),
+                ),
+                const SizedBox(height: AppSpacing.lg),
               ],
             ),
           ),
         ),
-        if (_loading)
+        if (loading)
           const SliverFillRemaining(
             child: Center(
               child: CircularProgressIndicator(color: AppColors.accent1),
             ),
           )
-        else if (_error != null)
+        else if (error != null)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.xxl),
@@ -90,14 +137,14 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   const Icon(Icons.error_outline_rounded, size: 48, color: AppColors.error),
                   const SizedBox(height: AppSpacing.md),
-                  Text(_error!, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.error)),
+                  Text(error, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.error)),
                   const SizedBox(height: AppSpacing.lg),
                   ElevatedButton(onPressed: _search, child: const Text('Retry')),
                 ],
               ),
             ),
           )
-        else if (_results == null)
+        else if (results == null)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(top: 80),
@@ -113,7 +160,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
           )
-        else if (_results!.recommendations.isEmpty)
+        else if (results.recommendations.isEmpty)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.only(top: 80),
@@ -122,18 +169,23 @@ class _SearchScreenState extends State<SearchScreen> {
                   const Icon(Icons.search_off_rounded, size: 56, color: AppColors.muted2),
                   const SizedBox(height: AppSpacing.md),
                   Text('No results found', style: TextStyle(color: AppColors.muted)),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    'Try adjusting genre or query',
+                    style: TextStyle(color: AppColors.muted2, fontSize: 13),
+                  ),
                 ],
               ),
             ),
           )
         else
           SliverPadding(
-            padding: const EdgeInsets.all(AppSpacing.xxl),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.xxl, 0, AppSpacing.xxl, AppSpacing.xxl),
             sliver: SliverList.separated(
-              itemCount: _results!.recommendations.length,
+              itemCount: results.recommendations.length,
               separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
               itemBuilder: (context, index) {
-                final rec = _results!.recommendations[index];
+                final rec = results.recommendations[index];
                 return GestureDetector(
                   onTap: () => context.push('/recommendation/$index'),
                   child: _ResultCard(rec: rec, index: index),
@@ -142,6 +194,39 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
       ],
+    );
+  }
+}
+
+class _FilterChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  const _FilterChip({required this.label, required this.selected, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.accent1.withValues(alpha: 0.15) : AppColors.surface2,
+          borderRadius: BorderRadius.circular(99),
+          border: Border.all(
+            color: selected ? AppColors.accent1.withValues(alpha: 0.4) : AppColors.border,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: selected ? AppColors.accent1 : AppColors.muted,
+            fontSize: 12.5,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -164,7 +249,6 @@ class _ResultCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Gradient header
           Container(
             height: 100,
             decoration: BoxDecoration(
