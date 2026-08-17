@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/colors.dart';
 import '../theme/spacing.dart';
+import '../services/auth_service.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final auth = ref.read(authServiceProvider);
+
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.xxl),
       children: [
@@ -34,7 +38,7 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     Text('Guest User', style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 2),
-                    Text('Sign in to sync your data', style: TextStyle(color: AppColors.muted, fontSize: 13)),
+                    Text('Signed in', style: TextStyle(color: AppColors.muted, fontSize: 13)),
                   ],
                 ),
               ),
@@ -57,7 +61,10 @@ class SettingsScreen extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: OutlinedButton(
-            onPressed: () => context.go('/login'),
+            onPressed: () async {
+              await auth.logout();
+              if (context.mounted) context.go('/login');
+            },
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.error,
               side: const BorderSide(color: AppColors.error),

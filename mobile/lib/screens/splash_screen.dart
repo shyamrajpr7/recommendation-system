@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/colors.dart';
+import '../services/auth_service.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnim;
@@ -33,10 +35,20 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _checkAuthAndRoute() async {
+    // Wait for animation to feel intentional
     await Future.delayed(const Duration(milliseconds: 2000));
     if (!mounted) return;
-    // TODO: replace with real auth check in step 5
-    context.go('/login');
+
+    final authService = ref.read(authServiceProvider);
+    final isLoggedIn = await authService.isLoggedIn;
+
+    if (!mounted) return;
+
+    if (isLoggedIn) {
+      context.go('/home');
+    } else {
+      context.go('/login');
+    }
   }
 
   @override

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/colors.dart';
 import '../theme/spacing.dart';
+import '../services/auth_service.dart';
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
@@ -50,11 +52,23 @@ class _SignupScreenState extends State<SignupScreen> {
       _loading = true;
       _error = null;
     });
-    // TODO: real auth in step 5
-    await Future.delayed(const Duration(seconds: 1));
-    if (!mounted) return;
-    setState(() => _loading = false);
-    context.go('/home');
+
+    final auth = ref.read(authServiceProvider);
+    try {
+      await auth.signup(_nameCtrl.text.trim(), _emailCtrl.text.trim(), _passwordCtrl.text);
+      if (!mounted) return;
+      context.go('/home');
+    } on AuthException catch (e) {
+      setState(() {
+        _loading = false;
+        _error = e.message;
+      });
+    } catch (e) {
+      setState(() {
+        _loading = false;
+        _error = 'Connection failed. Please check your network.';
+      });
+    }
   }
 
   @override

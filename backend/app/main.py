@@ -1,8 +1,12 @@
 import json
-from fastapi import FastAPI, HTTPException, Query
+import hashlib
+import secrets
+import time
+from fastapi import FastAPI, HTTPException, Query, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from typing import List, Optional
+from pydantic import BaseModel
 
 from dotenv import load_dotenv
 
@@ -323,6 +327,96 @@ def verify_booking(booking_ref: str):
         status="pending",
         payment_status=payment_status,
     )
+
+
+# --------------------------------------------------------------------------
+# Auth (simple JWT-based)
+# --------------------------------------------------------------------------
+
+_SECRET = "cineread-dev-secret-key-change-in-production"
+_users: dict[str, dict] = {}  # email -> {name, email, password_hash}
+
+
+class SignupRequest(BaseModel):
+    name: str
+    email: str
+    password: str
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class AuthResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    name: str
+    email: str
+
+
+def _hash_pw(pw: str) -> str:
+    return hashlib.sha256(pw.encode()).hexdigest()
+
+
+def _make_token(email: str) -> str:
+    payload = f"{email}:{int(time.time())}"
+    sig = hashlib.sha256(f"{payload}:{_SECRET}".encode()).hexdigest()[:16]
+    return f"{payload}:{sig}"
+
+
+def _verify_token(token: str) -> Optional[str]:
+    try:
+        parts = token.rsplit(":", 1)
+        if len(parts) != 2:
+            return None
+        payload, sig = parts
+        expected = hashlib.sha256(f"{payload}:{_SECRET}".encode()).hexdigest()[:16]
+        if sig != expected:
+            return None
+        email = payload.rsplit(":", 1)[0]
+        return email
+    except Exception:
+        return None
+
+
+def get_current_user(authorization: Optional[str] = Header(None)) -> str:
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    email = _verify_token(authorization.removeprefix("Bearer ").strip())
+    if not email or email not in _users:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    return email
+
+
+@app.post("/auth/signup", response_model=AuthResponse)
+def signup(payload: SignupRequest):
+    email = payload.email.strip().lower()
+    if email in _users:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    _users[email] = {
+        "name": payload.name.strip(),
+        "email": email,
+        "password_hash": _hash_pw(payload.password),
+    }
+    token = _make_token(email)
+    return AuthResponse(access_token=token, name=_users[email]["name"], email=email)
+
+
+@app.post("/auth/login", response_model=AuthResponse)
+def login(payload: LoginRequest):
+    email = payload.email.strip().lower()
+    user = _users.get(email)
+    if not user or user["password_hash"] != _hash_pw(payload.password):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    token = _make_token(email)
+    return AuthResponse(access_token=token, name=user["name"], email=email)
+
+
+@app.get("/auth/me")
+def get_me(email: str = Depends(get_current_user)):
+    user = _users[email]
+    return {"name": user["name"], "email": user["email"]}
 
 
 # --------------------------------------------------------------------------
