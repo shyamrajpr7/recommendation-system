@@ -265,7 +265,7 @@ class _MovieCard extends StatelessWidget {
                         ),
                       ),
                       Positioned(
-                        bottom: 10,
+                        bottom: 12,
                         left: 14,
                         right: 14,
                         child: Text(
