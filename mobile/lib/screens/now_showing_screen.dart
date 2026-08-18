@@ -188,7 +188,7 @@ class _MovieCard extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: GestureDetector(
-          onTap: () => context.push('/showtimes/${movie.id}'),
+          onTap: () => context.push('/detail/${movie.id}'),
           child: Container(
             decoration: BoxDecoration(
               color: AppColors.surface,

@@ -6,6 +6,7 @@ import '../screens/login_screen.dart';
 import '../screens/signup_screen.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/now_showing_screen.dart';
+import '../screens/detail_screen.dart';
 import '../screens/showtime_screen.dart';
 import '../screens/seat_screen.dart';
 import '../screens/payment_screen.dart';
@@ -22,6 +23,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/onboarding', builder: (_, _) => const OnboardingScreen()),
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
       GoRoute(path: '/signup', builder: (_, _) => const SignupScreen()),
+      GoRoute(
+        path: '/detail/:movieId',
+        builder: (_, state) {
+          final id = int.tryParse(state.pathParameters['movieId'] ?? '0') ?? 0;
+          return DetailScreen(movieId: id);
+        },
+      ),
       ShellRoute(
         builder: (_, state, child) => DashboardShell(child: child),
         routes: [
