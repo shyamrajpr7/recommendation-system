@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: AppSpacing.xxl),
                 Text('CineRead', style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: AppSpacing.xs),
-                Text('AI-powered cinema booking', style: TextStyle(color: AppColors.muted)),
+                Text('AI-powered cinema booking', style: TextStyle(color: AppColors.muted, fontSize: 13)),
                 const SizedBox(height: AppSpacing.section),
                 TextFormField(
                   controller: _emailCtrl,
