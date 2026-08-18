@@ -34,7 +34,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   static const List<OnboardingPage> _pages = [
     OnboardingPage(
       title: 'Discover Movies',
-      description: 'AI-powered recommendations tailored to your taste. Find your next favorite film in seconds.',
+      description: 'AI-powered recommendations tailored to your taste. Discover your next favorite film in seconds.',
       icon: Icons.explore_rounded,
       accentColor: Color(0xFF38BDF8),
     ),
