@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/splash_screen.dart';
+import '../screens/onboarding_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/signup_screen.dart';
 import '../screens/dashboard_screen.dart';
@@ -18,6 +19,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: '/',
     routes: [
       GoRoute(path: '/', builder: (_, _) => const SplashScreen()),
+      GoRoute(path: '/onboarding', builder: (_, _) => const OnboardingScreen()),
       GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
       GoRoute(path: '/signup', builder: (_, _) => const SignupScreen()),
       ShellRoute(

@@ -17,7 +17,9 @@ class CineReadApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'CineRead',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.dark(),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: ThemeMode.system,
       routerConfig: router,
     );
   }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/colors.dart';
-import '../theme/spacing.dart';
 import '../models/cinema.dart';
 import '../services/cinema_service.dart';
 import 'now_showing_screen.dart';
