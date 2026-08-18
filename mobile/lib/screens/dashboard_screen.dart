@@ -142,7 +142,7 @@ class _NavBtnState extends State<_NavBtn> with SingleTickerProviderStateMixin {
       child: AnimatedContainer(
         duration: AppAnimations.normal,
         curve: AppAnimations.defaultCurve,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color: widget.active ? AppColors.accent1.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(AppDimens.radiusMd),
