@@ -81,7 +81,7 @@ class NowShowingScreen extends ConsumerWidget {
                     .slideY(begin: 0.1, end: 0, delay: 100.ms, duration: 400.ms),
                 const SizedBox(height: 4),
                 Text(
-                  'Tap a movie to see showtimes and book seats',
+                  'Tap a movie to see showtimes and book your seats',
                   style: TextStyle(color: AppColors.muted, fontSize: 13),
                 ).animate().fadeIn(delay: 200.ms, duration: 400.ms),
                 const SizedBox(height: 16),
