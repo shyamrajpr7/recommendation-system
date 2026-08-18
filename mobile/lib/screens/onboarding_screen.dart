@@ -209,7 +209,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: 'Space Grotesk',
-              fontSize: 28,
+              fontSize: 30,
               fontWeight: FontWeight.w700,
               color: AppColors.text,
               height: 1.2,
