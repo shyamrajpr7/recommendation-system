@@ -11,10 +11,9 @@ class DashboardShell extends StatelessWidget {
 
   int _currentIndex(BuildContext context) {
     final path = GoRouterState.of(context).uri.path;
-    if (path.startsWith('/search')) return 1;
-    if (path.startsWith('/chat')) return 2;
-    if (path.startsWith('/bookings')) return 3;
-    if (path.startsWith('/settings')) return 4;
+    if (path.startsWith('/explore')) return 1;
+    if (path.startsWith('/favorites')) return 2;
+    if (path.startsWith('/profile')) return 3;
     return 0;
   }
 
@@ -38,13 +37,13 @@ class DashboardShell extends StatelessWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _NavBtn(
                   icon: Icons.movie_filter_rounded,
-                  label: 'Movies',
+                  label: 'Home',
                   active: idx == 0,
                   onTap: () {
                     HapticFeedback.lightImpact();
@@ -52,39 +51,30 @@ class DashboardShell extends StatelessWidget {
                   },
                 ),
                 _NavBtn(
-                  icon: Icons.search_rounded,
-                  label: 'Search',
+                  icon: Icons.explore_rounded,
+                  label: 'Explore',
                   active: idx == 1,
                   onTap: () {
                     HapticFeedback.lightImpact();
-                    context.go('/search');
+                    context.go('/explore');
                   },
                 ),
                 _NavBtn(
-                  icon: Icons.chat_bubble_outline_rounded,
-                  label: 'Chat',
+                  icon: Icons.favorite_rounded,
+                  label: 'Favorites',
                   active: idx == 2,
                   onTap: () {
                     HapticFeedback.lightImpact();
-                    context.go('/chat');
+                    context.go('/favorites');
                   },
                 ),
                 _NavBtn(
-                  icon: Icons.confirmation_number_outlined,
-                  label: 'Tickets',
+                  icon: Icons.person_rounded,
+                  label: 'Profile',
                   active: idx == 3,
                   onTap: () {
                     HapticFeedback.lightImpact();
-                    context.go('/bookings');
-                  },
-                ),
-                _NavBtn(
-                  icon: Icons.settings_rounded,
-                  label: 'Settings',
-                  active: idx == 4,
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.go('/settings');
+                    context.go('/profile');
                   },
                 ),
               ],

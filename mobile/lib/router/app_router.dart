@@ -6,6 +6,9 @@ import '../screens/login_screen.dart';
 import '../screens/signup_screen.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/now_showing_screen.dart';
+import '../screens/explore_screen.dart';
+import '../screens/favorites_screen.dart';
+import '../screens/profile_screen.dart';
 import '../screens/detail_screen.dart';
 import '../screens/showtime_screen.dart';
 import '../screens/seat_screen.dart';
@@ -34,6 +37,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state, child) => DashboardShell(child: child),
         routes: [
           GoRoute(path: '/home', builder: (_, _) => const NowShowingScreen()),
+          GoRoute(path: '/explore', builder: (_, _) => const ExploreScreen()),
+          GoRoute(path: '/favorites', builder: (_, _) => const FavoritesScreen()),
+          GoRoute(path: '/profile', builder: (_, _) => const ProfileScreen()),
           GoRoute(path: '/search', builder: (_, _) => const AiSearchScreen()),
           GoRoute(path: '/chat', builder: (_, _) => const AiChatScreen()),
           GoRoute(path: '/bookings', builder: (_, _) => const MyBookingScreen()),
