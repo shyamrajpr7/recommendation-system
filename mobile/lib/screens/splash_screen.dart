@@ -81,7 +81,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     color: AppColors.text,
                     fontFamily: 'Space Grotesk',
                     fontWeight: FontWeight.w700,
-                    fontSize: 34,
+                    fontSize: 36,
                   ),
             )
                 .animate()
