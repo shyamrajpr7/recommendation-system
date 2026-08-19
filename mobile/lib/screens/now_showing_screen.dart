@@ -129,6 +129,34 @@ class NowShowingScreen extends ConsumerWidget {
             ),
           ),
         ),
+        // Featured carousel
+        moviesAsync.when(
+          data: (movies) {
+            if (movies.isEmpty) return const SliverToBoxAdapter(child: SizedBox.shrink());
+            final featured = movies.take(3).toList();
+            return SliverToBoxAdapter(
+              child: SizedBox(
+                height: 220,
+                child: PageView.builder(
+                  controller: PageController(viewportFraction: 0.88),
+                  itemCount: featured.length,
+                  itemBuilder: (_, i) => _FeaturedCard(movie: featured[i]),
+                ),
+              ),
+            );
+          },
+          loading: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
+          error: (_, __) => const SliverToBoxAdapter(child: SizedBox.shrink()),
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 20)),
+        // Section header
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text('All Movies', style: Theme.of(context).textTheme.titleMedium),
+          ).animate().fadeIn(delay: 400.ms, duration: 400.ms),
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: 12)),
         // Movie grid
         moviesAsync.when(
           data: (movies) {
@@ -353,6 +381,145 @@ class _MovieCard extends StatelessWidget {
           delay: Duration(milliseconds: 300 + (index * 80)),
           duration: 400.ms,
         );
+  }
+
+  String _stars(double rating) {
+    final full = rating ~/ 2;
+    final half = (rating % 2) >= 1 ? 1 : 0;
+    return '${'★' * full}${half == 1 ? '½' : ''}${'☆' * (5 - full - half)}';
+  }
+
+  List<Color> _palette(String title) {
+    final palettes = [
+      [const Color(0xFF1E3A5F), const Color(0xFF0D2137)],
+      [const Color(0xFF3B1F6E), const Color(0xFF1A0F3A)],
+      [const Color(0xFF5F1E3A), const Color(0xFF370D21)],
+      [const Color(0xFF1E5F3A), const Color(0xFF0D3721)],
+      [const Color(0xFF5F4A1E), const Color(0xFF372A0D)],
+      [const Color(0xFF1E4A5F), const Color(0xFF0D2A37)],
+    ];
+    return palettes[title.hashCode.abs() % palettes.length];
+  }
+}
+
+class _FeaturedCard extends StatelessWidget {
+  final Movie movie;
+  const _FeaturedCard({required this.movie});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = _palette(movie.title);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6),
+      child: GestureDetector(
+        onTap: () => context.push('/detail/${movie.id}'),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: colors,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(AppDimens.radiusXl),
+            boxShadow: [
+              BoxShadow(
+                color: colors.first.withValues(alpha: 0.4),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.8),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 12,
+                left: 14,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    gradient: AppColors.primaryGradient,
+                    borderRadius: BorderRadius.circular(AppDimens.radiusFull),
+                  ),
+                  child: const Text(
+                    'FEATURED',
+                    style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.1),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 12,
+                right: 14,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.45),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusFull),
+                  ),
+                  child: Text(
+                    _stars(movie.rating),
+                    style: const TextStyle(color: AppColors.gold, fontSize: 12),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 16,
+                left: 16,
+                right: 16,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      movie.title,
+                      style: const TextStyle(
+                        fontFamily: 'Space Grotesk',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${movie.genre}  \u2022  ${movie.year}',
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 12),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        gradient: AppColors.primaryGradient,
+                        borderRadius: BorderRadius.circular(AppDimens.radiusFull),
+                      ),
+                      child: const Text(
+                        'Book Now',
+                        style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ).animate().fadeIn(delay: Duration(milliseconds: 300), duration: 400.ms)
+        .scale(begin: const Offset(0.95, 0.95), duration: 400.ms);
   }
 
   String _stars(double rating) {
