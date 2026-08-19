@@ -23,62 +23,63 @@ class DashboardShell extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(child: child),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          border: const Border(top: BorderSide(color: AppColors.borderSoft, width: 0.5)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.15),
-              blurRadius: 16,
-              offset: const Offset(0, -4),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _NavBtn(
-                  icon: Icons.movie_filter_rounded,
-                  label: 'Home',
-                  active: idx == 0,
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.go('/home');
-                  },
-                ),
-                _NavBtn(
-                  icon: Icons.explore_rounded,
-                  label: 'Explore',
-                  active: idx == 1,
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.go('/explore');
-                  },
-                ),
-                _NavBtn(
-                  icon: Icons.favorite_rounded,
-                  label: 'Favorites',
-                  active: idx == 2,
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.go('/favorites');
-                  },
-                ),
-                _NavBtn(
-                  icon: Icons.person_rounded,
-                  label: 'Profile',
-                  active: idx == 3,
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    context.go('/profile');
-                  },
-                ),
-              ],
-            ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+        child: Container(
+          height: 68,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppDimens.radiusXl),
+            border: Border.all(color: AppColors.borderSoft, width: 0.5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.25),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _NavBtn(
+                icon: Icons.movie_filter_rounded,
+                label: 'Home',
+                active: idx == 0,
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  context.go('/home');
+                },
+              ),
+              _NavBtn(
+                icon: Icons.explore_rounded,
+                label: 'Explore',
+                active: idx == 1,
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  context.go('/explore');
+                },
+              ),
+              _NavBtn(
+                icon: Icons.favorite_rounded,
+                label: 'Favorites',
+                active: idx == 2,
+                badgeCount: 3,
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  context.go('/favorites');
+                },
+              ),
+              _NavBtn(
+                icon: Icons.person_rounded,
+                label: 'Profile',
+                active: idx == 3,
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  context.go('/profile');
+                },
+              ),
+            ],
           ),
         ),
       ),
@@ -91,12 +92,14 @@ class _NavBtn extends StatefulWidget {
   final String label;
   final bool active;
   final VoidCallback onTap;
+  final int? badgeCount;
 
   const _NavBtn({
     required this.icon,
     required this.label,
     required this.active,
     required this.onTap,
+    this.badgeCount,
   });
 
   @override
@@ -139,26 +142,65 @@ class _NavBtnState extends State<_NavBtn> with SingleTickerProviderStateMixin {
     return GestureDetector(
       onTap: widget.onTap,
       behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: AppAnimations.normal,
-        curve: AppAnimations.defaultCurve,
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: widget.active ? AppColors.accent1.withValues(alpha: 0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(AppDimens.radiusMd),
-        ),
+      child: SizedBox(
+        width: 64,
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedBuilder(
-              animation: _bounceAnimation,
-              builder: (context, child) {
-                return Transform.scale(
-                  scale: widget.active ? _bounceAnimation.value : 1.0,
-                  child: child,
-                );
-              },
-              child: Icon(widget.icon, size: 22, color: color),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                AnimatedContainer(
+                  duration: AppAnimations.normal,
+                  curve: AppAnimations.defaultCurve,
+                  width: widget.active ? 40 : 0,
+                  height: widget.active ? 40 : 0,
+                  decoration: BoxDecoration(
+                    color: widget.active
+                        ? AppColors.accent1.withValues(alpha: 0.15)
+                        : Colors.transparent,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                Positioned.fill(
+                  child: Center(
+                    child: AnimatedBuilder(
+                      animation: _bounceAnimation,
+                      builder: (context, child) {
+                        return Transform.scale(
+                          scale: widget.active ? _bounceAnimation.value : 1.0,
+                          child: child,
+                        );
+                      },
+                      child: Icon(widget.icon, size: 22, color: color),
+                    ),
+                  ),
+                ),
+                if (widget.badgeCount != null && widget.badgeCount! > 0)
+                  Positioned(
+                    right: 2,
+                    top: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                      decoration: BoxDecoration(
+                        color: AppColors.error,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: AppColors.surface, width: 2),
+                      ),
+                      child: Text(
+                        '${widget.badgeCount}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w700,
+                          height: 1,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 3),
             AnimatedDefaultTextStyle(
