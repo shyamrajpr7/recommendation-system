@@ -13,6 +13,8 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = ref.watch(darkModeProvider);
+
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.xxl),
       children: [
@@ -50,82 +52,76 @@ class SettingsScreen extends ConsumerWidget {
             .slideY(begin: 0.1, end: 0, delay: 100.ms, duration: 400.ms),
         const SizedBox(height: AppSpacing.xxl),
         // Section: Preferences
-        Text(
-          'Preferences',
-          style: TextStyle(
-            fontFamily: 'Space Grotesk',
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: AppColors.muted,
-            letterSpacing: 0.05,
+        _sectionHeader('Preferences', 150),
+        const SizedBox(height: AppSpacing.md),
+        // Grouped preferences card
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppDimens.radiusLg),
+            border: Border.all(color: AppColors.borderSoft),
           ),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        _buildToggleTile(
-          icon: Icons.notifications_rounded,
-          title: 'Push Notifications',
-          subtitle: 'Get booking & recommendation alerts',
-          value: ref.watch(notificationsProvider),
-          onChanged: (v) {
-            HapticFeedback.lightImpact();
-            ref.read(notificationsProvider.notifier).toggle(v);
-          },
-          delayMs: 200,
-        ),
-        const SizedBox(height: AppSpacing.md),
-        _buildToggleTile(
-          icon: Icons.dark_mode_rounded,
-          title: 'Dark Mode',
-          subtitle: 'Use dark theme',
-          value: ref.watch(darkModeProvider),
-          onChanged: (v) {
-            HapticFeedback.lightImpact();
-            ref.read(darkModeProvider.notifier).toggle(v);
-          },
-          delayMs: 250,
-        ),
-        const SizedBox(height: AppSpacing.md),
-        _buildToggleTile(
-          icon: Icons.play_circle_outline_rounded,
-          title: 'Auto-play Trailers',
-          subtitle: 'Play trailers automatically',
-          value: ref.watch(autoPlayTrailersProvider),
-          onChanged: (v) {
-            HapticFeedback.lightImpact();
-            ref.read(autoPlayTrailersProvider.notifier).toggle(v);
-          },
-          delayMs: 300,
-        ),
-        const SizedBox(height: AppSpacing.md),
-        _buildToggleTile(
-          icon: Icons.location_on_outlined,
-          title: 'Location Services',
-          subtitle: 'Find nearby theaters',
-          value: ref.watch(locationServicesProvider),
-          onChanged: (v) {
-            HapticFeedback.lightImpact();
-            ref.read(locationServicesProvider.notifier).toggle(v);
-          },
-          delayMs: 350,
-        ),
+          child: Column(
+            children: [
+              _buildToggleTile(
+                icon: Icons.notifications_rounded,
+                title: 'Push Notifications',
+                subtitle: 'Get booking & recommendation alerts',
+                value: ref.watch(notificationsProvider),
+                onChanged: (v) {
+                  HapticFeedback.lightImpact();
+                  ref.read(notificationsProvider.notifier).toggle(v);
+                },
+              ),
+              _divider(),
+              _buildThemeTile(ref, isDark),
+              _divider(),
+              _buildToggleTile(
+                icon: Icons.play_circle_outline_rounded,
+                title: 'Auto-play Trailers',
+                subtitle: 'Play trailers automatically',
+                value: ref.watch(autoPlayTrailersProvider),
+                onChanged: (v) {
+                  HapticFeedback.lightImpact();
+                  ref.read(autoPlayTrailersProvider.notifier).toggle(v);
+                },
+              ),
+              _divider(),
+              _buildToggleTile(
+                icon: Icons.location_on_outlined,
+                title: 'Location Services',
+                subtitle: 'Find nearby theaters',
+                value: ref.watch(locationServicesProvider),
+                onChanged: (v) {
+                  HapticFeedback.lightImpact();
+                  ref.read(locationServicesProvider.notifier).toggle(v);
+                },
+              ),
+            ],
+          ),
+        ).animate().fadeIn(delay: 200.ms, duration: 400.ms)
+            .slideY(begin: 0.05, end: 0, delay: 200.ms, duration: 400.ms),
         const SizedBox(height: AppSpacing.xxl),
         // Section: About
-        Text(
-          'About',
-          style: TextStyle(
-            fontFamily: 'Space Grotesk',
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: AppColors.muted,
-            letterSpacing: 0.05,
+        _sectionHeader('About', 350),
+        const SizedBox(height: AppSpacing.md),
+        // Grouped about card
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppDimens.radiusLg),
+            border: Border.all(color: AppColors.borderSoft),
           ),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        _buildInfoTile(Icons.info_outline, 'About CineRead', 'AI-powered cinema booking'),
-        const SizedBox(height: AppSpacing.md),
-        _buildInfoTile(Icons.code_rounded, 'API Status', 'Backend: localhost:8000'),
-        const SizedBox(height: AppSpacing.md),
-        _buildInfoTile(Icons.phone_android_rounded, 'Platform', 'macOS desktop'),
+          child: Column(
+            children: [
+              _buildInfoTile(Icons.info_outline, 'About CineRead', 'AI-powered cinema booking'),
+              _divider(),
+              _buildInfoTile(Icons.code_rounded, 'API Status', 'Backend: localhost:8000'),
+              _divider(),
+              _buildInfoTile(Icons.phone_android_rounded, 'Platform', 'macOS desktop'),
+            ],
+          ),
+        ).animate().fadeIn(delay: 400.ms, duration: 400.ms),
         const SizedBox(height: AppSpacing.xxxl),
         // Logout
         SizedBox(
@@ -147,7 +143,134 @@ class SettingsScreen extends ConsumerWidget {
             child: const Text('Log out'),
           ),
         ).animate().fadeIn(delay: 450.ms, duration: 400.ms),
+        const SizedBox(height: AppSpacing.xl),
+        // Version footer
+        Center(
+          child: Column(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  gradient: AppColors.primaryGradient,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.movie_filter_rounded, size: 18, color: Colors.white),
+              ),
+              const SizedBox(height: 6),
+              Text('CineRead v1.0.0', style: TextStyle(color: AppColors.muted2, fontSize: 11, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 2),
+              Text('AI-Powered Cinema Booking', style: TextStyle(color: AppColors.muted2, fontSize: 10)),
+            ],
+          ),
+        ).animate().fadeIn(delay: 500.ms, duration: 400.ms),
+        const SizedBox(height: AppSpacing.xxl),
       ],
+    );
+  }
+
+  Widget _sectionHeader(String label, int delayMs) {
+    return Row(
+      children: [
+        Container(
+          width: 3,
+          height: 14,
+          decoration: BoxDecoration(
+            gradient: AppColors.primaryGradient,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'Space Grotesk',
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            color: AppColors.muted,
+            letterSpacing: 0.05,
+          ),
+        ),
+      ],
+    ).animate().fadeIn(delay: Duration(milliseconds: delayMs), duration: 400.ms);
+  }
+
+  Widget _divider() {
+    return Divider(height: 1, indent: 16, endIndent: 16, color: AppColors.borderSoft);
+  }
+
+  Widget _buildThemeTile(WidgetRef ref, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.accent1.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(AppDimens.radiusMd),
+            ),
+            child: Icon(Icons.dark_mode_rounded, size: 20, color: AppColors.accent1),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Theme', style: TextStyle(color: AppColors.text, fontSize: 14, fontWeight: FontWeight.w600)),
+                Text(isDark ? 'Dark mode' : 'Light mode', style: TextStyle(color: AppColors.muted, fontSize: 12)),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: AppColors.surface2,
+              borderRadius: BorderRadius.circular(AppDimens.radiusMd),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _themeChip(Icons.dark_mode_rounded, 'Dark', isDark, () {
+                  HapticFeedback.lightImpact();
+                  ref.read(darkModeProvider.notifier).toggle(true);
+                }),
+                _themeChip(Icons.light_mode_rounded, 'Light', !isDark, () {
+                  HapticFeedback.lightImpact();
+                  ref.read(darkModeProvider.notifier).toggle(false);
+                }),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _themeChip(IconData icon, String label, bool selected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          gradient: selected ? AppColors.primaryGradient : null,
+          color: selected ? null : Colors.transparent,
+          borderRadius: BorderRadius.circular(AppDimens.radiusMd - 2),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14, color: selected ? Colors.white : AppColors.muted),
+            const SizedBox(width: 4),
+            Text(label, style: TextStyle(
+              color: selected ? Colors.white : AppColors.muted,
+              fontSize: 11, fontWeight: FontWeight.w600,
+            )),
+          ],
+        ),
+      ),
     );
   }
 
@@ -157,15 +280,9 @@ class SettingsScreen extends ConsumerWidget {
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
-    required int delayMs,
   }) {
-    return Container(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppDimens.radiusLg),
-        border: Border.all(color: AppColors.borderSoft),
-      ),
       child: Row(
         children: [
           Container(
@@ -201,20 +318,12 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ],
       ),
-    )
-        .animate()
-        .fadeIn(delay: Duration(milliseconds: delayMs), duration: 400.ms)
-        .slideX(begin: 0.05, end: 0, delay: Duration(milliseconds: delayMs), duration: 400.ms);
+    );
   }
 
   Widget _buildInfoTile(IconData icon, String title, String sub) {
-    return Container(
+    return Padding(
       padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(AppDimens.radiusLg),
-        border: Border.all(color: AppColors.borderSoft),
-      ),
       child: Row(children: [
         Icon(icon, size: 22, color: AppColors.accent1),
         const SizedBox(width: AppSpacing.md),
