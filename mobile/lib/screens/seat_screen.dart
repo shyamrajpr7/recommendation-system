@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../theme/colors.dart';
 import '../models/cinema.dart';
 import '../services/cinema_service.dart';
+import '../widgets/booking_stepper.dart';
+import '../widgets/app_button.dart';
 
 final seatMapProvider = FutureProvider.family<SeatMap, int>((ref, showtimeId) async {
   return ref.read(cinemaServiceProvider).fetchSeats(showtimeId);
@@ -32,12 +34,10 @@ class SeatScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          // Stepper
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-            child: _BookingStepper(current: 2),
+            child: const BookingStepper(current: 2),
           ),
-          // Seat area
           Expanded(
             child: seatMapAsync.when(
               data: (seatMap) => _SeatGrid(seatMap: seatMap),
@@ -45,7 +45,6 @@ class SeatScreen extends ConsumerWidget {
               error: (_, __) => const Center(child: Text('Failed to load seats', style: TextStyle(color: AppColors.error))),
             ),
           ),
-          // Legend
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Row(
@@ -61,7 +60,6 @@ class SeatScreen extends ConsumerWidget {
               ],
             ),
           ),
-          // Booking bar
           Container(
             padding: const EdgeInsets.fromLTRB(20, 14, 20, 24),
             decoration: BoxDecoration(
@@ -89,20 +87,11 @@ class SeatScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
-                ElevatedButton(
+                AppButton(
+                  label: selected.isEmpty ? 'Select seats' : 'Pay \u20B9${selected.length * 150}',
+                  style: AppButtonStyle.gradient,
+                  fullWidth: false,
                   onPressed: selected.isEmpty ? null : () => context.push('/payment'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accent1,
-                    foregroundColor: Colors.white,
-                    disabledBackgroundColor: AppColors.surface2,
-                    disabledForegroundColor: AppColors.muted2,
-                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: Text(
-                    selected.isEmpty ? 'Select seats' : 'Pay ₹${selected.length * 150}',
-                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
-                  ),
                 ),
               ],
             ),
@@ -123,44 +112,6 @@ class SeatScreen extends ConsumerWidget {
   }
 }
 
-class _BookingStepper extends StatelessWidget {
-  final int current;
-  const _BookingStepper({required this.current});
-  @override
-  Widget build(BuildContext context) {
-    final steps = ['Movie', 'Showtime', 'Seats', 'Payment'];
-    return Row(
-      children: List.generate(steps.length * 2 - 1, (i) {
-        if (i.isOdd) return Expanded(child: Container(height: 1.5, color: AppColors.borderSoft));
-        final idx = i ~/ 2;
-        final done = idx < current;
-        final active = idx == current;
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 26, height: 26,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: (done || active) ? AppColors.primaryGradient : null,
-                color: (!done && !active) ? AppColors.surface2 : null,
-                border: (!done && !active) ? Border.all(color: AppColors.border) : null,
-              ),
-              child: Center(
-                child: done
-                    ? const Icon(Icons.check_rounded, size: 13, color: Colors.white)
-                    : Text('${idx + 1}', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: active ? Colors.white : AppColors.muted)),
-              ),
-            ),
-            const SizedBox(width: 4),
-            Text(steps[idx], style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: active ? AppColors.text : AppColors.muted2)),
-          ],
-        );
-      }),
-    );
-  }
-}
-
 class _SeatGrid extends ConsumerWidget {
   final SeatMap seatMap;
   const _SeatGrid({required this.seatMap});
@@ -170,101 +121,141 @@ class _SeatGrid extends ConsumerWidget {
     final selected = ref.watch(selectedSeatsProvider);
     final rows = seatMap.seats;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-      child: Column(
-        children: [
-          // Screen with glow
-          SizedBox(
-            width: 220,
-            child: Column(
-              children: [
-                Container(
-                  width: 220, height: 6,
-                  decoration: BoxDecoration(
-                    gradient: AppColors.primaryGradient,
-                    borderRadius: BorderRadius.circular(99),
-                    boxShadow: [BoxShadow(color: AppColors.accent1.withValues(alpha: 0.4), blurRadius: 16, spreadRadius: 2)],
+    return InteractiveViewer(
+      minScale: 0.5,
+      maxScale: 3.0,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        child: Column(
+          children: [
+            // Curved screen indicator
+            SizedBox(
+              width: 260,
+              height: 50,
+              child: CustomPaint(
+                painter: _ScreenPainter(),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text('SCREEN', style: TextStyle(color: AppColors.muted2, fontSize: 9, letterSpacing: 0.2, fontWeight: FontWeight.w600)),
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text('SCREEN', style: TextStyle(color: AppColors.muted2, fontSize: 9, letterSpacing: 0.2, fontWeight: FontWeight.w600)),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
-          // Column numbers
-          if (rows.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(left: 32),
-              child: Row(
-                children: List.generate(rows[0].length, (c) => Expanded(
-                  child: Center(child: Text('${c + 1}', style: TextStyle(color: AppColors.muted2, fontSize: 9.5, fontWeight: FontWeight.w600))),
-                )),
               ),
             ),
-          const SizedBox(height: 8),
-          // Seats
-          ...List.generate(rows.length, (r) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 5),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 30,
-                    child: Center(
-                      child: Text(
-                        String.fromCharCode(65 + r),
-                        style: TextStyle(color: AppColors.muted2, fontSize: 11, fontWeight: FontWeight.w700),
+            const SizedBox(height: 16),
+            if (rows.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(left: 32),
+                child: Row(
+                  children: List.generate(rows[0].length, (c) => Expanded(
+                    child: Center(child: Text('${c + 1}', style: TextStyle(color: AppColors.muted2, fontSize: 9.5, fontWeight: FontWeight.w600))),
+                  )),
+                ),
+              ),
+            const SizedBox(height: 8),
+            ...List.generate(rows.length, (r) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 30,
+                      child: Center(
+                        child: Text(
+                          String.fromCharCode(65 + r),
+                          style: TextStyle(color: AppColors.muted2, fontSize: 11, fontWeight: FontWeight.w700),
+                        ),
                       ),
                     ),
-                  ),
-                  ...List.generate(rows[r].length, (c) {
-                    final seat = rows[r][c];
-                    final seatId = '${String.fromCharCode(65 + r)}${c + 1}';
-                    final isOccupied = seat == 'X';
-                    final isBlocked = seat == '·' || seat == '-';
-                    final isSelected = selected.contains(seatId);
+                    ...List.generate(rows[r].length, (c) {
+                      final seat = rows[r][c];
+                      final seatId = '${String.fromCharCode(65 + r)}${c + 1}';
+                      final isOccupied = seat == 'X';
+                      final isBlocked = seat == '\u00B7' || seat == '-';
+                      final isSelected = selected.contains(seatId);
 
-                    return Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(2),
-                        child: GestureDetector(
-                          onTap: isOccupied || isBlocked ? null : () {
-                            final current = ref.read(selectedSeatsProvider);
-                            ref.read(selectedSeatsProvider.notifier).state =
-                                isSelected ? current.where((s) => s != seatId).toList() : [...current, seatId];
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 150),
-                            height: 34,
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? AppColors.accent1
-                                  : isOccupied ? AppColors.muted2 : isBlocked ? AppColors.surface3 : AppColors.success,
-                              borderRadius: BorderRadius.circular(7),
-                              boxShadow: isSelected ? [BoxShadow(color: AppColors.accent1.withValues(alpha: 0.35), blurRadius: 8)] : null,
-                            ),
-                            child: Center(
-                              child: Text(
-                                isOccupied ? '✕' : isBlocked ? '·' : seatId,
-                                style: TextStyle(
-                                  color: isSelected || isOccupied ? Colors.white : AppColors.background,
-                                  fontSize: 10, fontWeight: FontWeight.w700,
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(2),
+                          child: GestureDetector(
+                            onTap: isOccupied || isBlocked ? null : () {
+                              final current = ref.read(selectedSeatsProvider);
+                              ref.read(selectedSeatsProvider.notifier).state =
+                                  isSelected ? current.where((s) => s != seatId).toList() : [...current, seatId];
+                            },
+                            child: Tooltip(
+                              message: isOccupied
+                                  ? '$seatId - Occupied'
+                                  : isBlocked
+                                      ? '$seatId - Blocked'
+                                      : '$seatId - Available',
+                              preferBelow: false,
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 150),
+                                height: 34,
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? AppColors.accent1
+                                      : isOccupied ? AppColors.muted2 : isBlocked ? AppColors.surface3 : AppColors.success,
+                                  borderRadius: BorderRadius.circular(7),
+                                  boxShadow: isSelected ? [BoxShadow(color: AppColors.accent1.withValues(alpha: 0.35), blurRadius: 8)] : null,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    isOccupied ? '\u2715' : isBlocked ? '\u00B7' : seatId,
+                                    style: TextStyle(
+                                      color: isSelected || isOccupied ? Colors.white : AppColors.background,
+                                      fontSize: 10, fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  }),
-                ],
-              ),
-            );
-          }),
-        ],
+                      );
+                    }),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
       ),
     );
   }
+}
+
+class _ScreenPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..shader = const LinearGradient(
+        colors: [AppColors.accent1, AppColors.accent2],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, 20))
+      ..strokeWidth = 4
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    final path = Path();
+    path.moveTo(0, size.height);
+    path.quadraticBezierTo(size.width / 2, 0, size.width, size.height);
+
+    canvas.drawPath(path, paint);
+
+    // Glow effect
+    final glowPaint = Paint()
+      ..shader = LinearGradient(
+        colors: [AppColors.accent1.withValues(alpha: 0.3), AppColors.accent2.withValues(alpha: 0.3)],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, 20))
+      ..strokeWidth = 12
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
+
+    canvas.drawPath(path, glowPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
