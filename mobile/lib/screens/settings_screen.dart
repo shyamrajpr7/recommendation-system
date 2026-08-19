@@ -16,7 +16,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  bool _notificationsEnabled = true;
   bool _autoPlayTrailers = false;
   bool _locationEnabled = true;
 
@@ -74,10 +73,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           icon: Icons.notifications_rounded,
           title: 'Push Notifications',
           subtitle: 'Get booking & recommendation alerts',
-          value: _notificationsEnabled,
+          value: ref.watch(notificationsProvider),
           onChanged: (v) {
             HapticFeedback.lightImpact();
-            setState(() => _notificationsEnabled = v);
+            ref.read(notificationsProvider.notifier).toggle(v);
           },
           delayMs: 200,
         ),

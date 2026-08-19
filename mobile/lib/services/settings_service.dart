@@ -54,3 +54,26 @@ class DarkModeNotifier extends StateNotifier<bool> {
 extension ThemeModeX on WidgetRef {
   ThemeMode get themeMode => watch(darkModeProvider) ? ThemeMode.dark : ThemeMode.light;
 }
+
+final notificationsProvider = StateNotifierProvider<NotificationsNotifier, bool>((ref) {
+  return NotificationsNotifier(ref);
+});
+
+class NotificationsNotifier extends StateNotifier<bool> {
+  final Ref _ref;
+
+  NotificationsNotifier(this._ref) : super(true) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final service = await _ref.read(settingsServiceProvider.future);
+    state = service.notifications;
+  }
+
+  Future<void> toggle(bool value) async {
+    state = value;
+    final service = await _ref.read(settingsServiceProvider.future);
+    await service.setNotifications(value);
+  }
+}
