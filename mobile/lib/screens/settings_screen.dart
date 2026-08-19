@@ -8,18 +8,11 @@ import '../theme/spacing.dart';
 import '../theme/app_dimens.dart';
 import '../services/settings_service.dart';
 
-class SettingsScreen extends ConsumerStatefulWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  bool _locationEnabled = true;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.xxl),
       children: [
@@ -108,10 +101,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           icon: Icons.location_on_outlined,
           title: 'Location Services',
           subtitle: 'Find nearby theaters',
-          value: _locationEnabled,
+          value: ref.watch(locationServicesProvider),
           onChanged: (v) {
             HapticFeedback.lightImpact();
-            setState(() => _locationEnabled = v);
+            ref.read(locationServicesProvider.notifier).toggle(v);
           },
           delayMs: 350,
         ),

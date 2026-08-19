@@ -100,3 +100,26 @@ class AutoPlayTrailersNotifier extends StateNotifier<bool> {
     await service.setAutoPlayTrailers(value);
   }
 }
+
+final locationServicesProvider = StateNotifierProvider<LocationServicesNotifier, bool>((ref) {
+  return LocationServicesNotifier(ref);
+});
+
+class LocationServicesNotifier extends StateNotifier<bool> {
+  final Ref _ref;
+
+  LocationServicesNotifier(this._ref) : super(true) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final service = await _ref.read(settingsServiceProvider.future);
+    state = service.locationEnabled;
+  }
+
+  Future<void> toggle(bool value) async {
+    state = value;
+    final service = await _ref.read(settingsServiceProvider.future);
+    await service.setLocationEnabled(value);
+  }
+}
