@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/colors.dart';
 import '../theme/spacing.dart';
 import '../theme/app_dimens.dart';
+import '../services/settings_service.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _notificationsEnabled = true;
-  bool _darkModeEnabled = true;
   bool _autoPlayTrailers = false;
   bool _locationEnabled = true;
 
@@ -85,10 +86,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           icon: Icons.dark_mode_rounded,
           title: 'Dark Mode',
           subtitle: 'Use dark theme',
-          value: _darkModeEnabled,
+          value: ref.watch(darkModeProvider),
           onChanged: (v) {
             HapticFeedback.lightImpact();
-            setState(() => _darkModeEnabled = v);
+            ref.read(darkModeProvider.notifier).toggle(v);
           },
           delayMs: 250,
         ),
