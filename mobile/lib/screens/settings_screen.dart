@@ -16,7 +16,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  bool _autoPlayTrailers = false;
   bool _locationEnabled = true;
 
   @override
@@ -97,10 +96,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           icon: Icons.play_circle_outline_rounded,
           title: 'Auto-play Trailers',
           subtitle: 'Play trailers automatically',
-          value: _autoPlayTrailers,
+          value: ref.watch(autoPlayTrailersProvider),
           onChanged: (v) {
             HapticFeedback.lightImpact();
-            setState(() => _autoPlayTrailers = v);
+            ref.read(autoPlayTrailersProvider.notifier).toggle(v);
           },
           delayMs: 300,
         ),
