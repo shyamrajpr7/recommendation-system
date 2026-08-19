@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../theme/colors.dart';
 import '../theme/spacing.dart';
 import '../services/cinema_service.dart';
@@ -18,7 +20,11 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   bool _loading = false;
 
   @override
-  void dispose() { _msgCtrl.dispose(); _focus.dispose(); super.dispose(); }
+  void dispose() {
+    _msgCtrl.dispose();
+    _focus.dispose();
+    super.dispose();
+  }
 
   void _fillSuggestion(String text) {
     _msgCtrl.text = text;
@@ -29,19 +35,32 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
   Future<void> _send() async {
     final msg = _msgCtrl.text.trim();
     if (msg.isEmpty || _loading) return;
+    HapticFeedback.lightImpact();
     _msgCtrl.clear();
 
     final history = ref.read(chatHistoryProvider);
-    ref.read(chatHistoryProvider.notifier).state = [...history, {'role': 'user', 'content': msg}];
+    final now = DateFormat('HH:mm').format(DateTime.now());
+    ref.read(chatHistoryProvider.notifier).state = [
+      ...history,
+      {'role': 'user', 'content': msg, 'time': now},
+    ];
     setState(() => _loading = true);
 
     try {
       final res = await ref.read(cinemaServiceProvider).chat(msg, history);
       final current = ref.read(chatHistoryProvider);
-      ref.read(chatHistoryProvider.notifier).state = [...current, {'role': 'assistant', 'content': res.reply}];
+      final replyTime = DateFormat('HH:mm').format(DateTime.now());
+      ref.read(chatHistoryProvider.notifier).state = [
+        ...current,
+        {'role': 'assistant', 'content': res.reply, 'time': replyTime},
+      ];
     } catch (e) {
       final current = ref.read(chatHistoryProvider);
-      ref.read(chatHistoryProvider.notifier).state = [...current, {'role': 'assistant', 'content': 'Error: $e'}];
+      final errTime = DateFormat('HH:mm').format(DateTime.now());
+      ref.read(chatHistoryProvider.notifier).state = [
+        ...current,
+        {'role': 'assistant', 'content': 'Error: $e', 'time': errTime},
+      ];
     }
     setState(() => _loading = false);
   }
@@ -52,7 +71,6 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
 
     return Column(
       children: [
-        // Header
         Container(
           width: double.infinity,
           padding: const EdgeInsets.fromLTRB(AppSpacing.xxl, AppSpacing.xxl, AppSpacing.xxl, AppSpacing.md),
@@ -71,7 +89,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                       gradient: AppColors.primaryGradient,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.chat_bubble_outline_rounded, size: 18, color: Colors.white),
+                    child: const Icon(Icons.auto_awesome_rounded, size: 18, color: Colors.white),
                   ),
                   const SizedBox(width: 10),
                   Text('AI Concierge', style: Theme.of(context).textTheme.headlineMedium),
@@ -83,7 +101,6 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
             ],
           ),
         ),
-        // Messages
         Expanded(
           child: history.isEmpty
               ? _emptyState()
@@ -94,11 +111,10 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                     if (i == history.length && _loading) return _typingIndicator();
                     final msg = history[i];
                     final isUser = msg['role'] == 'user';
-                    return _chatBubble(msg['content'] ?? '', isUser);
+                    return _chatBubble(msg['content'] ?? '', isUser, msg['time'] ?? '');
                   },
                 ),
         ),
-        // Input
         Container(
           padding: const EdgeInsets.fromLTRB(AppSpacing.xxl, 8, AppSpacing.xxl, AppSpacing.xxl),
           decoration: const BoxDecoration(
@@ -118,6 +134,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                     controller: _msgCtrl,
                     focusNode: _focus,
                     onSubmitted: (_) => _send(),
+                    textInputAction: TextInputAction.send,
                     decoration: InputDecoration(
                       hintText: 'Ask about showtimes...',
                       hintStyle: TextStyle(color: AppColors.muted, fontSize: 14),
@@ -131,15 +148,18 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
               const SizedBox(width: 10),
               GestureDetector(
                 onTap: _send,
-                child: Container(
-                  width: 44, height: 44,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: _msgCtrl.text.trim().isEmpty ? null : AppColors.primaryGradient,
                     color: _msgCtrl.text.trim().isEmpty ? AppColors.surface2 : null,
                   ),
                   child: Icon(
-                    Icons.send_rounded, size: 20,
+                    Icons.send_rounded,
+                    size: 20,
                     color: _msgCtrl.text.trim().isEmpty ? AppColors.muted2 : Colors.white,
                   ),
                 ),
@@ -166,7 +186,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
                 ),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.chat_bubble_outline_rounded, size: 40, color: AppColors.accent1),
+              child: const Icon(Icons.auto_awesome_rounded, size: 40, color: AppColors.accent1),
             ),
             const SizedBox(height: AppSpacing.md),
             Text('Ask the concierge anything', style: TextStyle(color: AppColors.text, fontWeight: FontWeight.w600, fontSize: 15)),
@@ -174,12 +194,13 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
             Text('Showtimes, recommendations, or booking help', style: TextStyle(color: AppColors.muted, fontSize: 12)),
             const SizedBox(height: AppSpacing.xl),
             Wrap(
-              spacing: 8, runSpacing: 8,
+              spacing: 8,
+              runSpacing: 8,
               alignment: WrapAlignment.center,
               children: [
-                _suggestionChip('🎬 what sci-fi is on tonight?'),
-                _suggestionChip('🍿 best family movie today'),
-                _suggestionChip('🕗 what time is Oppenheimer?'),
+                _suggestionChip('What sci-fi is on tonight?'),
+                _suggestionChip('Best family movie today'),
+                _suggestionChip('What time is Oppenheimer?'),
               ],
             ),
           ],
@@ -205,47 +226,96 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
     );
   }
 
-  Widget _chatBubble(String content, bool isUser) {
+  Widget _chatBubble(String content, bool isUser, String time) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isUser) ...[
             Container(
-              width: 30, height: 30,
-              decoration: const BoxDecoration(shape: BoxShape.circle, gradient: LinearGradient(colors: [AppColors.accent2, AppColors.accent3])),
-              child: const Center(child: Text('🤖', style: TextStyle(fontSize: 14))),
+              width: 30,
+              height: 30,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(colors: [AppColors.accent2, AppColors.accent3]),
+              ),
+              child: const Center(child: Icon(Icons.auto_awesome_rounded, size: 14, color: Colors.white)),
             ),
             const SizedBox(width: 8),
           ],
           Flexible(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                gradient: isUser
-                    ? LinearGradient(colors: [AppColors.accent1, AppColors.accent2])
-                    : null,
-                color: isUser ? null : AppColors.surface2,
-                borderRadius: BorderRadius.circular(16),
-                border: isUser ? null : Border.all(color: AppColors.borderSoft),
-              ),
-              child: Text(content, style: TextStyle(
-                color: isUser ? Colors.white : AppColors.text,
-                fontSize: 13, height: 1.55,
-              )),
+            child: Column(
+              crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(
+                    gradient: isUser
+                        ? const LinearGradient(colors: [AppColors.accent1, AppColors.accent2])
+                        : null,
+                    color: isUser ? null : AppColors.surface2,
+                    borderRadius: BorderRadius.circular(16),
+                    border: isUser ? null : Border.all(color: AppColors.borderSoft),
+                  ),
+                  child: _buildRichText(content, isUser),
+                ),
+                if (time.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(time, style: TextStyle(color: AppColors.muted2, fontSize: 10)),
+                ],
+              ],
             ),
           ),
           if (isUser) ...[
             const SizedBox(width: 8),
             Container(
-              width: 30, height: 30,
+              width: 30,
+              height: 30,
               decoration: const BoxDecoration(shape: BoxShape.circle, gradient: AppColors.primaryGradient),
-              child: const Center(child: Text('🧑', style: TextStyle(fontSize: 14))),
+              child: const Center(child: Icon(Icons.person_rounded, size: 16, color: Colors.white)),
             ),
           ],
         ],
+      ),
+    );
+  }
+
+  Widget _buildRichText(String content, bool isUser) {
+    final color = isUser ? Colors.white : AppColors.text;
+    final boldColor = isUser ? Colors.white : AppColors.accent1;
+
+    final spans = <TextSpan>[];
+    final regex = RegExp(r'\*\*(.*?)\*\*|`(.*?)`');
+    int lastEnd = 0;
+
+    for (final match in regex.allMatches(content)) {
+      if (match.start > lastEnd) {
+        spans.add(TextSpan(text: content.substring(lastEnd, match.start)));
+      }
+      if (match.group(1) != null) {
+        spans.add(TextSpan(text: match.group(1), style: TextStyle(fontWeight: FontWeight.w700, color: boldColor)));
+      } else if (match.group(2) != null) {
+        spans.add(TextSpan(
+          text: match.group(2),
+          style: TextStyle(
+            fontFamily: 'monospace',
+            fontSize: 12,
+            backgroundColor: (isUser ? Colors.white : AppColors.surface3).withValues(alpha: 0.3),
+          ),
+        ));
+      }
+      lastEnd = match.end;
+    }
+    if (lastEnd < content.length) {
+      spans.add(TextSpan(text: content.substring(lastEnd)));
+    }
+
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(color: color, fontSize: 13, height: 1.55),
+        children: spans,
       ),
     );
   }
@@ -257,9 +327,13 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 30, height: 30,
-            decoration: const BoxDecoration(shape: BoxShape.circle, gradient: LinearGradient(colors: [AppColors.accent2, AppColors.accent3])),
-            child: const Center(child: Text('🤖', style: TextStyle(fontSize: 14))),
+            width: 30,
+            height: 30,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(colors: [AppColors.accent2, AppColors.accent3]),
+            ),
+            child: const Center(child: Icon(Icons.auto_awesome_rounded, size: 14, color: Colors.white)),
           ),
           const SizedBox(width: 8),
           Container(
@@ -305,7 +379,10 @@ class _DotState extends State<_Dot> with SingleTickerProviderStateMixin {
   }
 
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -314,8 +391,9 @@ class _DotState extends State<_Dot> with SingleTickerProviderStateMixin {
       builder: (_, __) => Opacity(
         opacity: _anim.value,
         child: Container(
-          width: 7, height: 7,
-          decoration: BoxDecoration(color: AppColors.accent1, shape: BoxShape.circle),
+          width: 7,
+          height: 7,
+          decoration: const BoxDecoration(color: AppColors.accent1, shape: BoxShape.circle),
         ),
       ),
     );
