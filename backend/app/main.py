@@ -271,7 +271,6 @@ def booking_status(booking_ref: str):
     booking = get_booking(booking_ref)
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found")
-    import json
     return BookingResponse(
         booking_ref=booking["booking_ref"],
         showtime_id=booking["showtime_id"],
