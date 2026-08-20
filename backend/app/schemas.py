@@ -1,3 +1,5 @@
+"""Pydantic request/response models for the CineRead Cinema API."""
+
 from pydantic import BaseModel, Field
 from typing import List, Literal, Optional
 
