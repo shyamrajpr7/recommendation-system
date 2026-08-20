@@ -17,7 +17,7 @@ _STOP_WORDS = {
     "makes", "made", "say", "says", "said", "tell", "tells", "told", "give",
     "gives", "given", "take", "takes", "taken", "find", "finds", "found", "seen",
     "story", "film", "movie", "book", "novel", "feature", "work", "plot", "title",
-    "one", "two", "three", "also", "yet", "although", "though", "even", "still",
+    "one", "two", "three", "yet", "although", "though", "even", "still",
     "already", "however", "therefore", "thus", "similar", "alike", "match",
     "matches", "matched", "recommend", "recommended", "suggest", "suggests",
     "suggested", "audience", "viewer", "reader", "fan", "fans", "perfect",
