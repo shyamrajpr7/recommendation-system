@@ -22,11 +22,11 @@ Razorpay payment — all powered by a FastAPI backend with a Streamlit frontend.
 ```
 ┌──────────────┐   HTTP    ┌─────────────────────────────────────────────────┐
 │  Streamlit   │ ────────► │  FastAPI                                        │
-│  Frontend    │ ◄──────── │  /recommend  vector search + Grok explanations  │
+│  Frontend    │ ◄──────── │  /recommend  vector search + AI explanations     │
 └──────────────┘   JSON    │  /movies /showtimes /seats                      │
                            │  /bookings  create + Razorpay payment link      │
                            │  /bookings/{ref}/verify  confirm after payment  │
-                           │  /chat       Grok concierge (grounded in data)  │
+                           │  /chat       AI concierge (grounded in data)    │
                            └─────────────────────────────────────────────────┘
 ```
 
@@ -34,7 +34,7 @@ Razorpay payment — all powered by a FastAPI backend with a Streamlit frontend.
 - **Backend**: FastAPI (`backend/app/main.py`)
 - **Retrieval**: `sentence-transformers` (`all-MiniLM-L6-v2`) + FAISS inner-product index
 - **Metadata & ticketing**: SQLite — movies, theaters, screens, showtimes, bookings
-- **LLM**: xAI Grok (`grok-2-latest`, configurable via `XAI_MODEL`)
+- **LLM**: Groq (primary, `qwen/qwen3.6-27b`) or xAI Grok (`grok-2-latest`)
 - **Payments**: Razorpay Payment Links API
 - **Cache**: in-memory dict keyed on normalized query + filters
 
