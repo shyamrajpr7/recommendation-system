@@ -38,5 +38,8 @@ class RecommendationCache:
         self._cache.clear()
         self._order.clear()
 
+    def __len__(self) -> int:
+        return len(self._cache)
+
 # Global cache instance
 cache_instance = RecommendationCache()
