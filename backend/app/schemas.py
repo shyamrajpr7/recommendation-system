@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Literal, Optional
 
 # --------------------------------------------------------------------------
 # Recommendation
@@ -75,7 +75,7 @@ class ShowtimeListResponse(BaseModel):
 
 class Seat(BaseModel):
     seat: str
-    status: str  # available | occupied | blocked
+    status: Literal["available", "occupied", "blocked"]
 
 class SeatMapResponse(BaseModel):
     showtime_id: int
