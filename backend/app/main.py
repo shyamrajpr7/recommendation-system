@@ -80,7 +80,7 @@ app.add_middleware(
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "service": "CineRead Cinema API"}
+    return {"status": "ok", "service": "CineRead Cinema API", "version": "2.0.0"}
 
 
 @app.get("/genres", response_model=GenresResponse)
