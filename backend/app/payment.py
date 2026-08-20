@@ -1,3 +1,5 @@
+"""Razorpay payment link integration with mock fallback for local dev."""
+
 import os
 import requests
 from typing import Dict, Any, Optional
