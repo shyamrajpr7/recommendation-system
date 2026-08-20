@@ -1,3 +1,5 @@
+"""CineRead Cinema API — FastAPI app with recommendation, cinema, and chat endpoints."""
+
 import json
 import hashlib
 import secrets
