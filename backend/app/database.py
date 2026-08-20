@@ -330,7 +330,6 @@ def create_booking(showtime_id: int, customer_name: str, customer_email: str,
 
 
 def _new_booking_ref(conn) -> str:
-    import hashlib
     while True:
         ref = "CINE" + ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
         if not conn.execute("SELECT 1 FROM bookings WHERE booking_ref = ?;", (ref,)).fetchone():
