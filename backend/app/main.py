@@ -332,7 +332,7 @@ def verify_booking(booking_ref: str):
 # Auth (simple JWT-based)
 # --------------------------------------------------------------------------
 
-_SECRET = "cineread-dev-secret-key-change-in-production"
+_SECRET = os.environ.get("AUTH_SECRET", "cineread-dev-secret-key-change-in-production")
 _users: dict[str, dict] = {}  # email -> {name, email, password_hash}
 
 
