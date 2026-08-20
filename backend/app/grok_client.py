@@ -1,4 +1,6 @@
 import os
+import re
+import json
 import requests
 from typing import List, Dict, Any, Optional
 
@@ -71,8 +73,6 @@ def grok_json(messages: List[Dict[str, str]], **kwargs) -> Optional[Dict[str, An
     content = grok_chat(messages, **kwargs)
     if not content:
         return None
-    import re
-    import json
 
     stripped = re.sub(r"```(?:json)?\s*", "", content).strip()
     try:
