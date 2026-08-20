@@ -1,5 +1,5 @@
 import hashlib
-from typing import Dict, Any, Optional, Tuple
+from typing import Dict, Any, List, Optional, Tuple
 
 class RecommendationCache:
     """
