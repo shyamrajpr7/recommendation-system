@@ -1,3 +1,5 @@
+"""In-memory LRU cache for recommendation query results."""
+
 import hashlib
 from typing import Dict, Any, List, Optional, Tuple
 
