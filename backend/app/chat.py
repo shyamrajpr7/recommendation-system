@@ -1,3 +1,5 @@
+"""AI concierge chat endpoint grounded in live catalog and schedule data."""
+
 from typing import List, Dict, Any
 
 from backend.app.grok_client import grok_chat
