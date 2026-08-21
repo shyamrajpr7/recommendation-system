@@ -84,7 +84,7 @@ streamlit run frontend/app.py                       # frontend (http://localhost
 - `POST /bookings` — `{showtime_id, customer_name, customer_email, seats: ["A1","A2"]}`
 - `GET /bookings/{ref}` — booking status / e-ticket data
 - `POST /bookings/{ref}/verify` — confirm a booking after payment
-- `POST /chat` — `{message, history}` Grok concierge
+- `POST /chat` — `{message, history}` AI concierge
 
 ## Project layout
 
