@@ -781,7 +781,7 @@ def page_now_showing():
 
 # ============================================================ AI SEARCH
 def page_ai_search():
-    _hero("Semantic Search", "Find your next watch", "Vector matching across the catalog — grounded Groq explanations")
+    _hero("Semantic Search", "Find your next watch", "Vector matching across the catalog — grounded AI explanations")
     if not backend_online():
         st.error("Backend offline. Start it with `uvicorn backend.app.main:app --port 8000`.")
         return
