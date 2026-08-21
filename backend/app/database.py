@@ -1,3 +1,5 @@
+"""SQLite database layer for catalog, theaters, showtimes, and bookings."""
+
 import sqlite3
 import os
 import json
