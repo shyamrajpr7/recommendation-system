@@ -833,7 +833,7 @@ def page_ai_search():
         return
 
     is_cached = data.get("cached", False)
-    badge = '<span class="badge badge-cached">⚡ cached</span>' if is_cached else '<span class="badge badge-year">✨ fresh</span>'
+    badge = '<span class="badge badge-cached">⚡ cached</span>' if is_cached else '<span class="badge badge-fresh">✨ fresh</span>'
     st.markdown(
         f'<div class="showtime-info"><strong style="color:#f8fafc;">{len(recs)}</strong> match(es) for '
         f'<i>“{html.escape(query)}”</i> {badge}</div>',
