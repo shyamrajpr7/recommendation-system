@@ -803,7 +803,7 @@ def page_ai_search():
             <div class="empty-state">
                 <div class="empty-icon">🔍</div>
                 <div class="empty-title">Find your next watch</div>
-                <div>Describe a plot, mood, or title — we match it semantically and explain why with Grok.</div>
+                <div>Describe a plot, mood, or title — we match it semantically and explain why with AI.</div>
             </div>
             """,
             unsafe_allow_html=True,
