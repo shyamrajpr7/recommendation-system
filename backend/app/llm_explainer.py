@@ -28,7 +28,8 @@ _STOP_WORDS = {
 def generate_explanations(query: str, candidates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
     Generates grounded natural-language explanations for recommendations.
-    Uses xAI Grok if XAI_API_KEY is configured, otherwise uses structured fallback.
+    Uses Groq (GROQ_API_KEY) or xAI Grok (XAI_API_KEY) if configured,
+    otherwise uses structured fallback.
     """
     if not candidates:
         return []
