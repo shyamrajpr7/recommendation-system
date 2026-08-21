@@ -542,7 +542,7 @@ with st.sidebar:
     )
     st.markdown(
         '<div style="color:#5b6f8f;font-size:0.75rem;margin-top:1.1rem;line-height:1.6;">'
-        'FAISS retrieval · Sentence-Transformers · Groq AI · Razorpay</div>',
+        'FAISS retrieval · Sentence-Transformers · Groq AI · Razorpay payments</div>',
         unsafe_allow_html=True,
     )
 
