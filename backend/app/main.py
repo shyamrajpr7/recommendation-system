@@ -65,7 +65,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="CineRead Cinema API",
-    description="Movie ticketing + vector search + grounded AI explanations (Grok)",
+    description="Movie ticketing + vector search + grounded AI explanations (Groq/xAI)",
     version="2.0.0",
     lifespan=lifespan
 )
