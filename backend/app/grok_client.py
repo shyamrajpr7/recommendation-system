@@ -1,3 +1,5 @@
+"""OpenAI-compatible LLM client supporting Groq and xAI Grok."""
+
 import os
 import re
 import json
