@@ -287,6 +287,7 @@ st.markdown(
     .badge-genre { background: rgba(56, 189, 248, 0.12); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.25); }
     .badge-year { background: rgba(52, 211, 153, 0.12); color: #6ee7b7; border: 1px solid rgba(52, 211, 153, 0.25); }
     .badge-rank { background: rgba(251, 191, 36, 0.14); color: #fcd34d; border: 1px solid rgba(251, 191, 36, 0.3); }
+    .badge-cached { background: rgba(56, 189, 248, 0.12); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.25); }
     .stars { color: var(--gold); letter-spacing: 0.08em; font-size: 0.82rem; }
     .synopsis { color: #b6c4da; font-size: 0.9rem; line-height: 1.6; flex: 1; }
 
