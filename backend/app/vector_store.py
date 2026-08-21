@@ -1,3 +1,5 @@
+"""Sentence-Transformers embedding model + FAISS index for semantic search."""
+
 import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer
