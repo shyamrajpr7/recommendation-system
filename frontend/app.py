@@ -841,6 +841,7 @@ def page_ai_search():
                           placeholder="e.g. 'dream within a dream heist' or 'space survival'")
     genre = g2.selectbox("Genre", ["All"] + genres)
     media = g3.selectbox("Type", ["All", "Movie", "Book"])
+    top_k = st.slider("Number of results", min_value=1, max_value=5, value=3, key="top_k_slider")
     st.markdown("</div>", unsafe_allow_html=True)
 
     if not query.strip():
@@ -863,7 +864,7 @@ def page_ai_search():
                 "query": query,
                 "genre": genre if genre != "All" else None,
                 "item_type": media if media != "All" else None,
-                "top_k": 3,
+                "top_k": top_k,
             })
         except Exception as e:
             st.error(f"❌ {html.escape(str(e))}")
