@@ -975,7 +975,11 @@ def page_chat():
         st.markdown(f'<div class="chat-wrap">{msgs}</div>', unsafe_allow_html=True)
 
     st.text_input("Message", key="chat_input", placeholder="e.g. 'what sci-fi is showing tonight?'")
-    st.button("Send", on_click=_send_chat, use_container_width=True)
+    c_send, c_clear = st.columns([3, 1])
+    c_send.button("Send", on_click=_send_chat, use_container_width=True)
+    if c_clear.button("🗑️ Clear", use_container_width=True):
+        st.session_state.chat_history = []
+        st.rerun()
     st.caption("Powered by Groq. Responses are grounded in tonight's schedule.")
     _footer()
 
