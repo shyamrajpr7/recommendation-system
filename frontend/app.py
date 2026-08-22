@@ -1027,6 +1027,7 @@ def _render_ticket(b):
     ts_cls = "ts-confirmed" if status_ok else "ts-pending"
     ts_label = b["status"].upper()
     seats = ", ".join(b["seats"])
+    st.code(b["booking_ref"], language=None)
     st.markdown(
         f'<div class="ticket-wrap">'
         f'<div class="ticket-head"><div class="ticket-brand">🎬 CINEREAD</div>'
