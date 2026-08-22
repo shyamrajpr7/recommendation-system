@@ -597,33 +597,48 @@ def page_now_showing():
 
     # --- Step 0/1: pick a movie ---
     if st.session_state.selected_movie_id is None:
+        st.markdown('<div class="chip-label">Filter <span>by title</span></div>', unsafe_allow_html=True)
+        title_query = st.text_input(
+            "Search movies by title",
+            key="movie_title_filter",
+            placeholder="Type a movie title…",
+            label_visibility="collapsed",
+        ).strip().lower()
+
         st.markdown('<div class="chip-label">Filter <span>by genre</span></div>', unsafe_allow_html=True)
         genres = ["All"] + sorted({m["genre"] for m in movies})
         sel_genre = st.pills("Genre", genres, key="genre_pill", default="All", label_visibility="collapsed")
 
-        st.markdown('<div class="movie-grid">', unsafe_allow_html=True)
-        for m in movies:
-            if sel_genre != "All" and m["genre"] != sel_genre:
-                continue
-            title = html.escape(m["title"])
-            synopsis = html.escape(m["synopsis"])
-            stars = _stars(m["rating"])
-            grad = _palette(m["title"])
-            st.markdown(
-                f'<div class="movie-card">'
-                f'<div class="movie-poster" style="background:{grad};"><h3>{title}</h3></div>'
-                f'<div class="movie-body">'
-                f'<div class="movie-meta"><span class="badge badge-genre">{html.escape(m["genre"])}</span>'
-                f'<span class="badge badge-year">{m["year"]}</span>'
-                f'<span class="stars">{stars}</span>'
-                f'<span style="color:var(--muted);font-weight:700;">{m["rating"]}/10</span></div>'
-                f'<div class="synopsis">{synopsis}</div>'
-                f'</div></div>',
-                unsafe_allow_html=True,
-            )
-            st.button("🎟️ Book Tickets", key=f"book_{m['id']}", use_container_width=True,
-                      on_click=_pick_movie, args=(m["id"],))
-        st.markdown("</div>", unsafe_allow_html=True)
+        visible = [
+            m for m in movies
+            if (sel_genre == "All" or m["genre"] == sel_genre)
+            and (not title_query or title_query in m["title"].lower())
+        ]
+
+        if not visible:
+            st.info(f"No movies match “{title_query}”. Clear the search to see all titles.")
+        else:
+            st.markdown('<div class="movie-grid">', unsafe_allow_html=True)
+            for m in visible:
+                title = html.escape(m["title"])
+                synopsis = html.escape(m["synopsis"])
+                stars = _stars(m["rating"])
+                grad = _palette(m["title"])
+                st.markdown(
+                    f'<div class="movie-card">'
+                    f'<div class="movie-poster" style="background:{grad};"><h3>{title}</h3></div>'
+                    f'<div class="movie-body">'
+                    f'<div class="movie-meta"><span class="badge badge-genre">{html.escape(m["genre"])}</span>'
+                    f'<span class="badge badge-year">{m["year"]}</span>'
+                    f'<span class="stars">{stars}</span>'
+                    f'<span style="color:var(--muted);font-weight:700;">{m["rating"]}/10</span></div>'
+                    f'<div class="synopsis">{synopsis}</div>'
+                    f'</div></div>',
+                    unsafe_allow_html=True,
+                )
+                st.button("🎟️ Book Tickets", key=f"book_{m['id']}", use_container_width=True,
+                          on_click=_pick_movie, args=(m["id"],))
+            st.markdown("</div>", unsafe_allow_html=True)
         _footer()
         return
 
