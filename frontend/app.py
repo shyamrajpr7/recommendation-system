@@ -609,11 +609,26 @@ def page_now_showing():
         genres = ["All"] + sorted({m["genre"] for m in movies})
         sel_genre = st.pills("Genre", genres, key="genre_pill", default="All", label_visibility="collapsed")
 
-        visible = [
-            m for m in movies
-            if (sel_genre == "All" or m["genre"] == sel_genre)
-            and (not title_query or title_query in m["title"].lower())
-        ]
+        st.markdown('<div class="chip-label">Sort <span>movies</span></div>', unsafe_allow_html=True)
+        sort_by = st.selectbox(
+            "Sort movies",
+            ["Rating (high → low)", "Year (new → old)", "Title (A → Z)"],
+            key="movie_sort",
+            label_visibility="collapsed",
+        )
+        sort_keys = {
+            "Rating (high → low)": lambda m: (-m["rating"], m["title"]),
+            "Year (new → old)": lambda m: (-m["year"], m["title"]),
+            "Title (A → Z)": lambda m: m["title"].lower(),
+        }
+        visible = sorted(
+            [
+                m for m in movies
+                if (sel_genre == "All" or m["genre"] == sel_genre)
+                and (not title_query or title_query in m["title"].lower())
+            ],
+            key=sort_keys[sort_by],
+        )
 
         if not visible:
             st.info(f"No movies match “{title_query}”. Clear the search to see all titles.")
