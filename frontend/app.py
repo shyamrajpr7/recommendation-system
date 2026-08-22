@@ -541,6 +541,16 @@ with st.sidebar:
         f'<span class="status-pill {cls}"><span class="status-dot"></span>{label}</span>',
         unsafe_allow_html=True,
     )
+    stats = api_get("/stats") if online else None
+    if stats:
+        st.markdown(
+            '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.8rem;">'
+            f'<span class="badge badge-genre">🎬 {stats["movies"]} movies</span>'
+            f'<span class="badge badge-year">🗓️ {stats["showtimes"]} shows</span>'
+            f'<span class="badge badge-rank">🏛️ {stats["theaters"]} theaters</span>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
     st.markdown(
         '<div style="color:#5b6f8f;font-size:0.75rem;margin-top:1.1rem;line-height:1.6;">'
         'FAISS retrieval · Sentence-Transformers · Groq AI · Razorpay payments</div>',

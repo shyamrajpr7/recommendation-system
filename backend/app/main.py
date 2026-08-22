@@ -194,6 +194,18 @@ def list_dates():
     return {"dates": get_upcoming_dates()}
 
 
+@app.get("/stats")
+def catalog_stats():
+    movies = get_movies()
+    showtimes = get_showtimes()
+    return {
+        "movies": len(movies),
+        "showtimes": len(showtimes),
+        "theaters": len(get_theaters()),
+        "show_dates": len(get_upcoming_dates()),
+    }
+
+
 @app.get("/showtimes", response_model=ShowtimeListResponse)
 def list_showtimes(movie_id: Optional[int] = None, show_date: Optional[str] = None):
     showtimes = get_showtimes(movie_id=movie_id, show_date=show_date)
