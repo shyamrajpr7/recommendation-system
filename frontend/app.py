@@ -1028,6 +1028,24 @@ def _render_ticket(b):
     ts_label = b["status"].upper()
     seats = ", ".join(b["seats"])
     st.code(b["booking_ref"], language=None)
+    ticket_text = (
+        "CINEREAD E-TICKET\n"
+        "=================\n"
+        f"Booking : {b['booking_ref']}\n"
+        f"Movie   : {b['movie_title']} ({b['movie_genre']})\n"
+        f"Theater : {b['theater_name']} — {b['screen_name']}, {b['city']}\n"
+        f"Show    : {b['show_date']} at {b['show_time']}\n"
+        f"Seats   : {seats}\n"
+        f"Amount  : Rs.{int(b['total_amount'])}\n"
+        f"Status  : {ts_label} (payment: {b['payment_status']})\n"
+    )
+    st.download_button(
+        "⬇️ Download e-ticket (.txt)",
+        data=ticket_text,
+        file_name=f"{b['booking_ref']}.txt",
+        mime="text/plain",
+        use_container_width=True,
+    )
     st.markdown(
         f'<div class="ticket-wrap">'
         f'<div class="ticket-head"><div class="ticket-brand">🎬 CINEREAD</div>'
