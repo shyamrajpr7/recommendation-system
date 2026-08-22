@@ -1,5 +1,6 @@
 import html
 import json
+import random
 import zlib
 import requests
 import streamlit as st
@@ -633,6 +634,9 @@ def page_now_showing():
         if not visible:
             st.info(f"No movies match “{title_query}”. Clear the search to see all titles.")
         else:
+            if st.button("🎲 Surprise me", key="surprise_me", use_container_width=False):
+                _pick_movie(random.choice(visible)["id"])
+                st.rerun()
             st.markdown('<div class="movie-grid">', unsafe_allow_html=True)
             for m in visible:
                 title = html.escape(m["title"])
