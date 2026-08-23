@@ -235,6 +235,9 @@ def make_booking(payload: BookingRequest):
     if not showtime:
         raise HTTPException(status_code=404, detail="Showtime not found")
 
+    if len(set(payload.seats)) != len(payload.seats):
+        raise HTTPException(status_code=400, detail="Duplicate seats in request: " + ", ".join(sorted(set(s for s in payload.seats if payload.seats.count(s) > 1))))
+
     seat_map = get_seat_map(payload.showtime_id)
     available = {
         s["seat"]
