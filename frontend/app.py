@@ -1032,10 +1032,11 @@ def page_my_booking():
         'Enter the booking reference you received at checkout — your ticket unlocks instantly.</div>',
         unsafe_allow_html=True,
     )
-    ref = st.text_input("Booking reference", key="lookup_ref", placeholder="e.g. CINE7PN9N8")
-    if st.button("Check status", use_container_width=True, type="primary") and ref.strip():
+    ref = st.text_input("Booking reference", key="lookup_ref",
+                        placeholder="e.g. CINE7PN9N8").strip().upper()
+    if st.button("Check status", use_container_width=True, type="primary") and ref:
         try:
-            data = api_get(f"/bookings/{ref.strip()}")
+            data = api_get(f"/bookings/{ref}")
             if not data:
                 st.error("Booking not found.")
             else:
@@ -1044,7 +1045,7 @@ def page_my_booking():
             st.error("Booking not found.")
     st.markdown("</div>", unsafe_allow_html=True)
 
-    if not ref.strip():
+    if not ref:
         st.markdown(
             '<div class="empty-state">'
             '<div class="empty-icon">🎟️</div>'
