@@ -89,9 +89,17 @@ async def add_process_time_header(request, call_next):
     return response
 
 
+_START_TIME = time.time()
+
+
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "service": "CineRead Cinema API", "version": "2.0.0"}
+    return {
+        "status": "ok",
+        "service": "CineRead Cinema API",
+        "version": "2.0.0",
+        "uptime_seconds": int(time.time() - _START_TIME),
+    }
 
 
 @app.get("/genres", response_model=GenresResponse)
