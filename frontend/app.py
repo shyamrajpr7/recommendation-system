@@ -89,6 +89,11 @@ def _set_search_query(example):
     st.session_state.search_input = example
 
 
+def _book_from_search(movie_id):
+    _pick_movie(movie_id)
+    st.session_state["nav_radio"] = "🎟️ Now Showing"
+
+
 # ----------------------------------------------------------- helpers ----
 _PALETTES = [
     ("#0ea5e9", "#6366f1"),
@@ -535,6 +540,7 @@ with st.sidebar:
     page = st.radio(
         "Navigate",
         ["🎟️ Now Showing", "✨ AI Search", "🤖 AI Assistant", "🎫 My Booking"],
+        key="nav_radio",
         label_visibility="collapsed",
     )
     online = backend_online()
@@ -936,6 +942,20 @@ def page_ai_search():
             f'</div>'
         )
     st.markdown(f'<div class="movie-grid">{"".join(cards)}</div>', unsafe_allow_html=True)
+
+    showtime_movie_ids = {s["movie_id"] for s in (api_get("/showtimes") or {}).get("showtimes", [])}
+    bookable = [r for r in recs if r["item_type"] == "Movie" and r["id"] in showtime_movie_ids]
+    if bookable:
+        st.markdown('<div class="chip-label">Book <span>a result</span></div>', unsafe_allow_html=True)
+        book_cols = st.columns(len(bookable))
+        for col, rec in zip(book_cols, bookable):
+            col.button(
+                f"🎟️ {rec['title']}",
+                key=f"book_rec_{rec['id']}",
+                use_container_width=True,
+                on_click=_book_from_search,
+                args=(rec["id"],),
+            )
     _footer()
 
 
