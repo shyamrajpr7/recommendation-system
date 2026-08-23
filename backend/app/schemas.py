@@ -89,7 +89,11 @@ class SeatMapResponse(BaseModel):
 class BookingRequest(BaseModel):
     showtime_id: int
     customer_name: str = Field(..., min_length=2, max_length=120)
-    customer_email: str = Field(..., min_length=5, max_length=200)
+    customer_email: str = Field(
+        ..., min_length=5, max_length=200,
+        pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+        description="Customer email (basic format validation)",
+    )
     seats: List[str] = Field(..., min_length=1, max_length=10)
 
 class BookingResponse(BaseModel):
