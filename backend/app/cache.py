@@ -1,19 +1,19 @@
 """In-memory LRU cache for recommendation query results."""
 
 import hashlib
-from typing import Dict, Any, List, Optional, Tuple
+from collections import OrderedDict
+from typing import Any, Dict, Optional
 
 class RecommendationCache:
     """
-    In-memory dictionary cache keyed on normalized query and filter criteria.
+    In-memory LRU cache keyed on normalized query and filter criteria.
     Stores both the retrieval results and the LLM-generated explanations.
-    Bounded by MAX_ENTRIES; oldest entry evicted when full.
+    Bounded by MAX_ENTRIES; the least-recently-used entry is evicted when full.
     """
     MAX_ENTRIES = 256
 
     def __init__(self, max_entries: int = MAX_ENTRIES):
-        self._cache: Dict[str, Dict[str, Any]] = {}
-        self._order: List[str] = []
+        self._cache: "OrderedDict[str, Dict[str, Any]]" = OrderedDict()
         self._max_entries = max_entries
 
     def _make_key(self, query: str, genre: Optional[str] = None, item_type: Optional[str] = None) -> str:
@@ -25,20 +25,21 @@ class RecommendationCache:
 
     def get(self, query: str, genre: Optional[str] = None, item_type: Optional[str] = None) -> Optional[Dict[str, Any]]:
         key = self._make_key(query, genre, item_type)
-        return self._cache.get(key)
+        if key not in self._cache:
+            return None
+        self._cache.move_to_end(key)
+        return self._cache[key]
 
     def set(self, query: str, data: Dict[str, Any], genre: Optional[str] = None, item_type: Optional[str] = None):
         key = self._make_key(query, genre, item_type)
-        if key not in self._cache:
-            self._order.append(key)
-            if len(self._order) > self._max_entries:
-                oldest = self._order.pop(0)
-                self._cache.pop(oldest, None)
+        if key in self._cache:
+            self._cache.move_to_end(key)
+        elif len(self._cache) >= self._max_entries:
+            self._cache.popitem(last=False)
         self._cache[key] = data
 
     def clear(self):
         self._cache.clear()
-        self._order.clear()
 
     def __len__(self) -> int:
         return len(self._cache)
