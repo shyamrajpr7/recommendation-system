@@ -967,17 +967,25 @@ def page_chat():
         return
 
     st.session_state.setdefault("chat_history", [])
+    presets = [
+        "🎬 what sci-fi is on tonight?",
+        "🍿 best family movie today",
+        "🕗 what time is Oppenheimer?",
+    ]
 
-    def _send_chat():
-        msg = st.session_state.get("chat_input", "").strip()
-        if not msg:
+    def _do_send(message):
+        message = message.strip()
+        if not message:
             return
-        st.session_state.chat_history.append({"role": "user", "content": msg})
+        st.session_state.chat_history.append({"role": "user", "content": message})
         try:
-            resp = api_post("/chat", {"message": msg, "history": st.session_state.chat_history[:-1]})
+            resp = api_post("/chat", {"message": message, "history": st.session_state.chat_history[:-1]})
             st.session_state.chat_history.append({"role": "assistant", "content": resp["reply"]})
         except Exception as e:
             st.session_state.chat_history.append({"role": "assistant", "content": f"Error: {e}"})
+
+    def _send_chat():
+        _do_send(st.session_state.get("chat_input", ""))
 
     if not st.session_state.chat_history:
         st.markdown(
@@ -988,14 +996,11 @@ def page_chat():
             '</div>',
             unsafe_allow_html=True,
         )
-        st.markdown(
-            '<div style="margin-bottom:1.2rem;text-align:center;">'
-            '<span class="chat-chip">🎬 what sci-fi is on tonight?</span>'
-            '<span class="chat-chip">🍿 best family movie today</span>'
-            '<span class="chat-chip">🕗 what time is Oppenheimer?</span>'
-            '</div>',
-            unsafe_allow_html=True,
-        )
+        st.markdown('<div class="chip-label">Try <span>asking</span></div>', unsafe_allow_html=True)
+        preset_cols = st.columns(len(presets))
+        for col, preset in zip(preset_cols, presets):
+            col.button(preset, key=f"preset_{zlib.crc32(preset.encode())}",
+                       use_container_width=True, on_click=_do_send, args=(preset,))
 
     msgs = "".join(
         f'<div class="chat-row {"user" if m["role"] == "user" else "ai"}">'
