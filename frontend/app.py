@@ -85,6 +85,10 @@ def _toggle_seat(seat):
         st.session_state.selected_seats.append(seat)
 
 
+def _set_search_query(example):
+    st.session_state.search_input = example
+
+
 # ----------------------------------------------------------- helpers ----
 _PALETTES = [
     ("#0ea5e9", "#6366f1"),
@@ -855,6 +859,16 @@ def page_ai_search():
             """,
             unsafe_allow_html=True,
         )
+        st.markdown('<div class="chip-label">Try <span>an example</span></div>', unsafe_allow_html=True)
+        examples = [
+            "a dream within a dream heist",
+            "space survival epic",
+            "feel-good time travel romance",
+        ]
+        example_cols = st.columns(len(examples))
+        for col, example in zip(example_cols, examples):
+            col.button(example, key=f"example_{zlib.crc32(example.encode())}",
+                       use_container_width=True, on_click=_set_search_query, args=(example,))
         _footer()
         return
 
