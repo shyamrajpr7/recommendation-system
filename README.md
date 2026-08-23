@@ -59,6 +59,7 @@ export XAI_MODEL="grok-2-latest"             # optional model override
 export GROQ_MODEL="llama-3.3-70b-versatile"  # optional Groq model override
 export RAZORPAY_KEY_ID="rzp_test_..."
 export RAZORPAY_KEY_SECRET="your-secret"     # real payment; absent = simulated
+export CINEREAD_API_URL="http://127.0.0.1:8000"  # optional frontend → backend URL override
 ```
 
 Run the backend, then the frontend:
@@ -73,18 +74,21 @@ streamlit run frontend/app.py                       # frontend (http://localhost
 
 ## Endpoints
 
-- `GET /health` — liveness check
+- `GET /health` — liveness check (includes `uptime_seconds`)
 - `GET /genres` — known genres for the filter dropdown
 - `POST /recommend` — `{"query": "...", "genre": "Sci-Fi", "item_type": "Movie", "top_k": 3}`
-- `GET /movies` — full movie catalog
+- `GET /movies` — full movie catalog (optional `?genre=` exact-match filter)
+- `GET /movies/{id}` — single movie detail (404 if unknown)
 - `GET /theaters` — theater list
 - `GET /dates` — upcoming show dates
 - `GET /showtimes?movie_id=&show_date=` — showtime schedule
 - `GET /seats?showtime_id=` — seat map with availability
-- `POST /bookings` — `{showtime_id, customer_name, customer_email, seats: ["A1","A2"]}`
+- `POST /bookings` — `{showtime_id, customer_name, customer_email, seats: ["A1","A2"]}` (duplicate seats rejected; email format validated)
 - `GET /bookings/{ref}` — booking status / e-ticket data
 - `POST /bookings/{ref}/verify` — confirm a booking after payment
 - `POST /chat` — `{message, history}` AI concierge
+
+> Every API response includes an `X-Process-Time` header (seconds) for latency profiling.
 
 ## Project layout
 
