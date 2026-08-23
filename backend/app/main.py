@@ -81,6 +81,14 @@ app.add_middleware(
 )
 
 
+@app.middleware("http")
+async def add_process_time_header(request, call_next):
+    start = time.perf_counter()
+    response = await call_next(request)
+    response.headers["X-Process-Time"] = f"{time.perf_counter() - start:.4f}"
+    return response
+
+
 @app.get("/health")
 def health_check():
     return {"status": "ok", "service": "CineRead Cinema API", "version": "2.0.0"}
