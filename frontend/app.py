@@ -748,6 +748,10 @@ def page_now_showing():
         st.rerun()
 
     seat_map = api_get(f"/seats?showtime_id={showtime['id']}")
+    available_count = (
+        sum(1 for row in seat_map["seats"] for s in row if s["status"] == "available")
+        if seat_map else 0
+    )
     _stepper(["Movie", "Showtime", "Seats", "Payment"], 2)
     st.markdown('<div class="panel">', unsafe_allow_html=True)
     st.markdown('<div class="chip-label">Booking Summary</div>', unsafe_allow_html=True)
@@ -756,7 +760,8 @@ def page_now_showing():
         f'<div class="showtime-info" style="margin-top:0.25rem;">{html.escape(showtime["theater_name"])} · '
         f'{html.escape(showtime["screen_name"])} · {html.escape(showtime["city"])} · '
         f'{showtime["show_date"]} at <strong style="color:var(--accent-1);">{showtime["show_time"]}</strong> · '
-        f'<span style="color:#a7f3d0;font-weight:700;">₹{int(showtime["base_price"])}/seat</span></div>',
+        f'<span style="color:#a7f3d0;font-weight:700;">₹{int(showtime["base_price"])}/seat</span> · '
+        f'<strong style="color:var(--accent-2);">{available_count} seats available</strong></div>',
         unsafe_allow_html=True,
     )
     st.markdown("</div>", unsafe_allow_html=True)
