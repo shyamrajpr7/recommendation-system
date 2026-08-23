@@ -179,8 +179,8 @@ def get_recommendations(payload: RecommendationRequest):
 # --------------------------------------------------------------------------
 
 @app.get("/movies", response_model=MovieListResponse)
-def list_movies():
-    movies = get_movies()
+def list_movies(genre: Optional[str] = None):
+    movies = get_movies(genre=(genre or "").strip() or None)
     return MovieListResponse(movies=[Movie(**m) for m in movies])
 
 

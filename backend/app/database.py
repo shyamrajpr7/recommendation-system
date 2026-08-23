@@ -201,9 +201,14 @@ def get_genres() -> List[str]:
 # Cinema helpers
 # --------------------------------------------------------------------------
 
-def get_movies() -> List[Dict[str, Any]]:
+def get_movies(genre: Optional[str] = None) -> List[Dict[str, Any]]:
     conn = _get_conn()
-    rows = conn.execute("SELECT * FROM movies_books WHERE item_type = 'Movie' ORDER BY title;").fetchall()
+    if genre:
+        rows = conn.execute(
+            "SELECT * FROM movies_books WHERE item_type = 'Movie' AND genre = ? ORDER BY title;",
+            (genre,)).fetchall()
+    else:
+        rows = conn.execute("SELECT * FROM movies_books WHERE item_type = 'Movie' ORDER BY title;").fetchall()
     conn.close()
     return [dict(row) for row in rows]
 
