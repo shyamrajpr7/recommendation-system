@@ -19,6 +19,7 @@ from backend.app.database import (
     get_items_by_ids,
     get_genres,
     get_movies,
+    get_movie,
     get_theaters,
     get_showtimes,
     get_showtime,
@@ -181,6 +182,14 @@ def get_recommendations(payload: RecommendationRequest):
 def list_movies():
     movies = get_movies()
     return MovieListResponse(movies=[Movie(**m) for m in movies])
+
+
+@app.get("/movies/{movie_id}", response_model=Movie)
+def movie_detail(movie_id: int):
+    movie = get_movie(movie_id)
+    if not movie or movie["item_type"] != "Movie":
+        raise HTTPException(status_code=404, detail="Movie not found")
+    return Movie(**movie)
 
 
 @app.get("/theaters", response_model=TheaterListResponse)
