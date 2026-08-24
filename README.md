@@ -1,5 +1,8 @@
 # CineRead — AI Movie Recommendation & Cinema Ticket Booking
 
+> **Latest:** v1.0.1 — settings screen polish (profile name, API version badge, footer version bump)
+
+
 A full-stack cinema ticketing web app: vector-similarity movie search with
 grounded AI explanations, showtime browsing, interactive seat selection, and
 Razorpay payment — all powered by a FastAPI backend with a Streamlit frontend.
