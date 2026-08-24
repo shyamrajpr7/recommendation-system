@@ -158,7 +158,7 @@ class SettingsScreen extends ConsumerWidget {
                 child: const Icon(Icons.movie_filter_rounded, size: 18, color: Colors.white),
               ),
               const SizedBox(height: 6),
-              Text('CineRead v1.0.0', style: TextStyle(color: AppColors.muted2, fontSize: 11, fontWeight: FontWeight.w600)),
+              Text('CineRead v1.0.1', style: TextStyle(color: AppColors.muted2, fontSize: 11, fontWeight: FontWeight.w600)),
               const SizedBox(height: 2),
               Text('AI-Powered Cinema Booking', style: TextStyle(color: AppColors.muted2, fontSize: 10)),
             ],
