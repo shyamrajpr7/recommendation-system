@@ -116,7 +116,7 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               _buildInfoTile(Icons.info_outline, 'About CineRead', 'AI-powered cinema booking'),
               _divider(),
-              _buildInfoTile(Icons.code_rounded, 'API Status', 'Backend: localhost:8000'),
+              _buildInfoTile(Icons.code_rounded, 'API Status', 'Backend: localhost:8000 · v1.0.1'),
               _divider(),
               _buildInfoTile(Icons.phone_android_rounded, 'Platform', 'macOS desktop'),
             ],
