@@ -41,8 +41,8 @@ class SettingsScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Guest User', style: Theme.of(context).textTheme.titleMedium),
-                  Text('Development mode', style: TextStyle(color: AppColors.muted, fontSize: 13)),
+                  Text('Alex Johnson', style: Theme.of(context).textTheme.titleMedium),
+                  Text('Signed in', style: TextStyle(color: AppColors.muted, fontSize: 13)),
                 ],
               ),
             ),
