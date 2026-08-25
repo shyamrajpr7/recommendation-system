@@ -3,6 +3,27 @@
 from pydantic import BaseModel, Field
 from typing import List, Literal, Optional
 
+__all__ = [
+    "RecommendationRequest",
+    "RecommendationResponse",
+    "ItemRecommendation",
+    "GenresResponse",
+    "Movie",
+    "MovieListResponse",
+    "Theater",
+    "TheaterListResponse",
+    "Showtime",
+    "ShowtimeListResponse",
+    "Seat",
+    "SeatMapResponse",
+    "BookingRequest",
+    "BookingResponse",
+    "BookingVerifyRequest",
+    "BookingVerifyResponse",
+    "ChatRequest",
+    "ChatResponse",
+]
+
 # --------------------------------------------------------------------------
 # Recommendation
 # --------------------------------------------------------------------------
