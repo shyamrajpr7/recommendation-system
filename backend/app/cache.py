@@ -5,10 +5,12 @@ from collections import OrderedDict
 from typing import Any, Dict, Optional
 
 class RecommendationCache:
-    """
-    In-memory LRU cache keyed on normalized query and filter criteria.
-    Stores both the retrieval results and the LLM-generated explanations.
-    Bounded by MAX_ENTRIES; the least-recently-used entry is evicted when full.
+    """In-memory LRU cache for recommendation query results.
+
+    Stores both retrieval results and LLM-generated explanations keyed on
+    the SHA-256 hash of the normalised query string combined with genre and
+    item-type filters.  Bounded by ``max_entries`` (default 256); the
+    least-recently-used entry is evicted when the cache is full.
     """
     MAX_ENTRIES = 256
 
