@@ -23,6 +23,19 @@ data/*.sqlite3
 .idea/
 .vscode/
 .DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Build
+dist/
+build/
 
 # Flutter
 mobile/.dart_tool/
