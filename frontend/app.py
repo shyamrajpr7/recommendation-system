@@ -27,8 +27,8 @@ def api_get(path: str):
         return None
 
 
-def api_post(path: str, payload: dict):
-    res = requests.post(f"{BACKEND_URL}{path}", json=payload, timeout=30)
+def api_post(path: str, payload: dict, timeout: int = 30):
+    res = requests.post(f"{BACKEND_URL}{path}", json=payload, timeout=timeout)
     if res.status_code >= 400:
         detail = res.json().get("detail")
         raise RuntimeError(detail if isinstance(detail, str) else str(detail))
