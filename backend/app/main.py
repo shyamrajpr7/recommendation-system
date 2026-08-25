@@ -2,6 +2,7 @@
 
 import json
 import hashlib
+import logging
 import os
 import time
 from fastapi import FastAPI, HTTPException, Query, Depends, Header
@@ -13,6 +14,8 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 from backend.app.database import (
     init_db,
@@ -57,12 +60,12 @@ from backend.app.schemas import (
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("[Startup] Initializing SQLite Metadata Database...")
+    logger.info("[Startup] Initializing SQLite Metadata Database...")
     init_db()
-    print("[Startup] Loading Vector Store & Indexing Items...")
+    logger.info("[Startup] Loading Vector Store & Indexing Items...")
     VectorStore.get_instance()
-    print(f"[Startup] Razorpay payment: {'enabled' if payment_enabled() else 'mock fallback (set RAZORPAY_KEY_ID/SECRET)'}")
-    print("[Startup] Cinema Booking Backend Ready!")
+    logger.info(f"[Startup] Razorpay payment: {'enabled' if payment_enabled() else 'mock fallback (set RAZORPAY_KEY_ID/SECRET)'}")
+    logger.info("[Startup] Cinema Booking Backend Ready!")
     yield
 
 app = FastAPI(
