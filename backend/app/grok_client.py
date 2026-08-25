@@ -60,7 +60,7 @@ def grok_chat(
             cfg["url"],
             json=payload,
             headers={"Authorization": f"Bearer {cfg['api_key']}"},
-            timeout=timeout,
+            timeout=(10, timeout),
         )
         resp.raise_for_status()
         data = resp.json()
