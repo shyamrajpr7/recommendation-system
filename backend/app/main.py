@@ -17,6 +17,8 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
+APP_VERSION = "2.0.0"
+
 from backend.app.database import (
     init_db,
     get_items_by_ids,
@@ -71,7 +73,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="CineRead Cinema API",
     description="Movie ticketing + vector search + grounded AI explanations (Groq/xAI)",
-    version="2.0.0",
+    version=APP_VERSION,
     lifespan=lifespan
 )
 
@@ -100,7 +102,7 @@ def health_check():
     return {
         "status": "ok",
         "service": "CineRead Cinema API",
-        "version": "2.0.0",
+        "version": APP_VERSION,
         "uptime_seconds": int(time.time() - _START_TIME),
     }
 
