@@ -1,3 +1,9 @@
+"""Seed data for the CineRead cinema ticketing system.
+
+Defines theaters, screens, showtimes, and the movie/book catalog used to
+populate the SQLite database on application startup.
+"""
+
 # ---------------------------------------------------------------------------
 # Cinema ticketing seed data
 # ---------------------------------------------------------------------------
