@@ -44,5 +44,13 @@ class RecommendationCache:
     def __len__(self) -> int:
         return len(self._cache)
 
+    def info(self) -> Dict[str, Any]:
+        """Return cache statistics for monitoring."""
+        return {
+            "size": len(self._cache),
+            "max_entries": self._max_entries,
+            "utilization": round(len(self._cache) / self._max_entries, 2),
+        }
+
 # Global cache instance
 cache_instance = RecommendationCache()
