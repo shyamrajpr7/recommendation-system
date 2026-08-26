@@ -495,7 +495,7 @@ st.markdown(
         background: #0a101d; border: 1px solid #223052; color: var(--muted-2);
     }
     .step.active { color: var(--text); }
-    .step.active .step-dot { background: linear-gradient(135deg, #38bdf8, #818cf8); border-color: transparent; color: #08111f; }
+    .step.active .step-dot { background: linear-gradient(135deg, #38bdf8, #818cf8); border-color: transparent; color: #08111f; box-shadow: 0 0 14px rgba(129, 140, 248, 0.45); }
     .step.done .step-dot { background: rgba(52, 211, 153, 0.18); border-color: rgba(52, 211, 153, 0.4); color: #6ee7b7; }
     .step-line { flex: 1; height: 1px; background: #1a2744; margin: 0 0.8rem; min-width: 22px; }
 
