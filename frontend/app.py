@@ -276,7 +276,10 @@ st.markdown(
     }
     .movie-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 26px 60px rgba(0, 0, 0, 0.55);
+        box-shadow:
+            0 26px 60px rgba(0, 0, 0, 0.55),
+            0 0 40px rgba(129, 140, 248, 0.18),
+            0 0 80px rgba(56, 189, 248, 0.08);
         border-color: rgba(129, 140, 248, 0.55);
     }
     .movie-poster {
