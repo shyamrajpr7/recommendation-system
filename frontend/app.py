@@ -229,6 +229,11 @@ st.markdown(
         padding: 0.25rem 0.9rem; border-radius: 999px;
         background: rgba(56, 189, 248, 0.08);
         margin-bottom: 0.9rem;
+        animation: pulse-badge 3s ease-in-out infinite;
+    }
+    @keyframes pulse-badge {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.25); }
+        50% { box-shadow: 0 0 18px 4px rgba(56, 189, 248, 0.15); }
     }
     .hero-title {
         font-family: 'Space Grotesk', sans-serif;
