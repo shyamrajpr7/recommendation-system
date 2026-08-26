@@ -318,7 +318,8 @@ st.markdown(
     .movie-card:hover .movie-poster h3 { transform: scale(1.03); }
     .movie-body { padding: 1.05rem 1.2rem 1.2rem; display: flex; flex-direction: column; gap: 0.7rem; flex: 1; }
     .movie-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; color: var(--muted); font-size: 0.84rem; }
-    .badge { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
+    .badge { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .badge:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
     .badge-genre { background: rgba(56, 189, 248, 0.12); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.25); }
     .badge-year { background: rgba(52, 211, 153, 0.12); color: #6ee7b7; border: 1px solid rgba(52, 211, 153, 0.25); }
     .badge-rank { background: rgba(251, 191, 36, 0.14); color: #fcd34d; border: 1px solid rgba(251, 191, 36, 0.3); }
