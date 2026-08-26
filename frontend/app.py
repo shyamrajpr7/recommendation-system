@@ -248,6 +248,17 @@ st.markdown(
         -webkit-background-clip: text; background-clip: text;
         -webkit-text-fill-color: transparent;
         animation: shimmer 9s linear infinite;
+        display: inline-block;
+    }
+    .hero-title::after {
+        content: "";
+        display: block;
+        height: 3px;
+        margin: 0.5rem auto 0;
+        width: 60%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, #c084fc, transparent);
+        opacity: 0.5;
     }
     @keyframes shimmer {
         0% { background-position: 0% 50%; }
