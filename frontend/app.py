@@ -474,7 +474,11 @@ st.markdown(
     .match-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-2); margin-bottom: 0.35rem; }
 
     .empty-state { text-align: center; padding: 3.4rem 1.5rem; color: var(--muted); }
-    .empty-icon { font-size: 3.2rem; margin-bottom: 0.7rem; }
+    .empty-icon { font-size: 3.2rem; margin-bottom: 0.7rem; animation: float-icon 3.5s ease-in-out infinite; }
+    @keyframes float-icon {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
     .empty-title { font-size: 1.45rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; font-family: 'Space Grotesk', sans-serif; }
 
     .stepper { display: flex; align-items: center; gap: 0; margin-bottom: 1.5rem; flex-wrap: wrap; }
