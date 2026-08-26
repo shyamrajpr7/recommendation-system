@@ -418,7 +418,11 @@ st.markdown(
     .ticket-cell .tc-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-2); margin-bottom: 0.2rem; }
     .ticket-cell .tc-value { font-weight: 700; color: #dbe7f5; font-size: 0.95rem; }
     .ticket-status { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; }
-    .ts-confirmed { background: rgba(52, 211, 153, 0.15); color: #6ee7b7; border: 1px solid rgba(52, 211, 153, 0.35); }
+    .ts-confirmed { background: rgba(52, 211, 153, 0.15); color: #6ee7b7; border: 1px solid rgba(52, 211, 153, 0.35); animation: status-glow 2.5s ease-in-out infinite; }
+    @keyframes status-glow {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.2); }
+        50% { box-shadow: 0 0 14px 2px rgba(52, 211, 153, 0.25); }
+    }
     .ts-pending { background: rgba(251, 191, 36, 0.15); color: #fcd34d; border: 1px solid rgba(251, 191, 36, 0.35); }
     .ticket-stub {
         margin: 0.2rem 1.4rem 1.2rem;
