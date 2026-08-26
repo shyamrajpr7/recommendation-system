@@ -257,6 +257,11 @@ st.markdown(
         padding: 1.4rem 1.6rem 1.6rem;
         margin-bottom: 1.4rem;
         box-shadow: 0 14px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.03);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .search-card:hover {
+        border-color: rgba(129, 140, 248, 0.4);
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(129, 140, 248, 0.1);
     }
     .chip-label {
         color: var(--muted);
