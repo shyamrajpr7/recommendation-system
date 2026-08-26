@@ -499,7 +499,11 @@ st.markdown(
     .step.done .step-dot { background: rgba(52, 211, 153, 0.18); border-color: rgba(52, 211, 153, 0.4); color: #6ee7b7; }
     .step-line { flex: 1; height: 1px; background: #1a2744; margin: 0 0.8rem; min-width: 22px; }
 
-    .chat-row { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.8rem; }
+    .chat-row { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.8rem; animation: fade-in-chat 0.35s ease-out; }
+    @keyframes fade-in-chat {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
     .chat-row.user { justify-content: flex-end; }
     .chat-avatar {
         width: 34px; height: 34px; border-radius: 50%; flex: 0 0 auto;
