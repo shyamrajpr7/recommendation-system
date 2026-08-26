@@ -529,9 +529,9 @@ st.markdown(
         font-size: 0.8rem;
         font-weight: 600;
         cursor: pointer;
-        transition: background 0.2s ease;
+        transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .chat-chip:hover { background: rgba(56, 189, 248, 0.2); }
+    .chat-chip:hover { background: rgba(56, 189, 248, 0.2); transform: scale(1.05); box-shadow: 0 4px 16px rgba(56, 189, 248, 0.2); }
 
     .footer {
         margin-top: 2.6rem;
