@@ -184,6 +184,11 @@ st.markdown(
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
+        animation: brand-fade-in 0.6s ease-out;
+    }
+    @keyframes brand-fade-in {
+        from { opacity: 0; transform: translateX(-8px); }
+        to { opacity: 1; transform: translateX(0); }
     }
     .brand-sub { color: var(--muted-2); font-size: 0.8rem; margin-top: 0.15rem; }
 
