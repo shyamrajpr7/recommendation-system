@@ -430,6 +430,11 @@ st.markdown(
         -webkit-mask-image: linear-gradient(90deg, transparent 2%, #000 8%, #000 92%, transparent 98%);
         mask-image: linear-gradient(90deg, transparent 2%, #000 8%, #000 92%, transparent 98%);
         opacity: 0.55;
+        animation: barcode-shimmer 4s ease-in-out infinite;
+    }
+    @keyframes barcode-shimmer {
+        0%, 100% { opacity: 0.55; }
+        50% { opacity: 0.75; }
     }
 
     .rec-poster {
