@@ -378,7 +378,12 @@ st.markdown(
         backdrop-filter: blur(14px);
         box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
     }
-    .booking-bar .bb-total { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700; color: #a7f3d0; }
+    .booking-bar .bb-total {
+        font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700;
+        background: linear-gradient(135deg, #34d399, #38bdf8);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
     .booking-bar .bb-seats { color: var(--muted); font-size: 0.88rem; }
 
     .ticket-wrap {
