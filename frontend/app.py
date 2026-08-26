@@ -308,7 +308,9 @@ st.markdown(
         position: relative; z-index: 2;
         color: #fff; font-size: 1.45rem; font-weight: 700; line-height: 1.15;
         margin: 0; text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+        transition: transform 0.25s ease;
     }
+    .movie-card:hover .movie-poster h3 { transform: scale(1.03); }
     .movie-body { padding: 1.05rem 1.2rem 1.2rem; display: flex; flex-direction: column; gap: 0.7rem; flex: 1; }
     .movie-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; color: var(--muted); font-size: 0.84rem; }
     .badge { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
