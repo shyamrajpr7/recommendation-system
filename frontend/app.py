@@ -474,8 +474,15 @@ st.markdown(
     }
     .match-fill {
         height: 100%; border-radius: 999px;
-        background: linear-gradient(90deg, #38bdf8, #818cf8, #a78bfa);
+        background: linear-gradient(90deg, #38bdf8, #818cf8, #a78bfa, #38bdf8);
+        background-size: 200% 100%;
+        animation: match-fill-flow 3s ease infinite;
         box-shadow: 0 0 12px rgba(129, 140, 248, 0.6);
+    }
+    @keyframes match-fill-flow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
     .why-box {
         background: rgba(99, 102, 241, 0.08);
