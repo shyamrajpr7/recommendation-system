@@ -533,7 +533,7 @@ st.markdown(
     .chat-avatar.ai { background: linear-gradient(135deg, #6366f1, #a855f7); }
     .chat-bubble { padding: 0.75rem 1.05rem; border-radius: 16px; font-size: 0.92rem; line-height: 1.6; max-width: 78%; }
     .chat-user { background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(129, 140, 248, 0.14)); color: #cfe8ff; border: 1px solid rgba(56, 189, 248, 0.25); }
-    .chat-ai { background: var(--surface-2); border: 1px solid var(--border-soft); color: #dbe7f5; }
+    .chat-ai { background: var(--surface-2); border: 1px solid var(--border-soft); border-left: 3px solid #6366f1; color: #dbe7f5; }
     .chat-wrap {
         background: linear-gradient(150deg, rgba(13, 20, 38, 0.55), rgba(9, 14, 26, 0.55));
         border: 1px solid var(--border-soft);
