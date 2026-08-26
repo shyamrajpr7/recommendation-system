@@ -356,7 +356,7 @@ st.markdown(
     .st-key-seat_map { padding: 1.2rem 0.4rem 0.2rem; }
     .st-key-seat_map [data-testid="stBaseButton"] {
         min-height: 40px; border-radius: 9px; font-size: 0.82rem; font-weight: 700;
-        transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease;
+        transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
     .st-key-seat_map [data-testid="stBaseButton"]:hover:not(:disabled) { transform: translateY(-2px); }
     .st-key-seat_map [data-testid="stBaseButton-secondary"] {
