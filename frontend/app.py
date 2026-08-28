@@ -566,6 +566,8 @@ st.markdown(
     .chat-wrap {
         background: linear-gradient(150deg, rgba(13, 20, 38, 0.55), rgba(9, 14, 26, 0.55));
         border: 1px solid var(--border-soft);
+        border-bottom: 2px solid;
+        border-image: linear-gradient(90deg, transparent, #6366f1, transparent) 1;
         border-radius: 18px;
         padding: 1.1rem 1.2rem;
         margin-bottom: 1rem;
