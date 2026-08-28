@@ -436,6 +436,11 @@ st.markdown(
         border-radius: 20px;
         overflow: hidden;
         box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+        animation: ticket-in 0.55s ease-out;
+    }
+    @keyframes ticket-in {
+        from { opacity: 0; transform: translateY(14px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     .ticket-head {
         padding: 1.1rem 1.4rem;
