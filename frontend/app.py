@@ -350,9 +350,9 @@ st.markdown(
         padding: 0.95rem 1.2rem;
         margin-bottom: 0.8rem;
         display: flex; justify-content: space-between; align-items: center; gap: 1rem;
-        transition: border-color 0.2s ease;
+        transition: border-color 0.2s ease, background 0.3s ease;
     }
-    .showtime-card:hover { border-color: rgba(56, 189, 248, 0.45); box-shadow: 0 4px 24px rgba(56, 189, 248, 0.12); }
+    .showtime-card:hover { border-color: rgba(56, 189, 248, 0.45); box-shadow: 0 4px 24px rgba(56, 189, 248, 0.12); background: linear-gradient(135deg, rgba(20, 32, 58, 0.95), rgba(14, 22, 40, 0.95)); }
     .showtime-time { font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; font-weight: 700; color: var(--accent-1); }
     .showtime-info { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
     .showtime-price { color: #a7f3d0; font-weight: 700; font-size: 1.05rem; }
