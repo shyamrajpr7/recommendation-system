@@ -365,6 +365,11 @@ st.markdown(
         border-radius: 10px; padding: 0.55rem;
         margin: 0 auto 1.4rem; max-width: 72%;
         box-shadow: 0 4px 30px rgba(56, 189, 248, 0.08) inset;
+        animation: screen-fade 1.2s ease-out;
+    }
+    @keyframes screen-fade {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     .legend { display: flex; gap: 1.3rem; justify-content: center; color: var(--muted); font-size: 0.8rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
     .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
