@@ -408,6 +408,14 @@ st.markdown(
         -webkit-background-clip: text; background-clip: text;
         -webkit-text-fill-color: transparent;
     }
+
+    [data-testid="stBaseButton-primary"] {
+        transition: box-shadow 0.25s ease, transform 0.2s ease;
+    }
+    [data-testid="stBaseButton-primary"]:hover {
+        box-shadow: 0 4px 20px rgba(129, 140, 248, 0.35);
+        transform: translateY(-1px);
+    }
     .booking-bar .bb-seats { color: var(--muted); font-size: 0.88rem; }
 
     .ticket-wrap {
