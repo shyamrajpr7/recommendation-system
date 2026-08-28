@@ -204,7 +204,11 @@ st.markdown(
     .status-on { background: rgba(16, 185, 129, 0.12); color: #6ee7b7; border-color: rgba(52, 211, 153, 0.35); }
     .status-off { background: rgba(248, 113, 113, 0.12); color: #fca5a5; border-color: rgba(248, 113, 113, 0.35); }
     .status-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
-    .status-on .status-dot { background: #34d399; box-shadow: 0 0 8px #34d399; }
+    .status-on .status-dot { background: #34d399; box-shadow: 0 0 8px #34d399; animation: pulse-dot 2s ease-in-out infinite; }
+    @keyframes pulse-dot {
+        0%, 100% { box-shadow: 0 0 4px #34d399; }
+        50% { box-shadow: 0 0 14px #34d399, 0 0 24px rgba(52, 211, 153, 0.3); }
+    }
     .status-off .status-dot { background: #f87171; box-shadow: 0 0 8px #f87171; }
 
     .hero {
