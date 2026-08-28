@@ -532,7 +532,7 @@ st.markdown(
     }
     .why-box b { color: #a5b4fc; }
     .search-meta { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; }
-    .match-pct { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #a5b4fc; font-size: 0.85rem; white-space: nowrap; }
+    .match-pct { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.85rem; white-space: nowrap; background: linear-gradient(90deg, #38bdf8, #a78bfa); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
     .match-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-2); margin-bottom: 0.35rem; }
 
     .empty-state { text-align: center; padding: 3.4rem 1.5rem; color: var(--muted); }
