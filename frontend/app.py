@@ -631,7 +631,8 @@ st.markdown(
         color: var(--muted-2);
         font-size: 0.82rem;
     }
-    .footer b { color: #aebfd8; font-weight: 600; }
+    .footer b { color: #aebfd8; font-weight: 600; transition: color 0.25s ease, text-shadow 0.25s ease; }
+    .footer b:hover { color: #7dd3fc; text-shadow: 0 0 12px rgba(56, 189, 248, 0.4); }
 </style>
 """,
     unsafe_allow_html=True,
