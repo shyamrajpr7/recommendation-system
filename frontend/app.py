@@ -504,6 +504,8 @@ st.markdown(
         position: absolute; top: 0.7rem; right: 0.9rem; z-index: 3;
         font-family: 'Space Grotesk', sans-serif; font-weight: 800; font-size: 1.7rem;
         color: rgba(255, 255, 255, 0.9); text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+        background: rgba(7, 11, 22, 0.45); border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px; padding: 0.15rem 0.55rem; backdrop-filter: blur(4px);
     }
     .rec-type {
         position: absolute; top: 0.8rem; left: 0.9rem; z-index: 3;
