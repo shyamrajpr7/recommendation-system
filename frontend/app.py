@@ -536,7 +536,7 @@ st.markdown(
         color: #c7d2fe; font-size: 0.85rem; line-height: 1.55;
         transition: box-shadow 0.25s ease, background 0.25s ease;
     }
-    .why-box:hover { background: rgba(99, 102, 241, 0.12); box-shadow: 0 0 16px rgba(129, 140, 248, 0.15); }
+    .why-box:hover { background: rgba(99, 102, 241, 0.12); box-shadow: 0 0 16px rgba(129, 140, 248, 0.15); transform: translateY(-2px); }
     .why-box b { color: #a5b4fc; }
     .search-meta { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; }
     .match-pct { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.85rem; white-space: nowrap; background: linear-gradient(90deg, #38bdf8, #a78bfa); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
