@@ -441,7 +441,9 @@ st.markdown(
         overflow: hidden;
         box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
         animation: ticket-in 0.55s ease-out;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
     }
+    .ticket-wrap:hover { transform: translateY(-3px); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65), 0 0 40px rgba(139, 92, 246, 0.12); }
     @keyframes ticket-in {
         from { opacity: 0; transform: translateY(14px); }
         to { opacity: 1; transform: translateY(0); }
