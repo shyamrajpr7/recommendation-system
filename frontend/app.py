@@ -408,6 +408,8 @@ st.markdown(
         display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
         padding: 0.95rem 1.4rem; border-radius: 16px;
         border: 1px solid rgba(129, 140, 248, 0.35);
+        border-top: 3px solid;
+        border-image: linear-gradient(90deg, #38bdf8, #818cf8, #34d399) 1;
         background: rgba(13, 20, 36, 0.88);
         backdrop-filter: blur(14px);
         box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
