@@ -319,6 +319,7 @@ st.markdown(
         padding: 1rem 1.2rem 0.85rem;
         overflow: hidden;
     }
+    .movie-card:hover .movie-poster h3 { text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5), 0 0 22px rgba(129, 140, 248, 0.25); }
     .movie-poster::after {
         content: "";
         position: absolute; inset: 0;
