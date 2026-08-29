@@ -368,7 +368,9 @@ st.markdown(
         margin: 0 auto 1.4rem; max-width: 72%;
         box-shadow: 0 4px 30px rgba(56, 189, 248, 0.08) inset;
         animation: screen-fade 1.2s ease-out;
+        transition: box-shadow 0.3s ease, background 0.3s ease;
     }
+    .screen-block:hover { box-shadow: 0 4px 34px rgba(56, 189, 248, 0.18) inset; background: linear-gradient(180deg, rgba(56, 189, 248, 0.16), rgba(56, 189, 248, 0.04)); }
     @keyframes screen-fade {
         from { opacity: 0; transform: translateY(6px); }
         to { opacity: 1; transform: translateY(0); }
