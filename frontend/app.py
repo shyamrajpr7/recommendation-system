@@ -185,7 +185,9 @@ st.markdown(
         background-clip: text;
         -webkit-text-fill-color: transparent;
         animation: brand-fade-in 0.6s ease-out;
+        transition: filter 0.25s ease;
     }
+    .brand-title:hover { filter: brightness(1.2) drop-shadow(0 0 10px rgba(129, 140, 248, 0.45)); }
     @keyframes brand-fade-in {
         from { opacity: 0; transform: translateX(-8px); }
         to { opacity: 1; transform: translateX(0); }
