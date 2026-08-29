@@ -579,7 +579,9 @@ st.markdown(
         width: 34px; height: 34px; border-radius: 50%; flex: 0 0 auto;
         display: flex; align-items: center; justify-content: center;
         font-size: 1rem; margin-top: 0.15rem;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
+    .chat-avatar:hover { transform: scale(1.12); box-shadow: 0 4px 14px rgba(129, 140, 248, 0.35); }
     .chat-avatar.user { background: linear-gradient(135deg, #38bdf8, #818cf8); }
     .chat-avatar.ai { background: linear-gradient(135deg, #6366f1, #a855f7); }
     .chat-bubble { padding: 0.75rem 1.05rem; border-radius: 16px; font-size: 0.92rem; line-height: 1.6; max-width: 78%; }
