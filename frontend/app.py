@@ -232,7 +232,7 @@ st.markdown(
     }
     .hero-kicker {
         display: inline-block;
-        font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+        font-size: 0.72rem; font-weight: 700; letter-spacing: 0.26em; text-transform: uppercase;
         color: var(--accent-1);
         border: 1px solid rgba(56, 189, 248, 0.3);
         padding: 0.25rem 0.9rem; border-radius: 999px;
