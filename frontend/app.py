@@ -305,6 +305,11 @@ st.markdown(
         display: flex;
         flex-direction: column;
         transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        animation: card-in 0.45s ease-out;
+    }
+    @keyframes card-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     .movie-card:hover {
         transform: translateY(-6px);
