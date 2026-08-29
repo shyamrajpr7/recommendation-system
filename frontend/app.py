@@ -567,7 +567,7 @@ st.markdown(
     .step.active { color: var(--text); }
     .step.active .step-dot { background: linear-gradient(135deg, #38bdf8, #818cf8); border-color: transparent; color: #08111f; box-shadow: 0 0 14px rgba(129, 140, 248, 0.45); }
     .step.done .step-dot { background: rgba(52, 211, 153, 0.18); border-color: rgba(52, 211, 153, 0.4); color: #6ee7b7; }
-    .step-line { flex: 1; height: 1px; background: #1a2744; margin: 0 0.8rem; min-width: 22px; }
+    .step-line { flex: 1; height: 1px; background: linear-gradient(90deg, #223052, #38bdf8, #223052); margin: 0 0.8rem; min-width: 22px; }
 
     .chat-row { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.8rem; animation: fade-in-chat 0.35s ease-out; }
     @keyframes fade-in-chat {
