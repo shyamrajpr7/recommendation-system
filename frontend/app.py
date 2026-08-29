@@ -375,7 +375,8 @@ st.markdown(
     }
     .legend { display: flex; gap: 1.3rem; justify-content: center; color: var(--muted); font-size: 0.8rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
     .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
-    .seat-legend-dot { width: 18px; height: 18px; border-radius: 6px; display: inline-block; }
+    .seat-legend-dot { width: 18px; height: 18px; border-radius: 6px; display: inline-block; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .legend span:hover .seat-legend-dot { transform: scale(1.2); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); }
     .legend-avail { background: #16233f; border: 1px solid #2c3f66; }
     .legend-sel { background: linear-gradient(135deg, #38bdf8, #818cf8); }
     .legend-occ { background: repeating-linear-gradient(45deg, rgba(248,113,113,0.35), rgba(248,113,113,0.35) 3px, rgba(248,113,113,0.12) 3px, rgba(248,113,113,0.12) 6px); border: 1px solid rgba(248,113,113,0.4); }
