@@ -554,7 +554,7 @@ st.markdown(
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-8px); }
     }
-    .empty-title { font-size: 1.45rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; font-family: 'Space Grotesk', sans-serif; }
+    .empty-title { font-size: 1.45rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; font-family: 'Space Grotesk', sans-serif; background: linear-gradient(90deg, #e6edf7, #38bdf8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
     .stepper { display: flex; align-items: center; gap: 0; margin-bottom: 1.5rem; flex-wrap: wrap; }
     .step { display: flex; align-items: center; gap: 0.5rem; color: var(--muted-2); font-size: 0.82rem; font-weight: 600; }
