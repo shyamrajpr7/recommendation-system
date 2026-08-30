@@ -299,7 +299,9 @@ st.markdown(
         color: var(--muted);
         font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
         margin: 0 0 0.7rem;
+        transition: color 0.25s ease, letter-spacing 0.25s ease;
     }
+    .chip-label:hover { color: #a5b4fc; letter-spacing: 0.16em; }
     .chip-label span { color: var(--accent-2); }
 
     .movie-grid {
