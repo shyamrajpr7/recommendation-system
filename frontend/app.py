@@ -204,6 +204,16 @@ st.markdown(
     }
     .brand-sub { color: var(--muted-2); font-size: 0.8rem; margin-top: 0.15rem; }
 
+    [data-testid="stBaseButton-pills"] {
+        transition: transform 0.15s ease, box-shadow 0.2s ease;
+    }
+    [data-testid="stBaseButton-pills"]:hover { transform: translateY(-1px); box-shadow: 0 3px 12px rgba(56, 189, 248, 0.15); }
+    [data-testid="stBaseButton-pills"][aria-pressed="true"] {
+        background: linear-gradient(135deg, #38bdf8, #818cf8) !important;
+        color: #08111f !important; font-weight: 700;
+        box-shadow: 0 4px 16px rgba(129, 140, 248, 0.35);
+    }
+
     [data-testid="stSidebar"] .stRadio > label, [data-testid="stSidebar"] [role="radiogroup"] label { color: var(--muted); font-weight: 500; }
     [data-testid="stSidebar"] [role="radiogroup"] label:hover { color: var(--text); }
     [data-testid="stSidebar"] [role="radiogroup"] label p { font-size: 0.95rem; }
