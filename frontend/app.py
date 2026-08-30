@@ -164,6 +164,13 @@ st.markdown(
     h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
     #MainMenu, footer { visibility: hidden; }
 
+    [data-testid="stBaseButton"]:focus-visible {
+        outline: 2px solid #818cf8;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.25);
+    }
+    input, textarea, [data-testid="stSelectbox"] [data-baseweb="select"]:focus-within { outline-offset: 2px; }
+
     ::-webkit-scrollbar { width: 10px; height: 10px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #223054; border-radius: 999px; border: 2px solid var(--bg); }
