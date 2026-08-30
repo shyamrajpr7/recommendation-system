@@ -446,10 +446,15 @@ st.markdown(
     }
 
     [data-testid="stBaseButton-primary"] {
-        transition: box-shadow 0.25s ease, transform 0.2s ease;
+        transition: box-shadow 0.25s ease, transform 0.2s ease, background 0.3s ease;
+        background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%) !important;
+        color: #08111f !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        box-shadow: 0 4px 16px rgba(129, 140, 248, 0.25) !important;
     }
     [data-testid="stBaseButton-primary"]:hover {
-        box-shadow: 0 4px 20px rgba(129, 140, 248, 0.35);
+        background: linear-gradient(135deg, #7dd3fc 0%, #a5b4fc 100%) !important;
+        box-shadow: 0 6px 24px rgba(129, 140, 248, 0.45);
         transform: translateY(-1px);
     }
     .booking-bar .bb-seats { color: var(--muted); font-size: 0.88rem; }
