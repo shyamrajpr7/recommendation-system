@@ -580,6 +580,11 @@ st.markdown(
 
     .empty-state { text-align: center; padding: 3.4rem 1.5rem; color: var(--muted); }
     .empty-icon { font-size: 3.2rem; margin-bottom: 0.7rem; animation: float-icon 3.5s ease-in-out infinite; }
+    .empty-state:hover .empty-icon { animation: float-icon 1.4s ease-in-out infinite, icon-tilt 2.2s ease-in-out infinite; filter: drop-shadow(0 0 18px rgba(129, 140, 248, 0.35)); }
+    @keyframes icon-tilt {
+        0%, 100% { transform: translateY(0) rotate(-4deg); }
+        50% { transform: translateY(-8px) rotate(4deg); }
+    }
     @keyframes float-icon {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-8px); }
