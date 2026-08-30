@@ -217,6 +217,11 @@ st.markdown(
     [data-testid="stSidebar"] .stRadio > label, [data-testid="stSidebar"] [role="radiogroup"] label { color: var(--muted); font-weight: 500; }
     [data-testid="stSidebar"] [role="radiogroup"] label:hover { color: var(--text); }
     [data-testid="stSidebar"] [role="radiogroup"] label p { font-size: 0.95rem; }
+    [data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(129, 140, 248, 0.10));
+        border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(129, 140, 248, 0.35);
+    }
+    [data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) p { color: #cfe8ff; }
 
     .status-pill {
         display: inline-flex; align-items: center; gap: 0.45rem;
