@@ -431,7 +431,10 @@ st.markdown(
         background: linear-gradient(135deg, #38bdf8, #818cf8); color: #08111f;
         border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 6px 22px rgba(129, 140, 248, 0.4);
     }
-    .seat-rowlabel { color: var(--muted-2); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem; text-align: center; padding-top: 0.55rem; }
+    .seat-rowlabel { color: var(--muted-2); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.95rem; text-align: center; padding-top: 0.55rem; transition: color 0.25s ease; }
+    .st-key-seat_map [data-testid="stVerticalBlock"]:hover .seat-rowlabel { color: #7dd3fc; }
+    .seat-cols-header { color: var(--muted-2); font-size: 0.75rem; text-align: center; padding-bottom: 0.3rem; transition: color 0.25s ease; }
+    .st-key-seat_map [data-testid="stHorizontalBlock"]:hover .seat-cols-header { color: #a5b4fc; }
     .seat-chip { height: 40px; border-radius: 9px; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; }
     .seat-occ { background: repeating-linear-gradient(45deg, rgba(248,113,113,0.35), rgba(248,113,113,0.35) 3px, rgba(248,113,113,0.12) 3px, rgba(248,113,113,0.12) 6px); color: rgba(248, 113, 113, 0.75); border: 1px solid rgba(248,113,113,0.35); }
     .seat-blk { background: #0a101d; color: #33415f; border: 1px dashed #223052; }
