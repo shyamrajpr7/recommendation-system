@@ -654,7 +654,18 @@ st.markdown(
         cursor: pointer;
         transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .chat-chip:hover { background: rgba(56, 189, 248, 0.2); transform: scale(1.05); box-shadow: 0 4px 16px rgba(56, 189, 248, 0.2); }
+    .chat-chip:hover { background: rgba(56, 189, 248, 0.2); transform: scale(1.05); box-shadow: 0 4px 16px rgba(56, 189, 248, 0.2); color: #cfe8ff; border-color: rgba(56, 189, 248, 0.5); }
+
+    [data-testid="stTextInput"] input, [data-testid="stTextArea"] textarea {
+        background: rgba(10, 16, 29, 0.85);
+        border: 1px solid #223052;
+        color: var(--text);
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    [data-testid="stTextInput"] input:focus, [data-testid="stTextArea"] textarea:focus {
+        border-color: rgba(129, 140, 248, 0.6);
+        box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+    }
 
     .footer {
         margin-top: 2.6rem;
