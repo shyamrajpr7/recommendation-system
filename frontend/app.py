@@ -451,13 +451,17 @@ st.markdown(
         background: rgba(13, 20, 36, 0.88);
         backdrop-filter: blur(14px);
         box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
     }
+    .booking-bar:hover { box-shadow: 0 22px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(129, 140, 248, 0.12); }
     .booking-bar .bb-total {
         font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700;
         background: linear-gradient(135deg, #34d399, #38bdf8);
         -webkit-background-clip: text; background-clip: text;
         -webkit-text-fill-color: transparent;
+        transition: text-shadow 0.3s ease;
     }
+    .booking-bar:hover .bb-total { text-shadow: 0 0 16px rgba(52, 211, 153, 0.4); }
 
     [data-testid="stBaseButton-primary"] {
         transition: box-shadow 0.25s ease, transform 0.2s ease, background 0.3s ease;
