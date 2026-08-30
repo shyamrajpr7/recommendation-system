@@ -223,6 +223,14 @@ st.markdown(
     }
     [data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) p { color: #cfe8ff; }
 
+    .main .block-container {
+        animation: app-in 0.5s ease-out;
+    }
+    @keyframes app-in {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
     .status-pill {
         display: inline-flex; align-items: center; gap: 0.45rem;
         padding: 0.35rem 0.8rem; border-radius: 999px;
@@ -689,6 +697,7 @@ st.markdown(
         color: var(--muted-2);
         font-size: 0.82rem;
     }
+    .footer:hover { color: #7b8fb0; }
     .footer b { color: #aebfd8; font-weight: 600; transition: color 0.25s ease, text-shadow 0.25s ease; }
     .footer b:hover { color: #7dd3fc; text-shadow: 0 0 12px rgba(56, 189, 248, 0.4); }
 </style>
