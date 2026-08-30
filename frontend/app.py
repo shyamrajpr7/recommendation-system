@@ -169,6 +169,9 @@ st.markdown(
     ::-webkit-scrollbar-thumb { background: #223054; border-radius: 999px; border: 2px solid var(--bg); }
     ::-webkit-scrollbar-thumb:hover { background: #2e3f6e; }
 
+    ::selection { background: rgba(129, 140, 248, 0.45); color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
+    ::-moz-selection { background: rgba(129, 140, 248, 0.45); color: #fff; }
+
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #0b1222 0%, #080d1a 100%);
         border-right: 1px solid var(--border);
