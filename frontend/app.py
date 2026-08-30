@@ -533,6 +533,7 @@ st.markdown(
         0%, 100% { opacity: 0.55; }
         50% { opacity: 0.75; }
     }
+    .ticket-wrap:hover .ticket-barcode { opacity: 0.85; filter: drop-shadow(0 0 6px rgba(219, 231, 245, 0.35)); }
 
     .rec-poster {
         position: relative;
