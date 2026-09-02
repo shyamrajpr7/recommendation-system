@@ -650,7 +650,9 @@ st.markdown(
         display: flex; align-items: center; justify-content: center;
         font-size: 0.78rem; font-weight: 700;
         background: #0a101d; border: 1px solid #223052; color: var(--muted-2);
+        transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
     }
+    .step:hover .step-dot { transform: scale(1.12); box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25); }
     .step.active { color: var(--text); }
     .step.active .step-dot { background: linear-gradient(135deg, #38bdf8, #818cf8); border-color: transparent; color: #08111f; box-shadow: 0 0 14px rgba(129, 140, 248, 0.45); }
     .step.done .step-dot { background: rgba(52, 211, 153, 0.18); border-color: rgba(52, 211, 153, 0.4); color: #6ee7b7; }
