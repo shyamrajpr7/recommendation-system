@@ -147,6 +147,9 @@ st.markdown(
         --radius: 18px;
     }
 
+    html {
+        scroll-behavior: smooth;
+    }
     html, body, .stApp {
         background: var(--bg);
         color: var(--text);
