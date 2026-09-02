@@ -273,6 +273,11 @@ st.markdown(
         margin-bottom: 1.6rem;
         position: relative;
         overflow: hidden;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hero:hover {
+        border-color: rgba(129, 140, 248, 0.35);
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5), 0 0 45px rgba(129, 140, 248, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
     .hero::after {
         content: "";
