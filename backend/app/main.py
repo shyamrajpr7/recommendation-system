@@ -4,6 +4,7 @@ import json
 import hashlib
 import logging
 import os
+import re
 import time
 from fastapi import FastAPI, HTTPException, Query, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
@@ -447,6 +448,8 @@ def get_current_user(authorization: Optional[str] = Header(None)) -> str:
 @app.post("/auth/signup", response_model=AuthResponse)
 def signup(payload: SignupRequest):
     email = payload.email.strip().lower()
+    if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
+        raise HTTPException(status_code=400, detail="Invalid email format")
     if email in _users:
         raise HTTPException(status_code=400, detail="Email already registered")
     _users[email] = {
