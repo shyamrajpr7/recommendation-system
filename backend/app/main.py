@@ -17,7 +17,7 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-APP_VERSION = "2.0.0"
+from backend import APP_VERSION
 
 from backend.app.database import (
     init_db,
