@@ -211,7 +211,8 @@ st.markdown(
         from { opacity: 0; transform: translateX(-8px); }
         to { opacity: 1; transform: translateX(0); }
     }
-    .brand-sub { color: var(--muted-2); font-size: 0.8rem; margin-top: 0.15rem; }
+    .brand-sub { color: var(--muted-2); font-size: 0.8rem; margin-top: 0.15rem; transition: color 0.3s ease, letter-spacing 0.3s ease; }
+    .brand-block:hover .brand-sub { color: #9bb8e0; letter-spacing: 0.02em; }
 
     [data-testid="stBaseButton-pills"] {
         transition: transform 0.15s ease, box-shadow 0.2s ease;
