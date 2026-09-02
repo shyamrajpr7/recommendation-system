@@ -248,8 +248,9 @@ st.markdown(
         display: inline-flex; align-items: center; gap: 0.45rem;
         padding: 0.35rem 0.8rem; border-radius: 999px;
         font-size: 0.78rem; font-weight: 700; border: 1px solid;
+        transition: filter 0.2s ease, transform 0.25s ease, box-shadow 0.25s ease;
     }
-    .status-pill:hover { filter: brightness(1.1); }
+    .status-pill:hover { filter: brightness(1.1); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
     .status-on { background: rgba(16, 185, 129, 0.12); color: #6ee7b7; border-color: rgba(52, 211, 153, 0.35); }
     .status-off { background: rgba(248, 113, 113, 0.12); color: #fca5a5; border-color: rgba(248, 113, 113, 0.35); }
     .status-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
