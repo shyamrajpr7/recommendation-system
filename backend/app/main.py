@@ -240,6 +240,11 @@ def catalog_stats():
     }
 
 
+@app.get("/cache/stats")
+def cache_stats():
+    return cache_instance.info()
+
+
 @app.get("/showtimes", response_model=ShowtimeListResponse)
 def list_showtimes(movie_id: Optional[int] = None, show_date: Optional[str] = None):
     showtimes = get_showtimes(movie_id=movie_id, show_date=show_date)
