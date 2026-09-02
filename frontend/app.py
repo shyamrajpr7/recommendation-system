@@ -153,6 +153,15 @@ st.markdown(
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+
     .stApp {
         background:
             radial-gradient(1100px 520px at 85% -10%, rgba(139, 92, 246, 0.14), transparent 60%),
