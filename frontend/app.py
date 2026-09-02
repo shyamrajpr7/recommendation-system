@@ -210,6 +210,7 @@ st.markdown(
         transition: filter 0.25s ease;
     }
     .brand-title:hover { filter: brightness(1.2) drop-shadow(0 0 10px rgba(129, 140, 248, 0.45)); }
+    .brand-title:focus-visible { outline: 2px solid #818cf8; outline-offset: 4px; border-radius: 6px; }
     @keyframes brand-fade-in {
         from { opacity: 0; transform: translateX(-8px); }
         to { opacity: 1; transform: translateX(0); }
