@@ -508,6 +508,10 @@ st.markdown(
         box-shadow: 0 6px 24px rgba(129, 140, 248, 0.45);
         transform: translateY(-1px);
     }
+    [data-testid="stBaseButton-primary"]:active {
+        transform: translateY(1px) scale(0.98);
+        box-shadow: 0 2px 8px rgba(129, 140, 248, 0.3);
+    }
     .booking-bar .bb-seats { color: var(--muted); font-size: 0.88rem; }
 
     .ticket-wrap {
