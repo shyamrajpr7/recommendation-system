@@ -765,8 +765,9 @@ st.markdown(
         text-align: center;
         color: var(--muted-2);
         font-size: 0.82rem;
+        transition: color 0.3s ease, letter-spacing 0.3s ease, border-color 0.3s ease;
     }
-    .footer:hover { color: #7b8fb0; }
+    .footer:hover { color: #7b8fb0; letter-spacing: 0.02em; border-top-color: rgba(129, 140, 248, 0.3); }
     .footer b { color: #aebfd8; font-weight: 600; transition: color 0.25s ease, text-shadow 0.25s ease; }
     .footer b:hover { color: #7dd3fc; text-shadow: 0 0 12px rgba(56, 189, 248, 0.4); }
 </style>
