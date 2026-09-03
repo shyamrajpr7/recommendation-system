@@ -685,6 +685,13 @@ st.markdown(
     .step-line { flex: 1; height: 1px; background: linear-gradient(90deg, #223052, #38bdf8, #223052); margin: 0 0.8rem; min-width: 22px; }
 
     .chat-row { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.8rem; animation: fade-in-chat 0.35s ease-out; }
+    .chat-wrap .chat-row:nth-child(1) { animation-delay: 0.02s; }
+    .chat-wrap .chat-row:nth-child(2) { animation-delay: 0.08s; }
+    .chat-wrap .chat-row:nth-child(3) { animation-delay: 0.14s; }
+    .chat-wrap .chat-row:nth-child(4) { animation-delay: 0.2s; }
+    .chat-wrap .chat-row:nth-child(5) { animation-delay: 0.26s; }
+    .chat-wrap .chat-row:nth-child(6) { animation-delay: 0.32s; }
+    .chat-wrap .chat-row:nth-child(n+7) { animation-delay: 0.38s; }
     @keyframes fade-in-chat {
         from { opacity: 0; transform: translateY(8px); }
         to { opacity: 1; transform: translateY(0); }
