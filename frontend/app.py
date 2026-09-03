@@ -446,11 +446,25 @@ st.markdown(
         box-shadow: 0 4px 30px rgba(56, 189, 248, 0.08) inset;
         animation: screen-fade 1.2s ease-out;
         transition: box-shadow 0.3s ease, background 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
     .screen-block:hover { box-shadow: 0 4px 34px rgba(56, 189, 248, 0.18) inset; background: linear-gradient(180deg, rgba(56, 189, 248, 0.16), rgba(56, 189, 248, 0.04)); }
     @keyframes screen-fade {
         from { opacity: 0; transform: translateY(6px); }
         to { opacity: 1; transform: translateY(0); }
+    }
+    .screen-block::after {
+        content: "";
+        position: absolute; left: 0; right: 0; top: 50%; height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.7), transparent);
+        animation: screen-scan 3.5s ease-in-out infinite;
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+        pointer-events: none;
+    }
+    @keyframes screen-scan {
+        0%, 100% { top: 20%; opacity: 0.3; }
+        50% { top: 80%; opacity: 0.9; }
     }
     .legend { display: flex; gap: 1.3rem; justify-content: center; color: var(--muted); font-size: 0.8rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
     .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
