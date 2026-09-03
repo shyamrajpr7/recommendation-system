@@ -730,12 +730,14 @@ st.markdown(
         background: rgba(10, 16, 29, 0.85);
         border: 1px solid #223052;
         color: var(--text);
-        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
     }
     [data-testid="stTextInput"] input:focus, [data-testid="stTextArea"] textarea:focus {
         border-color: rgba(129, 140, 248, 0.6);
-        box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+        box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15), 0 0 24px rgba(129, 140, 248, 0.22);
+        background: rgba(13, 20, 38, 0.95);
     }
+    [data-testid="stTextInput"] input::placeholder, [data-testid="stTextArea"] textarea::placeholder { color: #42536f; }
 
     .footer {
         margin-top: 2.6rem;
