@@ -511,7 +511,19 @@ st.markdown(
         color: #08111f !important;
         border: 1px solid rgba(255, 255, 255, 0.18) !important;
         box-shadow: 0 4px 16px rgba(129, 140, 248, 0.25) !important;
+        position: relative;
+        overflow: hidden;
     }
+    [data-testid="stBaseButton-primary"]::after {
+        content: "";
+        position: absolute; top: 0; left: -60%;
+        width: 45%; height: 100%;
+        background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+        transform: skewX(-20deg);
+        transition: left 0.5s ease;
+        pointer-events: none;
+    }
+    [data-testid="stBaseButton-primary"]:hover::after { left: 130%; }
     [data-testid="stBaseButton-primary"]:hover {
         background: linear-gradient(135deg, #7dd3fc 0%, #a5b4fc 100%) !important;
         box-shadow: 0 6px 24px rgba(129, 140, 248, 0.45);
