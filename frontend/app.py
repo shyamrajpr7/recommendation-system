@@ -538,6 +538,16 @@ st.markdown(
         box-shadow: 0 6px 24px rgba(129, 140, 248, 0.45);
         transform: translateY(-1px);
     }
+    .main [data-testid="stBaseButton-secondary"] {
+        transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease, color 0.25s ease;
+    }
+    .main [data-testid="stBaseButton-secondary"]:hover {
+        background: linear-gradient(135deg, rgba(56,189,248,0.16), rgba(129,140,248,0.16)) !important;
+        border-color: rgba(129, 140, 248, 0.55) !important;
+        box-shadow: 0 6px 20px rgba(129, 140, 248, 0.28) !important;
+        transform: translateY(-1px);
+        color: #dbe7f5 !important;
+    }
     [data-testid="stBaseButton-primary"]:active {
         transform: translateY(1px) scale(0.98);
         box-shadow: 0 2px 8px rgba(129, 140, 248, 0.3);
