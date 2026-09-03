@@ -757,6 +757,7 @@ st.markdown(
         transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     }
     .chat-chip:hover { background: rgba(56, 189, 248, 0.2); transform: scale(1.05); box-shadow: 0 4px 16px rgba(56, 189, 248, 0.2); color: #cfe8ff; border-color: rgba(56, 189, 248, 0.5); }
+    .chat-chip:active { transform: scale(0.97); box-shadow: 0 2px 6px rgba(56, 189, 248, 0.25); }
 
     [data-testid="stTextInput"] input, [data-testid="stTextArea"] textarea {
         background: rgba(10, 16, 29, 0.85);
