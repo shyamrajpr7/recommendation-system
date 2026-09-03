@@ -353,6 +353,12 @@ st.markdown(
         grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
         gap: 1.4rem;
     }
+    .movie-card { animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1); }
+    .movie-card:nth-child(1) { animation-duration: 0.45s; }
+    .movie-card:nth-child(2) { animation-duration: 0.5s; }
+    .movie-card:nth-child(3) { animation-duration: 0.55s; }
+    .movie-card:nth-child(4) { animation-duration: 0.6s; }
+    .movie-card:nth-child(n+5) { animation-duration: 0.65s; }
     .movie-card {
         background: var(--surface);
         border: 1px solid var(--border-soft);
