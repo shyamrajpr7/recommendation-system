@@ -381,7 +381,11 @@ st.markdown(
         display: flex; align-items: flex-end;
         padding: 1rem 1.2rem 0.85rem;
         overflow: hidden;
+        transform: scale(1);
+        transform-origin: top center;
+        transition: transform 0.35s ease;
     }
+    .movie-card:hover .movie-poster { transform: scale(1.04); }
     .movie-card:hover .movie-poster h3 { text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5), 0 0 22px rgba(129, 140, 248, 0.25); color: #e9efff; }
     .movie-poster::after {
         content: "";
