@@ -692,8 +692,12 @@ st.markdown(
     }
     .step:hover .step-dot { transform: scale(1.12); box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25); }
     .step.active { color: var(--text); }
-    .step.active .step-dot { background: linear-gradient(135deg, #38bdf8, #818cf8); border-color: transparent; color: #08111f; box-shadow: 0 0 14px rgba(129, 140, 248, 0.45); }
+    .step.active .step-dot { background: linear-gradient(135deg, #38bdf8, #818cf8); border-color: transparent; color: #08111f; box-shadow: 0 0 14px rgba(129, 140, 248, 0.45); animation: step-dot-pulse 2.2s ease-in-out infinite; }
     .step.done .step-dot { background: rgba(52, 211, 153, 0.18); border-color: rgba(52, 211, 153, 0.4); color: #6ee7b7; }
+    @keyframes step-dot-pulse {
+        0%, 100% { box-shadow: 0 0 10px rgba(129, 140, 248, 0.4); }
+        50% { box-shadow: 0 0 26px rgba(129, 140, 248, 0.65); }
+    }
     .step-line { flex: 1; height: 1px; background: linear-gradient(90deg, #223052, #38bdf8, #223052); margin: 0 0.8rem; min-width: 22px; }
 
     .chat-row { display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.8rem; animation: fade-in-chat 0.35s ease-out; }
