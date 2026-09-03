@@ -485,6 +485,11 @@ st.markdown(
         backdrop-filter: blur(14px);
         box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
         transition: box-shadow 0.3s ease, transform 0.3s ease;
+        animation: booking-bar-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    }
+    @keyframes booking-bar-in {
+        from { opacity: 0; transform: translateY(24px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
     }
     .booking-bar:hover { box-shadow: 0 22px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(129, 140, 248, 0.12); }
     .booking-bar .bb-total {
