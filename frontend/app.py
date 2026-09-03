@@ -309,7 +309,10 @@ st.markdown(
         -webkit-text-fill-color: transparent;
         animation: shimmer 9s linear infinite;
         display: inline-block;
+        filter: drop-shadow(0 4px 24px rgba(129, 140, 248, 0.18));
+        transition: filter 0.35s ease, transform 0.35s ease;
     }
+    .hero:hover .hero-title { filter: drop-shadow(0 4px 34px rgba(129, 140, 248, 0.4)); transform: scale(1.01); }
     .hero-title::after {
         content: "";
         display: block;
