@@ -536,6 +536,19 @@ st.markdown(
         transition: box-shadow 0.3s ease, transform 0.3s ease;
     }
     .ticket-wrap:hover { transform: translateY(-3px); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65), 0 0 40px rgba(139, 92, 246, 0.12); }
+    .ticket-wrap::after {
+        content: "";
+        position: absolute; top: 0; left: -60%;
+        width: 40%; height: 100%;
+        background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+        transform: skewX(-20deg);
+        animation: ticket-shine 5s ease-in-out infinite;
+        pointer-events: none;
+    }
+    @keyframes ticket-shine {
+        0%, 60% { left: -60%; }
+        80%, 100% { left: 120%; }
+    }
     @keyframes ticket-in {
         from { opacity: 0; transform: translateY(14px); }
         to { opacity: 1; transform: translateY(0); }
