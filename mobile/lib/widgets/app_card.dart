@@ -44,7 +44,12 @@ class AppCard extends StatelessWidget {
           boxShadow: onTap != null
               ? [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
+                    color: AppColors.accent1.withValues(alpha: 0.12),
+                    blurRadius: AppDimens.shadowMd,
+                    offset: const Offset(0, 4),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.08),
                     blurRadius: AppDimens.shadowSm,
                     offset: const Offset(0, 2),
                   ),
