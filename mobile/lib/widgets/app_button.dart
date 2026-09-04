@@ -108,7 +108,7 @@ class _AppButtonState extends State<AppButton>
           borderRadius: BorderRadius.circular(AppDimens.radiusLg),
           boxShadow: [
             BoxShadow(
-              color: effectiveColor.withValues(alpha: 0.3),
+              color: AppColors.accent3.withValues(alpha: 0.3),
               blurRadius: AppDimens.shadowMd,
               offset: const Offset(0, 4),
             ),
