@@ -25,7 +25,7 @@ class Movie {
       year: json['year'] ?? 0,
       rating: (json['rating'] ?? 0).toDouble(),
       synopsis: json['synopsis'] ?? '',
-      director: json['director'] ?? '',
+      director: json['creator'] ?? json['director'] ?? '',
     );
   }
 }
