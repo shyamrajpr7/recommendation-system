@@ -1,12 +1,19 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const _tokenKey = 'auth_token';
-const _baseUrl = String.fromEnvironment(
-  'API_BASE_URL',
-  defaultValue: 'http://127.0.0.1:8000',
-);
+
+const _envBaseUrl = String.fromEnvironment('API_BASE_URL');
+
+String get _defaultBaseUrl {
+  if (_envBaseUrl.isNotEmpty) return _envBaseUrl;
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+    return 'http://10.0.2.2:8000';
+  }
+  return 'http://127.0.0.1:8000';
+}
 
 final secureStorageProvider = Provider<FlutterSecureStorage>(
   (_) => const FlutterSecureStorage(),
@@ -15,7 +22,7 @@ final secureStorageProvider = Provider<FlutterSecureStorage>(
 final dioProvider = Provider<Dio>((ref) {
   final storage = ref.watch(secureStorageProvider);
   final dio = Dio(BaseOptions(
-    baseUrl: _baseUrl,
+    baseUrl: _defaultBaseUrl,
     connectTimeout: const Duration(seconds: 10),
     receiveTimeout: const Duration(seconds: 15),
     headers: {'Content-Type': 'application/json'},
