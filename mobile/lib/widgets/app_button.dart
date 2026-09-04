@@ -168,6 +168,7 @@ class _AppButtonState extends State<AppButton>
               : effectiveTextColor,
           fontSize: 15,
           fontWeight: FontWeight.w700,
+          letterSpacing: 0.3,
         ),
       ),
     );
