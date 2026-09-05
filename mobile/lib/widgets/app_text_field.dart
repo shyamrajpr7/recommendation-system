@@ -96,13 +96,14 @@ class _AppTextFieldState extends State<AppTextField>
           mainAxisSize: MainAxisSize.min,
           children: [
             if (widget.label != null) ...[
-              Text(
-                widget.label!,
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 180),
                 style: TextStyle(
                   color: _isFocused ? AppColors.accent1 : AppColors.textSecondary,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                 ),
+                child: Text(widget.label!),
               ),
               const SizedBox(height: 8),
             ],
