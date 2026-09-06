@@ -5,6 +5,7 @@ import requests
 from typing import Dict, Any, Optional
 
 RAZORPAY_BASE = "https://api.razorpay.com/v1"
+CALLBACK_URL = os.environ.get("RAZORPAY_CALLBACK_URL", "https://example.com/razorpay-callback")
 
 
 def _auth() -> Optional[tuple]:
@@ -52,7 +53,7 @@ def create_payment_link(
         },
         "notify": {"email": True, "sms": False},
         "reference_id": booking_ref,
-        "callback_url": "https://example.com/razorpay-callback",
+        "callback_url": CALLBACK_URL,
         "callback_method": "get",
     }
     resp = requests.post(

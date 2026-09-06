@@ -1,4 +1,4 @@
-.PHONY: install dev-backend dev-frontend db-reset clean help
+.PHONY: install dev-backend dev-frontend db-reset clean check help
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*##' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -18,3 +18,6 @@ db-reset:  ## Regenerate the SQLite database
 clean:  ## Remove caches and build artifacts
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	rm -rf .pytest_cache htmlcov .coverage dist build
+
+check:  ## Compile-check Python sources without running anything
+	python -m compileall -q backend data frontend

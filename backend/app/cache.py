@@ -17,6 +17,8 @@ class RecommendationCache:
     def __init__(self, max_entries: int = MAX_ENTRIES):
         self._cache: "OrderedDict[str, Dict[str, Any]]" = OrderedDict()
         self._max_entries = max_entries
+        self._hits = 0
+        self._misses = 0
 
     def _make_key(self, query: str, genre: Optional[str] = None, item_type: Optional[str] = None) -> str:
         norm_query = query.strip().lower()
@@ -28,7 +30,9 @@ class RecommendationCache:
     def get(self, query: str, genre: Optional[str] = None, item_type: Optional[str] = None) -> Optional[Dict[str, Any]]:
         key = self._make_key(query, genre, item_type)
         if key not in self._cache:
+            self._misses += 1
             return None
+        self._hits += 1
         self._cache.move_to_end(key)
         return self._cache[key]
 
@@ -48,9 +52,13 @@ class RecommendationCache:
 
     def info(self) -> Dict[str, Any]:
         """Return cache statistics for monitoring."""
+        total = self._hits + self._misses
         return {
             "size": len(self._cache),
             "max_entries": self._max_entries,
+            "hits": self._hits,
+            "misses": self._misses,
+            "hit_rate": round(self._hits / total, 2) if total else 0.0,
             "utilization": round(len(self._cache) / self._max_entries, 2),
         }
 

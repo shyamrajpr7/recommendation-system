@@ -109,6 +109,7 @@ def health_check():
         "version": APP_VERSION,
         "uptime_seconds": int(time.time() - _START_TIME),
         "total_requests": _REQUEST_COUNT,
+        "cache": cache_instance.info(),
     }
 
 
