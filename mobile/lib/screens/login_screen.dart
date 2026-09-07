@@ -104,12 +104,45 @@ class _LoginScreenState extends State<LoginScreen> {
                     .slideY(begin: 0.05, end: 0, delay: 350.ms, duration: 400.ms),
                 const SizedBox(height: AppSpacing.lg),
                 Row(children: [
-                  const Expanded(child: Divider(color: AppColors.borderSoft)),
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Colors.transparent, AppColors.border],
+                          stops: [0.0, 1.0],
+                        ),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                    child: Text('or', style: TextStyle(color: AppColors.muted, fontSize: 13)),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 4),
+                      decoration: BoxDecoration(
+                        gradient: AppColors.primaryGradient,
+                        borderRadius: BorderRadius.circular(999),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.accent1.withValues(alpha: 0.35),
+                            blurRadius: 12,
+                          ),
+                        ],
+                      ),
+                      child: const Text('or', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
+                    ),
                   ),
-                  const Expanded(child: Divider(color: AppColors.borderSoft)),
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [AppColors.border, Colors.transparent],
+                          stops: const [0.0, 1.0],
+                        ),
+                      ),
+                    ),
+                  ),
                 ]).animate().fadeIn(delay: 400.ms, duration: 400.ms),
                 const SizedBox(height: AppSpacing.lg),
                 AppButton(
