@@ -7,7 +7,10 @@ import '../services/cinema_service.dart';
 import '../widgets/booking_stepper.dart';
 import '../widgets/app_button.dart';
 
-final seatMapProvider = FutureProvider.family<SeatMap, int>((ref, showtimeId) async {
+final seatMapProvider = FutureProvider.family<SeatMap, int>((
+  ref,
+  showtimeId,
+) async {
   return ref.read(cinemaServiceProvider).fetchSeats(showtimeId);
 });
 
@@ -30,7 +33,13 @@ class SeatScreen extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => context.go('/home'),
         ),
-        title: const Text('Select Seats', style: TextStyle(fontFamily: 'Space Grotesk', fontWeight: FontWeight.w700)),
+        title: const Text(
+          'Select Seats',
+          style: TextStyle(
+            fontFamily: 'Space Grotesk',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -41,8 +50,15 @@ class SeatScreen extends ConsumerWidget {
           Expanded(
             child: seatMapAsync.when(
               data: (seatMap) => _SeatGrid(seatMap: seatMap),
-              loading: () => const Center(child: CircularProgressIndicator(color: AppColors.accent1)),
-              error: (_, __) => const Center(child: Text('Failed to load seats', style: TextStyle(color: AppColors.error))),
+              loading: () => const Center(
+                child: CircularProgressIndicator(color: AppColors.accent1),
+              ),
+              error: (_, __) => const Center(
+                child: Text(
+                  'Failed to load seats',
+                  style: TextStyle(color: AppColors.error),
+                ),
+              ),
             ),
           ),
           Container(
@@ -64,8 +80,16 @@ class SeatScreen extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(20, 14, 20, 24),
             decoration: BoxDecoration(
               color: AppColors.surface,
-              border: const Border(top: BorderSide(color: AppColors.borderSoft)),
-              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, -4))],
+              border: const Border(
+                top: BorderSide(color: AppColors.borderSoft),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, -4),
+                ),
+              ],
             ),
             child: Row(
               children: [
@@ -75,23 +99,39 @@ class SeatScreen extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        selected.isEmpty ? 'No seats selected' : '${selected.length} seat(s)',
-                        style: TextStyle(color: selected.isEmpty ? AppColors.muted : AppColors.text, fontSize: 14, fontWeight: FontWeight.w600),
+                        selected.isEmpty
+                            ? 'No seats selected'
+                            : '${selected.length} seat(s)',
+                        style: TextStyle(
+                          color: selected.isEmpty
+                              ? AppColors.muted
+                              : AppColors.text,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       if (selected.isNotEmpty)
                         Text(
                           selected.join(', '),
-                          style: TextStyle(color: AppColors.muted, fontSize: 12),
-                          maxLines: 1, overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppColors.muted,
+                            fontSize: 12,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                     ],
                   ),
                 ),
                 AppButton(
-                  label: selected.isEmpty ? 'Select seats' : 'Pay \u20B9${selected.length * 150}',
+                  label: selected.isEmpty
+                      ? 'Select seats'
+                      : 'Pay \u20B9${selected.length * 150}',
                   style: AppButtonStyle.gradient,
                   fullWidth: false,
-                  onPressed: selected.isEmpty ? null : () => context.push('/payment'),
+                  onPressed: selected.isEmpty
+                      ? null
+                      : () => context.push('/payment'),
                 ),
               ],
             ),
@@ -104,7 +144,14 @@ class SeatScreen extends ConsumerWidget {
   Widget _legend(Color color, String label) {
     return Row(
       children: [
-        Container(width: 12, height: 12, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3))),
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(3),
+          ),
+        ),
         const SizedBox(width: 4),
         Text(label, style: TextStyle(color: AppColors.muted, fontSize: 11)),
       ],
@@ -137,7 +184,15 @@ class _SeatGrid extends ConsumerWidget {
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 8),
-                    child: Text('SCREEN', style: TextStyle(color: AppColors.muted2, fontSize: 9, letterSpacing: 0.2, fontWeight: FontWeight.w600)),
+                    child: Text(
+                      'SCREEN',
+                      style: TextStyle(
+                        color: AppColors.muted2,
+                        fontSize: 9,
+                        letterSpacing: 0.2,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -147,9 +202,21 @@ class _SeatGrid extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 32),
                 child: Row(
-                  children: List.generate(rows[0].length, (c) => Expanded(
-                    child: Center(child: Text('${c + 1}', style: TextStyle(color: AppColors.muted2, fontSize: 9.5, fontWeight: FontWeight.w600))),
-                  )),
+                  children: List.generate(
+                    rows[0].length,
+                    (c) => Expanded(
+                      child: Center(
+                        child: Text(
+                          '${c + 1}',
+                          style: TextStyle(
+                            color: AppColors.muted2,
+                            fontSize: 9.5,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             const SizedBox(height: 8),
@@ -163,7 +230,11 @@ class _SeatGrid extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           String.fromCharCode(65 + r),
-                          style: TextStyle(color: AppColors.muted2, fontSize: 11, fontWeight: FontWeight.w700),
+                          style: TextStyle(
+                            color: AppColors.muted2,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ),
@@ -178,38 +249,43 @@ class _SeatGrid extends ConsumerWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(2),
                           child: GestureDetector(
-                            onTap: isOccupied || isBlocked ? null : () {
-                              final current = ref.read(selectedSeatsProvider);
-                              ref.read(selectedSeatsProvider.notifier).state =
-                                  isSelected ? current.where((s) => s != seatId).toList() : [...current, seatId];
-                            },
+                            onTap: isOccupied || isBlocked
+                                ? null
+                                : () {
+                                    final current = ref.read(
+                                      selectedSeatsProvider,
+                                    );
+                                    ref
+                                        .read(selectedSeatsProvider.notifier)
+                                        .state = isSelected
+                                        ? current
+                                              .where((s) => s != seatId)
+                                              .toList()
+                                        : [...current, seatId];
+                                  },
                             child: Tooltip(
                               message: isOccupied
                                   ? '$seatId - Occupied'
                                   : isBlocked
-                                      ? '$seatId - Blocked'
-                                      : '$seatId - Available',
+                                  ? '$seatId - Blocked'
+                                  : '$seatId - Available',
                               preferBelow: false,
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 150),
-                                height: 34,
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? AppColors.accent1
-                                      : isOccupied ? AppColors.muted2 : isBlocked ? AppColors.surface3 : AppColors.success,
-                                  borderRadius: BorderRadius.circular(7),
-                                  boxShadow: isSelected ? [BoxShadow(color: AppColors.accent1.withValues(alpha: 0.35), blurRadius: 8)] : null,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    isOccupied ? '\u2715' : isBlocked ? '\u00B7' : seatId,
-                                    style: TextStyle(
-                                      color: isSelected || isOccupied ? Colors.white : AppColors.background,
-                                      fontSize: 10, fontWeight: FontWeight.w700,
+                              child: isSelected
+                                  ? _PulsingSeatGlow(
+                                      borderRadius: BorderRadius.circular(7),
+                                      child: _seatBox(
+                                        seatId,
+                                        isOccupied,
+                                        isBlocked,
+                                        isSelected,
+                                      ),
+                                    )
+                                  : _seatBox(
+                                      seatId,
+                                      isOccupied,
+                                      isBlocked,
+                                      isSelected,
                                     ),
-                                  ),
-                                ),
-                              ),
                             ),
                           ),
                         ),
@@ -222,6 +298,109 @@ class _SeatGrid extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _seatBox(
+    String seatId,
+    bool isOccupied,
+    bool isBlocked,
+    bool isSelected,
+  ) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      height: 34,
+      decoration: BoxDecoration(
+        color: isSelected
+            ? AppColors.accent1
+            : isOccupied
+            ? AppColors.muted2
+            : isBlocked
+            ? AppColors.surface3
+            : AppColors.success,
+        borderRadius: BorderRadius.circular(7),
+        boxShadow: isSelected
+            ? [
+                BoxShadow(
+                  color: AppColors.accent1.withValues(alpha: 0.35),
+                  blurRadius: 8,
+                ),
+              ]
+            : null,
+      ),
+      child: Center(
+        child: Text(
+          isOccupied
+              ? '\u2715'
+              : isBlocked
+              ? '\u00B7'
+              : seatId,
+          style: TextStyle(
+            color: isSelected || isOccupied
+                ? Colors.white
+                : AppColors.background,
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PulsingSeatGlow extends StatefulWidget {
+  final Widget child;
+  final BorderRadius borderRadius;
+
+  const _PulsingSeatGlow({required this.child, required this.borderRadius});
+
+  @override
+  State<_PulsingSeatGlow> createState() => _PulsingSeatGlowState();
+}
+
+class _PulsingSeatGlowState extends State<_PulsingSeatGlow>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..repeat(reverse: true);
+    _anim = CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _anim,
+      builder: (context, child) {
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: widget.borderRadius,
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.accent1.withValues(
+                  alpha: 0.15 + (0.4 * _anim.value),
+                ),
+                blurRadius: 4 + (12 * _anim.value),
+                spreadRadius: _anim.value * 2,
+              ),
+            ],
+          ),
+          child: child,
+        );
+      },
+      child: widget.child,
     );
   }
 }
@@ -246,7 +425,10 @@ class _ScreenPainter extends CustomPainter {
     // Glow effect
     final glowPaint = Paint()
       ..shader = LinearGradient(
-        colors: [AppColors.accent1.withValues(alpha: 0.3), AppColors.accent2.withValues(alpha: 0.3)],
+        colors: [
+          AppColors.accent1.withValues(alpha: 0.3),
+          AppColors.accent2.withValues(alpha: 0.3),
+        ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, 20))
       ..strokeWidth = 12
       ..style = PaintingStyle.stroke
