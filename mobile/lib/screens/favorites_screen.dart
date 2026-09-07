@@ -31,11 +31,22 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     final list = List<_FavItem>.from(_items);
     switch (_sortBy) {
       case _SortBy.name:
-        list.sort((a, b) => _sortAsc ? a.title.compareTo(b.title) : b.title.compareTo(a.title));
+        list.sort(
+          (a, b) => _sortAsc
+              ? a.title.compareTo(b.title)
+              : b.title.compareTo(a.title),
+        );
       case _SortBy.year:
-        list.sort((a, b) => _sortAsc ? a.year.compareTo(b.year) : b.year.compareTo(a.year));
+        list.sort(
+          (a, b) =>
+              _sortAsc ? a.year.compareTo(b.year) : b.year.compareTo(a.year),
+        );
       case _SortBy.rating:
-        list.sort((a, b) => _sortAsc ? a.rating.compareTo(b.rating) : b.rating.compareTo(a.rating));
+        list.sort(
+          (a, b) => _sortAsc
+              ? a.rating.compareTo(b.rating)
+              : b.rating.compareTo(a.rating),
+        );
     }
     return list;
   }
@@ -53,12 +64,18 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Favorites', style: Theme.of(context).textTheme.headlineMedium)
-                      .animate().fadeIn(duration: 400.ms).slideX(begin: -0.05, end: 0),
+                  Text(
+                        'Favorites',
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      )
+                      .animate()
+                      .fadeIn(duration: 400.ms)
+                      .slideX(begin: -0.05, end: 0),
                   const SizedBox(height: 4),
-                  Text('${_items.where((i) => i.liked).length} movies saved',
-                      style: TextStyle(color: AppColors.muted, fontSize: 13))
-                      .animate().fadeIn(delay: 100.ms, duration: 400.ms),
+                  Text(
+                    '${_items.where((i) => i.liked).length} movies saved',
+                    style: TextStyle(color: AppColors.muted, fontSize: 13),
+                  ).animate().fadeIn(delay: 100.ms, duration: 400.ms),
                 ],
               ),
             ),
@@ -99,7 +116,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   borderRadius: BorderRadius.circular(AppDimens.radiusMd),
                 ),
                 child: Icon(
-                  _sortAsc ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
+                  _sortAsc
+                      ? Icons.arrow_upward_rounded
+                      : Icons.arrow_downward_rounded,
                   size: 16,
                   color: AppColors.muted,
                 ),
@@ -113,10 +132,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         else if (_isGrid)
           _buildGrid(items)
         else
-          ...List.generate(items.length, (i) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: _buildFavCard(items[i], i),
-          )),
+          ...List.generate(
+            items.length,
+            (i) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _buildFavCard(items[i], i),
+            ),
+          ),
       ],
     );
   }
@@ -129,10 +151,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: selected ? AppColors.accent1.withValues(alpha: 0.15) : AppColors.surface2,
+          color: selected
+              ? AppColors.accent1.withValues(alpha: 0.15)
+              : AppColors.surface2,
           borderRadius: BorderRadius.circular(AppDimens.radiusFull),
           border: Border.all(
-            color: selected ? AppColors.accent1.withValues(alpha: 0.5) : AppColors.borderSoft,
+            color: selected
+                ? AppColors.accent1.withValues(alpha: 0.5)
+                : AppColors.borderSoft,
           ),
         ),
         child: Text(
@@ -173,69 +199,113 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     final colors = palettes[index % palettes.length];
 
     return GestureDetector(
-      onTap: () => context.push('/home'),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(AppDimens.radiusLg),
-          border: Border.all(color: AppColors.borderSoft),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 3,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: colors, begin: Alignment.topLeft, end: Alignment.bottomRight),
-                ),
-                child: Center(
-                  child: Text(
-                    item.title[0],
-                    style: TextStyle(fontFamily: 'Space Grotesk', fontSize: 32, fontWeight: FontWeight.w700, color: Colors.white.withValues(alpha: 0.5)),
+          onTap: () => context.push('/home'),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppDimens.radiusLg),
+              border: Border.all(color: AppColors.borderSoft),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: colors,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        item.title[0],
+                        style: TextStyle(
+                          fontFamily: 'Space Grotesk',
+                          fontSize: 32,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(item.title, style: TextStyle(color: AppColors.text, fontSize: 13, fontWeight: FontWeight.w700), maxLines: 1, overflow: TextOverflow.ellipsis),
-                    const SizedBox(height: 2),
-                    Text('${item.genre} \u2022 ${item.year}', style: TextStyle(color: AppColors.muted, fontSize: 11)),
-                    const Spacer(),
-                    Row(
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.star_rounded, size: 14, color: AppColors.gold),
-                        const SizedBox(width: 2),
-                        Text('${item.rating}', style: TextStyle(color: AppColors.textSecondary, fontSize: 11, fontWeight: FontWeight.w600)),
-                        const Spacer(),
-                        GestureDetector(
-                          onTap: () {
-                            HapticFeedback.mediumImpact();
-                            setState(() => item.liked = !item.liked);
-                          },
-                          child: Icon(
-                            item.liked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                            color: item.liked ? AppColors.error : AppColors.muted,
-                            size: 18,
+                        Text(
+                          item.title,
+                          style: TextStyle(
+                            color: AppColors.text,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${item.genre} \u2022 ${item.year}',
+                          style: TextStyle(
+                            color: AppColors.muted,
+                            fontSize: 11,
+                          ),
+                        ),
+                        const Spacer(),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.star_rounded,
+                              size: 14,
+                              color: AppColors.gold,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${item.rating}',
+                              style: TextStyle(
+                                color: AppColors.textSecondary,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const Spacer(),
+                            GestureDetector(
+                              onTap: () {
+                                HapticFeedback.mediumImpact();
+                                setState(() => item.liked = !item.liked);
+                              },
+                              child: Icon(
+                                item.liked
+                                    ? Icons.favorite_rounded
+                                    : Icons.favorite_border_rounded,
+                                color: item.liked
+                                    ? AppColors.error
+                                    : AppColors.muted,
+                                size: 18,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
-    ).animate().fadeIn(delay: Duration(milliseconds: 200 + index * 60), duration: 400.ms)
+          ),
+        )
+        .animate()
+        .fadeIn(
+          delay: Duration(milliseconds: 200 + index * 60),
+          duration: 400.ms,
+        )
         .scale(begin: const Offset(0.95, 0.95), duration: 400.ms);
   }
 
@@ -250,101 +320,163 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     final colors = palettes[index % palettes.length];
 
     return Dismissible(
-      key: ValueKey('${item.title}-$index'),
-      direction: DismissDirection.endToStart,
-      onDismissed: (_) {
-        setState(() => _items.removeWhere((e) => e.title == item.title));
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${item.title} removed from favorites')),
-        );
-      },
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 24),
-        decoration: BoxDecoration(
-          color: AppColors.error.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(AppDimens.radiusLg),
-        ),
-        child: Icon(Icons.delete_rounded, color: AppColors.error),
-      ),
-      child: GestureDetector(
-        onTap: () => context.push('/home'),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppDimens.radiusLg),
-            border: Border.all(color: AppColors.borderSoft),
+          key: ValueKey('${item.title}-$index'),
+          direction: DismissDirection.endToStart,
+          onDismissed: (_) {
+            setState(() => _items.removeWhere((e) => e.title == item.title));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('${item.title} removed from favorites')),
+            );
+          },
+          background: Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 24),
+            decoration: BoxDecoration(
+              color: AppColors.error.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(AppDimens.radiusLg),
+            ),
+            child: Icon(Icons.delete_rounded, color: AppColors.error),
           ),
-          clipBehavior: Clip.antiAlias,
-          child: Row(
-            children: [
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: colors, begin: Alignment.topLeft, end: Alignment.bottomRight),
-                ),
-                child: Center(
-                  child: Text(
-                    item.title[0],
-                    style: TextStyle(fontFamily: 'Space Grotesk', fontSize: 28, fontWeight: FontWeight.w700, color: Colors.white.withValues(alpha: 0.6)),
-                  ),
-                ),
+          child: GestureDetector(
+            onTap: () => context.push('/home'),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(AppDimens.radiusLg),
+                border: Border.all(color: AppColors.borderSoft),
               ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(item.title, style: TextStyle(color: AppColors.text, fontSize: 15, fontWeight: FontWeight.w700), maxLines: 1, overflow: TextOverflow.ellipsis),
-                    const SizedBox(height: 4),
-                    Row(children: [
-                      Text(item.genre, style: TextStyle(color: AppColors.muted, fontSize: 12)),
-                      const SizedBox(width: 8),
-                      Text('${item.year}', style: TextStyle(color: AppColors.muted, fontSize: 12)),
-                    ]),
-                    const SizedBox(height: 4),
-                    Row(children: [
-                      Icon(Icons.star_rounded, size: 14, color: AppColors.gold),
-                      const SizedBox(width: 2),
-                      Text('${item.rating}', style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
-                    ]),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  HapticFeedback.mediumImpact();
-                  setState(() => item.liked = !item.liked);
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: item.liked ? AppColors.error.withValues(alpha: 0.15) : AppColors.surface2,
-                    shape: BoxShape.circle,
+              clipBehavior: Clip.antiAlias,
+              child: Row(
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: colors,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        item.title[0],
+                        style: TextStyle(
+                          fontFamily: 'Space Grotesk',
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white.withValues(alpha: 0.6),
+                        ),
+                      ),
+                    ),
+                  ).animate().shimmer(
+                    delay: Duration(milliseconds: 200 + (index * 80) + 300),
+                    duration: 1400.ms,
+                    color: Colors.white.withValues(alpha: 0.1),
                   ),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
-                    child: Icon(
-                      item.liked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                      key: ValueKey(item.liked),
-                      color: item.liked ? AppColors.error : AppColors.muted,
-                      size: 20,
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.title,
+                          style: TextStyle(
+                            color: AppColors.text,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              item.genre,
+                              style: TextStyle(
+                                color: AppColors.muted,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '${item.year}',
+                              style: TextStyle(
+                                color: AppColors.muted,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.star_rounded,
+                              size: 14,
+                              color: AppColors.gold,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${item.rating}',
+                              style: TextStyle(
+                                color: AppColors.textSecondary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                ),
+                  GestureDetector(
+                    onTap: () {
+                      HapticFeedback.mediumImpact();
+                      setState(() => item.liked = !item.liked);
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: item.liked
+                            ? AppColors.error.withValues(alpha: 0.15)
+                            : AppColors.surface2,
+                        shape: BoxShape.circle,
+                      ),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        transitionBuilder: (child, anim) =>
+                            ScaleTransition(scale: anim, child: child),
+                        child: Icon(
+                          item.liked
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_border_rounded,
+                          key: ValueKey(item.liked),
+                          color: item.liked ? AppColors.error : AppColors.muted,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                ],
               ),
-              const SizedBox(width: 14),
-            ],
+            ),
           ),
-        ),
-      ),
-    )
+        )
         .animate()
-        .fadeIn(delay: Duration(milliseconds: 200 + index * 80), duration: 400.ms)
-        .slideX(begin: 0.05, end: 0, delay: Duration(milliseconds: 200 + index * 80), duration: 400.ms);
+        .fadeIn(
+          delay: Duration(milliseconds: 200 + index * 80),
+          duration: 400.ms,
+        )
+        .slideX(
+          begin: 0.05,
+          end: 0,
+          delay: Duration(milliseconds: 200 + index * 80),
+          duration: 400.ms,
+        );
   }
 
   Widget _buildEmptyState() {
@@ -353,21 +485,46 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         padding: const EdgeInsets.only(top: 60),
         child: Column(
           children: [
-            Icon(Icons.favorite_border_rounded, size: 64, color: AppColors.muted2),
+            Icon(
+              Icons.favorite_border_rounded,
+              size: 64,
+              color: AppColors.muted2,
+            ),
             const SizedBox(height: 16),
-            Text('No favorites yet', style: TextStyle(color: AppColors.text, fontSize: 18, fontWeight: FontWeight.w600)),
+            Text(
+              'No favorites yet',
+              style: TextStyle(
+                color: AppColors.text,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             const SizedBox(height: 8),
-            Text('Tap the heart icon on any movie to save it here', style: TextStyle(color: AppColors.muted, fontSize: 14), textAlign: TextAlign.center),
+            Text(
+              'Tap the heart icon on any movie to save it here',
+              style: TextStyle(color: AppColors.muted, fontSize: 14),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 20),
             GestureDetector(
               onTap: () => context.go('/home'),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   gradient: AppColors.primaryGradient,
                   borderRadius: BorderRadius.circular(AppDimens.radiusFull),
                 ),
-                child: const Text('Discover Movies', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
+                child: const Text(
+                  'Discover Movies',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ),
           ],
