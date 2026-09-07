@@ -36,49 +36,73 @@ class NowShowingScreen extends ConsumerWidget {
               children: [
                 // Brand header
                 Row(
-                  children: [
-                    Container(
-                      width: 42,
-                      height: 42,
-                      decoration: BoxDecoration(
-                        gradient: AppColors.primaryGradient,
-                        borderRadius: BorderRadius.circular(13),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.accent1.withValues(alpha: 0.25),
-                            blurRadius: 12,
-                          ),
-                        ],
-                      ),
-                      child: const Icon(Icons.movie_filter_rounded, size: 24, color: Colors.white),
-                    ).animate().scale(
-                      begin: const Offset(0.8, 0.8),
-                      end: const Offset(1, 1),
-                      duration: 400.ms,
-                      curve: Curves.easeOutBack,
-                    ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'CineRead',
-                          style: TextStyle(
-                            fontFamily: 'Space Grotesk',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.text,
+                        Container(
+                          width: 42,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            gradient: AppColors.primaryGradient,
+                            borderRadius: BorderRadius.circular(13),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.accent1.withValues(
+                                  alpha: 0.25,
+                                ),
+                                blurRadius: 12,
+                              ),
+                            ],
                           ),
+                          child: const Icon(
+                            Icons.movie_filter_rounded,
+                            size: 24,
+                            color: Colors.white,
+                          ),
+                        ).animate().scale(
+                          begin: const Offset(0.8, 0.8),
+                          end: const Offset(1, 1),
+                          duration: 400.ms,
+                          curve: Curves.easeOutBack,
                         ),
-                        Text('AI-Powered Cinema', style: TextStyle(color: AppColors.muted, fontSize: 11)),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'CineRead',
+                              style: TextStyle(
+                                fontFamily: 'Space Grotesk',
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.text,
+                              ),
+                            ),
+                            Text(
+                              'AI-Powered Cinema',
+                              style: TextStyle(
+                                color: AppColors.muted,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
-                    ),
-                  ],
-                ).animate().fadeIn(duration: 300.ms).slideX(begin: -0.05, end: 0),
+                    )
+                    .animate()
+                    .fadeIn(duration: 300.ms)
+                    .slideX(begin: -0.05, end: 0),
                 const SizedBox(height: 24),
-                Text('Now Showing', style: Theme.of(context).textTheme.headlineMedium)
-                    .animate().fadeIn(delay: 100.ms, duration: 400.ms)
-                    .slideY(begin: 0.1, end: 0, delay: 100.ms, duration: 400.ms),
+                Text(
+                      'Now Showing',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    )
+                    .animate()
+                    .fadeIn(delay: 100.ms, duration: 400.ms)
+                    .slideY(
+                      begin: 0.1,
+                      end: 0,
+                      delay: 100.ms,
+                      duration: 400.ms,
+                    ),
                 const SizedBox(height: 4),
                 Text(
                   'Tap a movie to see showtimes and book your seats',
@@ -96,21 +120,38 @@ class NowShowingScreen extends ConsumerWidget {
                         return Padding(
                           padding: const EdgeInsets.only(right: 8),
                           child: GestureDetector(
-                            onTap: () => ref.read(selectedGenreFilterProvider.notifier).state = g,
+                            onTap: () =>
+                                ref
+                                        .read(
+                                          selectedGenreFilterProvider.notifier,
+                                        )
+                                        .state =
+                                    g,
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
                               decoration: BoxDecoration(
-                                color: sel ? AppColors.accent1.withValues(alpha: 0.15) : AppColors.surface2,
-                                borderRadius: BorderRadius.circular(AppDimens.radiusFull),
+                                color: sel
+                                    ? AppColors.accent1.withValues(alpha: 0.15)
+                                    : AppColors.surface2,
+                                borderRadius: BorderRadius.circular(
+                                  AppDimens.radiusFull,
+                                ),
                                 border: Border.all(
-                                  color: sel ? AppColors.accent1.withValues(alpha: 0.5) : AppColors.border,
+                                  color: sel
+                                      ? AppColors.accent1.withValues(alpha: 0.5)
+                                      : AppColors.border,
                                 ),
                               ),
                               child: Text(
                                 g,
                                 style: TextStyle(
-                                  color: sel ? AppColors.accent1 : AppColors.muted,
+                                  color: sel
+                                      ? AppColors.accent1
+                                      : AppColors.muted,
                                   fontSize: 12.5,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -132,7 +173,8 @@ class NowShowingScreen extends ConsumerWidget {
         // Featured carousel
         moviesAsync.when(
           data: (movies) {
-            if (movies.isEmpty) return const SliverToBoxAdapter(child: SizedBox.shrink());
+            if (movies.isEmpty)
+              return const SliverToBoxAdapter(child: SizedBox.shrink());
             final featured = movies.take(3).toList();
             return SliverToBoxAdapter(
               child: SizedBox(
@@ -153,7 +195,10 @@ class NowShowingScreen extends ConsumerWidget {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text('All Movies', style: Theme.of(context).textTheme.titleMedium),
+            child: Text(
+              'All Movies',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ).animate().fadeIn(delay: 400.ms, duration: 400.ms),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: 12)),
@@ -166,7 +211,10 @@ class NowShowingScreen extends ConsumerWidget {
             if (filtered.isEmpty) {
               return const SliverFillRemaining(
                 child: Center(
-                  child: Text('No movies in this genre', style: TextStyle(color: AppColors.muted)),
+                  child: Text(
+                    'No movies in this genre',
+                    style: TextStyle(color: AppColors.muted),
+                  ),
                 ),
               );
             }
@@ -175,23 +223,29 @@ class NowShowingScreen extends ConsumerWidget {
               sliver: SliverList.separated(
                 itemCount: filtered.length,
                 separatorBuilder: (_, _) => const SizedBox(height: 14),
-                itemBuilder: (_, i) => _MovieCard(
-                  movie: filtered[i],
-                  index: i,
-                ),
+                itemBuilder: (_, i) => _MovieCard(movie: filtered[i], index: i),
               ),
             );
           },
           loading: () => const SliverFillRemaining(
-            child: Center(child: CircularProgressIndicator(color: AppColors.accent1)),
+            child: Center(
+              child: CircularProgressIndicator(color: AppColors.accent1),
+            ),
           ),
           error: (e, _) => SliverFillRemaining(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+                const Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: AppColors.error,
+                ),
                 const SizedBox(height: 12),
-                Text('Failed to load movies', style: TextStyle(color: AppColors.error)),
+                Text(
+                  'Failed to load movies',
+                  style: TextStyle(color: AppColors.error),
+                ),
               ],
             ),
           ),
@@ -202,183 +256,246 @@ class NowShowingScreen extends ConsumerWidget {
   }
 }
 
-class _MovieCard extends StatelessWidget {
+class _MovieCard extends StatefulWidget {
   final Movie movie;
   final int index;
 
   const _MovieCard({required this.movie, required this.index});
 
   @override
+  State<_MovieCard> createState() => _MovieCardState();
+}
+
+class _MovieCardState extends State<_MovieCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _scaleCtrl;
+  late final Animation<double> _scaleAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _scaleCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 160),
+      value: 1.0,
+    );
+    _scaleAnim = Tween<double>(
+      begin: 1.0,
+      end: 0.97,
+    ).animate(CurvedAnimation(parent: _scaleCtrl, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _scaleCtrl.dispose();
+    super.dispose();
+  }
+
+  void _onTapDown(TapDownDetails _) => _scaleCtrl.forward();
+  void _onTapUp(TapUpDetails _) => _scaleCtrl.reverse();
+  void _onTapCancel() => _scaleCtrl.reverse();
+
+  @override
   Widget build(BuildContext context) {
+    final movie = widget.movie;
     final colors = _palette(movie.title);
     return Hero(
-      tag: 'movie-${movie.id}',
-      child: Material(
-        color: Colors.transparent,
-        child: GestureDetector(
-          onTap: () => context.push('/detail/${movie.id}'),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppDimens.radiusXl),
-              border: Border.all(color: AppColors.borderSoft),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Gradient poster header
-                Container(
-                  height: 130,
-                  width: double.infinity,
+          tag: 'movie-${movie.id}',
+          child: Material(
+            color: Colors.transparent,
+            child: AnimatedBuilder(
+              animation: _scaleAnim,
+              builder: (context, child) =>
+                  Transform.scale(scale: _scaleAnim.value, child: child),
+              child: GestureDetector(
+                onTapDown: _onTapDown,
+                onTapUp: _onTapUp,
+                onTapCancel: _onTapCancel,
+                onTap: () => context.push('/detail/${movie.id}'),
+                child: Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: colors,
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(AppDimens.radiusXl),
+                    border: Border.all(color: AppColors.borderSoft),
                   ),
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.transparent,
-                                Colors.black.withValues(alpha: 0.7),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 10,
-                        left: 12,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.45),
-                            borderRadius: BorderRadius.circular(AppDimens.radiusFull),
-                          ),
-                          child: Text(
-                            movie.genre,
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 10.5,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 10,
-                        right: 12,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.45),
-                            borderRadius: BorderRadius.circular(AppDimens.radiusFull),
-                          ),
-                          child: Text(
-                            '${movie.year}',
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 10.5,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 12,
-                        left: 14,
-                        right: 14,
-                        child: Text(
-                          movie.title,
-                          style: const TextStyle(
-                            fontFamily: 'Space Grotesk',
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Body
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+                  clipBehavior: Clip.antiAlias,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        movie.synopsis,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 12.5,
-                          height: 1.45,
+                      // Gradient poster header
+                      Container(
+                        height: 130,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: colors,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Text(
-                            _stars(movie.rating),
-                            style: TextStyle(color: AppColors.gold, fontSize: 13, letterSpacing: 0.06),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            '${movie.rating}/10',
-                            style: TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const Spacer(),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: AppColors.accent1.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(AppDimens.radiusFull),
-                            ),
-                            child: Text(
-                              'Book Now',
-                              style: TextStyle(
-                                color: AppColors.accent1,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black.withValues(alpha: 0.7),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              top: 10,
+                              left: 12,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.45),
+                                  borderRadius: BorderRadius.circular(
+                                    AppDimens.radiusFull,
+                                  ),
+                                ),
+                                child: Text(
+                                  movie.genre,
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 10,
+                              right: 12,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.45),
+                                  borderRadius: BorderRadius.circular(
+                                    AppDimens.radiusFull,
+                                  ),
+                                ),
+                                child: Text(
+                                  '${movie.year}',
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 12,
+                              left: 14,
+                              right: 14,
+                              child: Text(
+                                movie.title,
+                                style: const TextStyle(
+                                  fontFamily: 'Space Grotesk',
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Body
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              movie.synopsis,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.textSecondary,
+                                fontSize: 12.5,
+                                height: 1.45,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Text(
+                                  _stars(movie.rating),
+                                  style: TextStyle(
+                                    color: AppColors.gold,
+                                    fontSize: 13,
+                                    letterSpacing: 0.06,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  '${movie.rating}/10',
+                                  style: TextStyle(
+                                    color: AppColors.textSecondary,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.accent1.withValues(
+                                      alpha: 0.1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                      AppDimens.radiusFull,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Book Now',
+                                    style: TextStyle(
+                                      color: AppColors.accent1,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    )
+        )
         .animate()
         .fadeIn(
-          delay: Duration(milliseconds: 300 + (index * 80)),
+          delay: Duration(milliseconds: 300 + (widget.index * 80)),
           duration: 400.ms,
         )
         .slideY(
           begin: 0.1,
           end: 0,
-          delay: Duration(milliseconds: 300 + (index * 80)),
+          delay: Duration(milliseconds: 300 + (widget.index * 80)),
           duration: 400.ms,
         );
   }
@@ -410,115 +527,147 @@ class _FeaturedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = _palette(movie.title);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
-      child: GestureDetector(
-        onTap: () => context.push('/detail/${movie.id}'),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: colors,
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(AppDimens.radiusXl),
-            boxShadow: [
-              BoxShadow(
-                color: colors.first.withValues(alpha: 0.4),
-                blurRadius: 16,
-                offset: const Offset(0, 6),
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          child: GestureDetector(
+            onTap: () => context.push('/detail/${movie.id}'),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: colors,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(AppDimens.radiusXl),
+                boxShadow: [
+                  BoxShadow(
+                    color: colors.first.withValues(alpha: 0.4),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
-            ],
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withValues(alpha: 0.8),
+              clipBehavior: Clip.antiAlias,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.8),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 12,
+                    left: 14,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: AppColors.primaryGradient,
+                        borderRadius: BorderRadius.circular(
+                          AppDimens.radiusFull,
+                        ),
+                      ),
+                      child: const Text(
+                        'FEATURED',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 12,
+                    right: 14,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.45),
+                        borderRadius: BorderRadius.circular(
+                          AppDimens.radiusFull,
+                        ),
+                      ),
+                      child: Text(
+                        _stars(movie.rating),
+                        style: const TextStyle(
+                          color: AppColors.gold,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 16,
+                    left: 16,
+                    right: 16,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          movie.title,
+                          style: const TextStyle(
+                            fontFamily: 'Space Grotesk',
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${movie.genre}  \u2022  ${movie.year}',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.7),
+                            fontSize: 12,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: AppColors.primaryGradient,
+                            borderRadius: BorderRadius.circular(
+                              AppDimens.radiusFull,
+                            ),
+                          ),
+                          child: const Text(
+                            'Book Now',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ),
+                ],
               ),
-              Positioned(
-                top: 12,
-                left: 14,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    gradient: AppColors.primaryGradient,
-                    borderRadius: BorderRadius.circular(AppDimens.radiusFull),
-                  ),
-                  child: const Text(
-                    'FEATURED',
-                    style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w700, letterSpacing: 0.1),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 12,
-                right: 14,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.45),
-                    borderRadius: BorderRadius.circular(AppDimens.radiusFull),
-                  ),
-                  child: Text(
-                    _stars(movie.rating),
-                    style: const TextStyle(color: AppColors.gold, fontSize: 12),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 16,
-                left: 16,
-                right: 16,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      movie.title,
-                      style: const TextStyle(
-                        fontFamily: 'Space Grotesk',
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${movie.genre}  \u2022  ${movie.year}',
-                      style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 12),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        gradient: AppColors.primaryGradient,
-                        borderRadius: BorderRadius.circular(AppDimens.radiusFull),
-                      ),
-                      child: const Text(
-                        'Book Now',
-                        style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-    ).animate().fadeIn(delay: Duration(milliseconds: 300), duration: 400.ms)
+        )
+        .animate()
+        .fadeIn(delay: Duration(milliseconds: 300), duration: 400.ms)
         .scale(begin: const Offset(0.95, 0.95), duration: 400.ms);
   }
 
