@@ -18,37 +18,59 @@ class SettingsScreen extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.xxl),
       children: [
-        Text('Settings', style: Theme.of(context).textTheme.headlineMedium)
-            .animate().fadeIn(duration: 400.ms)
-            .slideX(begin: -0.05, end: 0),
+        Text(
+          'Settings',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.05, end: 0),
         const SizedBox(height: AppSpacing.xxl),
         // Profile card
         Container(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppDimens.radiusXl),
-            border: Border.all(color: AppColors.borderSoft),
-          ),
-          child: Row(children: [
-            CircleAvatar(
-              radius: 28,
-              backgroundColor: AppColors.accent2.withValues(alpha: 0.2),
-              child: const Icon(Icons.person_rounded, size: 30, color: AppColors.accent2),
-            ),
-            const SizedBox(width: AppSpacing.lg),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(AppDimens.radiusXl),
+                border: Border.all(color: AppColors.borderSoft),
+              ),
+              child: Row(
                 children: [
-                  Text('Alex Johnson', style: Theme.of(context).textTheme.titleMedium),
-                  Text('Signed in', style: TextStyle(color: AppColors.muted, fontSize: 13)),
+                  CircleAvatar(
+                    radius: 28,
+                    backgroundColor: AppColors.accent2.withValues(alpha: 0.2),
+                    child: const Icon(
+                      Icons.person_rounded,
+                      size: 30,
+                      color: AppColors.accent2,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.lg),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Alex Johnson',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text(
+                          'Signed in',
+                          style: TextStyle(
+                            color: AppColors.muted,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    size: 22,
+                    color: AppColors.muted,
+                  ),
                 ],
               ),
-            ),
-            Icon(Icons.chevron_right_rounded, size: 22, color: AppColors.muted),
-          ]),
-        ).animate().fadeIn(delay: 100.ms, duration: 400.ms)
+            )
+            .animate()
+            .fadeIn(delay: 100.ms, duration: 400.ms)
             .slideY(begin: 0.1, end: 0, delay: 100.ms, duration: 400.ms),
         const SizedBox(height: AppSpacing.xxl),
         // Section: Preferences
@@ -56,50 +78,52 @@ class SettingsScreen extends ConsumerWidget {
         const SizedBox(height: AppSpacing.md),
         // Grouped preferences card
         Container(
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppDimens.radiusLg),
-            border: Border.all(color: AppColors.borderSoft),
-          ),
-          child: Column(
-            children: [
-              _buildToggleTile(
-                icon: Icons.notifications_rounded,
-                title: 'Push Notifications',
-                subtitle: 'Get booking & recommendation alerts',
-                value: ref.watch(notificationsProvider),
-                onChanged: (v) {
-                  HapticFeedback.lightImpact();
-                  ref.read(notificationsProvider.notifier).toggle(v);
-                },
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(AppDimens.radiusLg),
+                border: Border.all(color: AppColors.borderSoft),
               ),
-              _divider(),
-              _buildThemeTile(ref, isDark),
-              _divider(),
-              _buildToggleTile(
-                icon: Icons.play_circle_outline_rounded,
-                title: 'Auto-play Trailers',
-                subtitle: 'Play trailers automatically',
-                value: ref.watch(autoPlayTrailersProvider),
-                onChanged: (v) {
-                  HapticFeedback.lightImpact();
-                  ref.read(autoPlayTrailersProvider.notifier).toggle(v);
-                },
+              child: Column(
+                children: [
+                  _buildToggleTile(
+                    icon: Icons.notifications_rounded,
+                    title: 'Push Notifications',
+                    subtitle: 'Get booking & recommendation alerts',
+                    value: ref.watch(notificationsProvider),
+                    onChanged: (v) {
+                      HapticFeedback.lightImpact();
+                      ref.read(notificationsProvider.notifier).toggle(v);
+                    },
+                  ),
+                  _divider(),
+                  _buildThemeTile(ref, isDark),
+                  _divider(),
+                  _buildToggleTile(
+                    icon: Icons.play_circle_outline_rounded,
+                    title: 'Auto-play Trailers',
+                    subtitle: 'Play trailers automatically',
+                    value: ref.watch(autoPlayTrailersProvider),
+                    onChanged: (v) {
+                      HapticFeedback.lightImpact();
+                      ref.read(autoPlayTrailersProvider.notifier).toggle(v);
+                    },
+                  ),
+                  _divider(),
+                  _buildToggleTile(
+                    icon: Icons.location_on_outlined,
+                    title: 'Location Services',
+                    subtitle: 'Find nearby theaters',
+                    value: ref.watch(locationServicesProvider),
+                    onChanged: (v) {
+                      HapticFeedback.lightImpact();
+                      ref.read(locationServicesProvider.notifier).toggle(v);
+                    },
+                  ),
+                ],
               ),
-              _divider(),
-              _buildToggleTile(
-                icon: Icons.location_on_outlined,
-                title: 'Location Services',
-                subtitle: 'Find nearby theaters',
-                value: ref.watch(locationServicesProvider),
-                onChanged: (v) {
-                  HapticFeedback.lightImpact();
-                  ref.read(locationServicesProvider.notifier).toggle(v);
-                },
-              ),
-            ],
-          ),
-        ).animate().fadeIn(delay: 200.ms, duration: 400.ms)
+            )
+            .animate()
+            .fadeIn(delay: 200.ms, duration: 400.ms)
             .slideY(begin: 0.05, end: 0, delay: 200.ms, duration: 400.ms),
         const SizedBox(height: AppSpacing.xxl),
         // Section: About
@@ -114,11 +138,23 @@ class SettingsScreen extends ConsumerWidget {
           ),
           child: Column(
             children: [
-              _buildInfoTile(Icons.info_outline, 'About CineRead', 'AI-powered cinema booking'),
+              _buildInfoTile(
+                Icons.info_outline,
+                'About CineRead',
+                'AI-powered cinema booking',
+              ),
               _divider(),
-              _buildInfoTile(Icons.code_rounded, 'API Status', 'Backend: localhost:8000 · v1.0.1'),
+              _buildInfoTile(
+                Icons.code_rounded,
+                'API Status',
+                'Backend: localhost:8000 · v1.0.1',
+              ),
               _divider(),
-              _buildInfoTile(Icons.phone_android_rounded, 'Platform', 'macOS desktop'),
+              _buildInfoTile(
+                Icons.phone_android_rounded,
+                'Platform',
+                'macOS desktop',
+              ),
             ],
           ),
         ).animate().fadeIn(delay: 400.ms, duration: 400.ms),
@@ -154,13 +190,57 @@ class SettingsScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   gradient: AppColors.primaryGradient,
                   borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.accent1.withValues(alpha: 0.35),
+                      blurRadius: 10,
+                    ),
+                  ],
                 ),
-                child: const Icon(Icons.movie_filter_rounded, size: 18, color: Colors.white),
+                child: const Icon(
+                  Icons.movie_filter_rounded,
+                  size: 18,
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(height: 6),
-              Text('CineRead v1.0.1', style: TextStyle(color: AppColors.muted2, fontSize: 11, fontWeight: FontWeight.w600)),
+              Text(
+                'CineRead v1.0.1',
+                style: TextStyle(
+                  color: AppColors.muted2,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const SizedBox(height: 2),
-              Text('AI-Powered Cinema Booking', style: TextStyle(color: AppColors.muted2, fontSize: 10)),
+              Text(
+                'AI-Powered Cinema Booking',
+                style: TextStyle(color: AppColors.muted2, fontSize: 10),
+              ),
+              const SizedBox(height: 14),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(width: 60, height: 1, color: AppColors.borderSoft),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(
+                      '© 2026',
+                      style: TextStyle(
+                        color: AppColors.muted2,
+                        fontSize: 9,
+                        letterSpacing: 0.08,
+                      ),
+                    ),
+                  ),
+                  Container(width: 60, height: 1, color: AppColors.borderSoft),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Crafted with \u2764 by Shyam Raj',
+                style: TextStyle(color: AppColors.muted2, fontSize: 10),
+              ),
             ],
           ),
         ).animate().fadeIn(delay: 500.ms, duration: 400.ms),
@@ -192,16 +272,27 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ),
       ],
-    ).animate().fadeIn(delay: Duration(milliseconds: delayMs), duration: 400.ms);
+    ).animate().fadeIn(
+      delay: Duration(milliseconds: delayMs),
+      duration: 400.ms,
+    );
   }
 
   Widget _divider() {
-    return Divider(height: 1, indent: 16, endIndent: 16, color: AppColors.borderSoft);
+    return Divider(
+      height: 1,
+      indent: 16,
+      endIndent: 16,
+      color: AppColors.borderSoft,
+    );
   }
 
   Widget _buildThemeTile(WidgetRef ref, bool isDark) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: 12,
+      ),
       child: Row(
         children: [
           Container(
@@ -211,15 +302,29 @@ class SettingsScreen extends ConsumerWidget {
               color: AppColors.accent1.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppDimens.radiusMd),
             ),
-            child: Icon(Icons.dark_mode_rounded, size: 20, color: AppColors.accent1),
+            child: Icon(
+              Icons.dark_mode_rounded,
+              size: 20,
+              color: AppColors.accent1,
+            ),
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Theme', style: TextStyle(color: AppColors.text, fontSize: 14, fontWeight: FontWeight.w600)),
-                Text(isDark ? 'Dark mode' : 'Light mode', style: TextStyle(color: AppColors.muted, fontSize: 12)),
+                Text(
+                  'Theme',
+                  style: TextStyle(
+                    color: AppColors.text,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  isDark ? 'Dark mode' : 'Light mode',
+                  style: TextStyle(color: AppColors.muted, fontSize: 12),
+                ),
               ],
             ),
           ),
@@ -248,7 +353,12 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _themeChip(IconData icon, String label, bool selected, VoidCallback onTap) {
+  Widget _themeChip(
+    IconData icon,
+    String label,
+    bool selected,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -262,12 +372,20 @@ class SettingsScreen extends ConsumerWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 14, color: selected ? Colors.white : AppColors.muted),
-            const SizedBox(width: 4),
-            Text(label, style: TextStyle(
+            Icon(
+              icon,
+              size: 14,
               color: selected ? Colors.white : AppColors.muted,
-              fontSize: 11, fontWeight: FontWeight.w600,
-            )),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: selected ? Colors.white : AppColors.muted,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
       ),
@@ -282,7 +400,10 @@ class SettingsScreen extends ConsumerWidget {
     required ValueChanged<bool> onChanged,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: 12,
+      ),
       child: Row(
         children: [
           Container(
@@ -299,14 +420,25 @@ class SettingsScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(color: AppColors.text, fontSize: 14, fontWeight: FontWeight.w600)),
-                Text(subtitle, style: TextStyle(color: AppColors.muted, fontSize: 12)),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: AppColors.text,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: TextStyle(color: AppColors.muted, fontSize: 12),
+                ),
               ],
             ),
           ),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            transitionBuilder: (child, anim) => ScaleTransition(scale: anim, child: child),
+            transitionBuilder: (child, anim) =>
+                ScaleTransition(scale: anim, child: child),
             child: Switch(
               key: ValueKey(value),
               value: value,
@@ -324,19 +456,31 @@ class SettingsScreen extends ConsumerWidget {
   Widget _buildInfoTile(IconData icon, String title, String sub) {
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Row(children: [
-        Icon(icon, size: 22, color: AppColors.accent1),
-        const SizedBox(width: AppSpacing.md),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: TextStyle(color: AppColors.text, fontSize: 14, fontWeight: FontWeight.w600)),
-              Text(sub, style: TextStyle(color: AppColors.muted, fontSize: 12)),
-            ],
+      child: Row(
+        children: [
+          Icon(icon, size: 22, color: AppColors.accent1),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: AppColors.text,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  sub,
+                  style: TextStyle(color: AppColors.muted, fontSize: 12),
+                ),
+              ],
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }
