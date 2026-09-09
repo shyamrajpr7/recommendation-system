@@ -442,7 +442,7 @@ st.markdown(
         background: linear-gradient(180deg, rgba(56, 189, 248, 0.10), rgba(56, 189, 248, 0.02));
         border: 1px solid rgba(56, 189, 248, 0.18);
         border-radius: 10px; padding: 0.55rem;
-        margin: 0 auto 1.4rem; max-width: 72%;
+        margin: 0 auto 1.4rem; max-width: 78%;
         box-shadow: 0 4px 30px rgba(56, 189, 248, 0.08) inset;
         animation: screen-fade 1.2s ease-out;
         transition: box-shadow 0.3s ease, background 0.3s ease;
