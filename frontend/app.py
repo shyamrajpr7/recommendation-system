@@ -502,7 +502,7 @@ st.markdown(
     .seat-cols-header { color: var(--muted-2); font-size: 0.75rem; text-align: center; padding-bottom: 0.3rem; }
 
     .booking-bar {
-        position: sticky; bottom: 14px; z-index: 40; margin-top: 1.1rem;
+        position: sticky; bottom: 20px; z-index: 40; margin-top: 1.1rem;
         display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
         padding: 0.95rem 1.4rem; border-radius: 16px;
         border: 1px solid rgba(129, 140, 248, 0.35);
