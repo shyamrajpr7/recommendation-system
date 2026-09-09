@@ -386,7 +386,7 @@ st.markdown(
     }
     .movie-poster {
         position: relative;
-        height: 150px;
+        height: 170px;
         display: flex; align-items: flex-end;
         padding: 1rem 1.2rem 0.85rem;
         overflow: hidden;
