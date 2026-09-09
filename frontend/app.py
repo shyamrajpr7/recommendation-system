@@ -971,7 +971,7 @@ def page_now_showing():
                     f'</div></div>',
                     unsafe_allow_html=True,
                 )
-                st.button("🎟️ Book Tickets", key=f"book_{m['id']}", use_container_width=True,
+                st.button("🎟️ Book Now", key=f"book_{m['id']}", use_container_width=True,
                           on_click=_pick_movie, args=(m["id"],))
             st.markdown("</div>", unsafe_allow_html=True)
         _footer()
