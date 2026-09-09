@@ -147,62 +147,67 @@ class _NavBtnState extends State<_NavBtn> with SingleTickerProviderStateMixin {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                AnimatedContainer(
-                  duration: AppAnimations.normal,
-                  curve: AppAnimations.defaultCurve,
-                  width: widget.active ? 40 : 0,
-                  height: widget.active ? 40 : 0,
-                  decoration: BoxDecoration(
-                    color: widget.active
-                        ? AppColors.accent1.withValues(alpha: 0.15)
-                        : Colors.transparent,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                Positioned.fill(
-                  child: Center(
-                    child: AnimatedBuilder(
-                      animation: _bounceAnimation,
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: widget.active ? _bounceAnimation.value : 1.0,
-                          child: child,
-                        );
-                      },
-                      child: Icon(widget.icon, size: 22, color: color),
+            SizedBox(
+              width: 40,
+              height: 40,
+              child: Stack(
+                clipBehavior: Clip.none,
+                fit: StackFit.expand,
+                children: [
+                  AnimatedContainer(
+                    duration: AppAnimations.normal,
+                    curve: AppAnimations.defaultCurve,
+                    width: widget.active ? 40 : 0,
+                    height: widget.active ? 40 : 0,
+                    decoration: BoxDecoration(
+                      color: widget.active
+                          ? AppColors.accent1.withValues(alpha: 0.15)
+                          : Colors.transparent,
+                      shape: BoxShape.circle,
                     ),
                   ),
-                ),
-                if (widget.badgeCount != null && widget.badgeCount! > 0)
-                  Positioned(
-                    right: 2,
-                    top: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                      decoration: BoxDecoration(
-                        color: AppColors.error,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.surface, width: 2),
+                  Positioned.fill(
+                    child: Center(
+                      child: AnimatedBuilder(
+                        animation: _bounceAnimation,
+                        builder: (context, child) {
+                          return Transform.scale(
+                            scale: widget.active ? _bounceAnimation.value : 1.0,
+                            child: child,
+                          );
+                        },
+                        child: Icon(widget.icon, size: 22, color: color),
                       ),
-                      child: Text(
-                        '${widget.badgeCount}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 9,
-                          fontWeight: FontWeight.w700,
-                          height: 1,
+                    ),
+                  ),
+                  if (widget.badgeCount != null && widget.badgeCount! > 0)
+                    Positioned(
+                      right: 2,
+                      top: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                        decoration: BoxDecoration(
+                          color: AppColors.error,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColors.surface, width: 2),
                         ),
-                        textAlign: TextAlign.center,
+                        child: Text(
+                          '${widget.badgeCount}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            height: 1,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-            const SizedBox(height: 3),
+            const SizedBox(height: 4),
             AnimatedDefaultTextStyle(
               duration: AppAnimations.normal,
               style: TextStyle(
