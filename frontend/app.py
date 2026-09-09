@@ -671,7 +671,7 @@ st.markdown(
         padding: 4px 11px; border-radius: 999px;
     }
     .match-bar {
-        height: 8px; border-radius: 999px; overflow: hidden;
+        height: 10px; border-radius: 999px; overflow: hidden;
         background: #0b1220; border: 1px solid #1c2a49;
     }
     .match-fill {
