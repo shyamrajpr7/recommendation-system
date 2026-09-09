@@ -876,7 +876,7 @@ def _hero(kicker: str, title: str, sub: str):
 
 def _footer():
     st.markdown(
-        '<div class="footer"><b>CineRead Cinema</b> · FAISS + Sentence-Transformers + Groq AI · Razorpay checkout</div>',
+        '<div class="footer"><b>CineRead Cinema</b> · FAISS + Sentence-Transformers + Groq AI · Secure checkout</div>',
         unsafe_allow_html=True,
     )
 
