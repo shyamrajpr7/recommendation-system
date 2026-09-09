@@ -297,8 +297,8 @@ st.markdown(
         animation: pulse-badge 3s ease-in-out infinite;
     }
     @keyframes pulse-badge {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.25); }
-        50% { box-shadow: 0 0 18px 4px rgba(56, 189, 248, 0.15); }
+        0%, 100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.30); }
+        50% { box-shadow: 0 0 22px 6px rgba(56, 189, 248, 0.22); }
     }
     .hero-title {
         font-family: 'Space Grotesk', sans-serif;
