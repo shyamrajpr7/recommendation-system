@@ -570,7 +570,7 @@ st.markdown(
 
     .ticket-wrap {
         position: relative;
-        max-width: 640px;
+        max-width: 680px;
         margin: 1.2rem auto 0;
         background: linear-gradient(150deg, #101a30 0%, #0b1323 100%);
         border: 1px solid rgba(139, 92, 246, 0.35);
