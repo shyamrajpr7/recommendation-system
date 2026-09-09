@@ -102,7 +102,7 @@ async def add_process_time_header(request, call_next):
 
 
 @app.get("/health")
-def health_check():
+def health_check() -> dict:
     return {
         "status": "ok",
         "service": "CineRead Cinema API",
@@ -226,12 +226,12 @@ def list_theaters():
 
 
 @app.get("/dates")
-def list_dates():
+def list_dates() -> dict:
     return {"dates": get_upcoming_dates()}
 
 
 @app.get("/stats")
-def catalog_stats():
+def catalog_stats() -> dict:
     movies = get_movies()
     showtimes = get_showtimes()
     return {
@@ -243,7 +243,7 @@ def catalog_stats():
 
 
 @app.get("/cache/stats")
-def cache_stats():
+def cache_stats() -> dict:
     return cache_instance.info()
 
 
