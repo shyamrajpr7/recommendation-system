@@ -47,6 +47,9 @@ class RecommendationCache:
     def clear(self):
         self._cache.clear()
 
+    def __contains__(self, query: str, genre: Optional[str] = None, item_type: Optional[str] = None) -> bool:
+        return self._make_key(query, genre, item_type) in self._cache
+
     def __len__(self) -> int:
         return len(self._cache)
 

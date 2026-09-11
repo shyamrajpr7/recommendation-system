@@ -118,7 +118,7 @@ def _palette(title: str):
 
 
 def _stars(rating: float) -> str:
-    filled = round(rating / 2)
+    filled = min(5, max(0, round(rating / 2)))
     return "★" * filled + "☆" * (5 - filled)
 
 
@@ -1314,7 +1314,7 @@ def page_chat():
     if msgs:
         st.markdown(f'<div class="chat-wrap">{msgs}</div>', unsafe_allow_html=True)
 
-    st.text_input("Message", key="chat_input", placeholder="e.g. 'what sci-fi is showing tonight?'")
+    st.text_input("Message", key="chat_input", placeholder="e.g. 'what sci-fi is showing tonight?'", max_chars=2000)
     c_send, c_clear = st.columns([3, 1])
     c_send.button("Send", on_click=_send_chat, use_container_width=True)
     if c_clear.button("🗑️ Clear", use_container_width=True):
@@ -1425,7 +1425,7 @@ def render_payment_step(showtime, movie):
         unsafe_allow_html=True,
     )
     n1, n2 = st.columns(2)
-    name = n1.text_input("Your name", key="book_name", placeholder="Full name")
+    name = n1.text_input("Your name", key="book_name", placeholder="Full name", max_chars=120)
     email = n2.text_input("Your email", key="book_email", placeholder="you@example.com")
 
     if st.button("💳 Proceed to payment", use_container_width=True, type="primary",

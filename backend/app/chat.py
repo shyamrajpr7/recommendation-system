@@ -27,7 +27,7 @@ def _build_context() -> str:
 
     movie_lines = "\n".join(
         f"- {m['title']} ({m['year']}, {m['genre']}, {m['rating']}/10): {m['synopsis'][:140]}"
-        for m in movies[:20]
+        for m in movies[:25]
     )
     show_lines = "\n".join(
         f"- {s['movie_title']} @ {s['theater_name']} {s['screen_name']} on {s['show_date']} {s['show_time']} (Rs {int(s['base_price'])})"
@@ -45,6 +45,7 @@ def _build_context() -> str:
 
 
 def chat_reply(message: str, history: List[Dict[str, str]]) -> Dict[str, Any]:
+    message = message.strip()
     messages = [{"role": "system", "content": _SYSTEM_PROMPT + "\n\n" + _build_context()}]
     for h in history[-8:]:
         role = h.get("role")

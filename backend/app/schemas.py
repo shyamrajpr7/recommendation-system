@@ -29,7 +29,7 @@ __all__ = [
 # --------------------------------------------------------------------------
 
 class RecommendationRequest(BaseModel):
-    query: str = Field(..., min_length=1, description="Movie/book title or preference description")
+    query: str = Field(..., min_length=1, max_length=300, description="Movie/book title or preference description")
     genre: Optional[str] = Field(None, description="Optional genre filter")
     item_type: Optional[str] = Field(None, description="Optional item type filter: Movie, Book, or All")
     top_k: int = Field(3, ge=1, le=10, description="Number of recommendations to return")
@@ -137,7 +137,7 @@ class BookingResponse(BaseModel):
     payment_enabled: bool = False
 
 class BookingVerifyRequest(BaseModel):
-    booking_ref: str
+    booking_ref: str = Field(..., min_length=6, max_length=12)
 
 class BookingVerifyResponse(BaseModel):
     booking_ref: str

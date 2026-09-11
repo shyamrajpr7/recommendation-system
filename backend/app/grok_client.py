@@ -59,7 +59,7 @@ def grok_chat(
         resp = requests.post(
             cfg["url"],
             json=payload,
-            headers={"Authorization": f"Bearer {cfg['api_key']}"},
+            headers={"Authorization": f"Bearer {cfg['api_key']}", "User-Agent": "CineRead/1.0"},
             timeout=(10, timeout),
         )
         resp.raise_for_status()

@@ -109,6 +109,7 @@ def health_check() -> dict:
         "version": APP_VERSION,
         "uptime_seconds": int(time.time() - _START_TIME),
         "total_requests": _REQUEST_COUNT,
+        "payment_enabled": payment_enabled(),
         "cache": cache_instance.info(),
     }
 
@@ -326,6 +327,7 @@ def make_booking(payload: BookingRequest):
 
 @app.get("/bookings/{booking_ref}", response_model=BookingResponse)
 def booking_status(booking_ref: str):
+    booking_ref = booking_ref.strip().upper()
     booking = get_booking(booking_ref)
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found")
@@ -352,6 +354,7 @@ def booking_status(booking_ref: str):
 
 @app.post("/bookings/{booking_ref}/verify", response_model=BookingVerifyResponse)
 def verify_booking(booking_ref: str):
+    booking_ref = booking_ref.strip().upper()
     booking = get_booking(booking_ref)
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found")

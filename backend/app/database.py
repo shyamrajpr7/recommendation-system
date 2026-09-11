@@ -5,7 +5,7 @@ import os
 import json
 import random
 import string
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta, datetime, timezone
 from typing import List, Dict, Any, Optional
 
 from data.seed_data import (
@@ -323,7 +323,7 @@ def create_booking(showtime_id: int, customer_name: str, customer_email: str,
         raise ValueError("Showtime not found")
     total = showtime["base_price"] * len(seats)
     booking_ref = _new_booking_ref(conn)
-    now = datetime.utcnow().isoformat(timespec="seconds")
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
     cursor.execute("""
         INSERT INTO bookings (booking_ref, showtime_id, customer_name, customer_email,
                               seats, total_amount, payment_id, payment_link_id, payment_status, status, created_at)

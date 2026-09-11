@@ -6,6 +6,7 @@ from typing import Dict, Any, Optional
 
 RAZORPAY_BASE = "https://api.razorpay.com/v1"
 CALLBACK_URL = os.environ.get("RAZORPAY_CALLBACK_URL", "https://example.com/razorpay-callback")
+REQUEST_TIMEOUT = 30
 
 
 def _auth() -> Optional[tuple]:
@@ -60,7 +61,7 @@ def create_payment_link(
         f"{RAZORPAY_BASE}/payment_links",
         json=payload,
         auth=auth,
-        timeout=20,
+        timeout=REQUEST_TIMEOUT,
     )
     resp.raise_for_status()
     data = resp.json()
@@ -79,7 +80,7 @@ def fetch_payment_link_status(payment_link_id: str) -> Dict[str, Any]:
         # Mock: a simulated link is considered paid once verification is called
         return {"status": "paid", "payments": [{"status": "captured", "id": f"mock_pay_{payment_link_id}"}]}
 
-    resp = requests.get(f"{RAZORPAY_BASE}/payment_links/{payment_link_id}", auth=auth, timeout=20)
+    resp = requests.get(f"{RAZORPAY_BASE}/payment_links/{payment_link_id}", auth=auth, timeout=REQUEST_TIMEOUT)
     resp.raise_for_status()
     data = resp.json()
     payments = data.get("payments", []) or []
