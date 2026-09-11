@@ -77,6 +77,9 @@ class VectorStore:
         if not self.index or self.index.ntotal == 0:
             return []
 
+        if not query or not query.strip():
+            return []
+
         # Encode and normalize query
         query_emb = self.model.encode([normalize_text(query)], show_progress_bar=False, convert_to_numpy=True).astype(np.float32)
         faiss.normalize_L2(query_emb)
