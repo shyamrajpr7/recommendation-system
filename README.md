@@ -1,6 +1,6 @@
 # CineRead — AI Movie Recommendation & Cinema Ticket Booking
 
-> **Latest:** v2.0.2 — version bump sync (README matches backend APP_VERSION)
+> **Latest:** v2.0.3 — version bump sync (README matches backend APP_VERSION)
 
 
 A full-stack cinema ticketing web app: vector-similarity movie search with
