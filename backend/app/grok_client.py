@@ -48,6 +48,8 @@ def grok_chat(
     if not cfg:
         return None
 
+    temperature = max(0.0, min(1.0, float(temperature)))
+
     payload = {
         "model": model or cfg["model"],
         "messages": messages,
