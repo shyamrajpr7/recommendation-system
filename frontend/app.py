@@ -875,8 +875,10 @@ def _hero(kicker: str, title: str, sub: str):
 
 
 def _footer():
+    version = (backend_health() or {}).get("version", "")
+    badge = f" · API v{version}" if version else ""
     st.markdown(
-        '<div class="footer"><b>CineRead Cinema</b> · FAISS + Sentence-Transformers + Groq AI · Secure checkout</div>',
+        f'<div class="footer"><b>CineRead Cinema</b> · FAISS + Sentence-Transformers + Groq AI · Secure checkout{badge}</div>',
         unsafe_allow_html=True,
     )
 
