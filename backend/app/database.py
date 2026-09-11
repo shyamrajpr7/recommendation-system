@@ -175,7 +175,7 @@ def _pick_blocked_seats(rows: int, cols: int, count: int = 4) -> List[str]:
 
 def get_all_items() -> List[Dict[str, Any]]:
     conn = _get_conn()
-    rows = conn.execute("SELECT * FROM movies_books;").fetchall()
+    rows = conn.execute("SELECT * FROM movies_books ORDER BY id;").fetchall()
     conn.close()
     return [dict(row) for row in rows]
 
