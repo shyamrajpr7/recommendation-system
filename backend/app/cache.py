@@ -53,6 +53,10 @@ class RecommendationCache:
     def __len__(self) -> int:
         return len(self._cache)
 
+    def keys(self) -> list:
+        """Return the cache keys (most-recently-used ordered)."""
+        return list(self._cache.keys())
+
     def info(self) -> Dict[str, Any]:
         """Return cache statistics for monitoring."""
         total = self._hits + self._misses
