@@ -46,6 +46,11 @@ def _build_context() -> str:
 
 def chat_reply(message: str, history: List[Dict[str, str]]) -> Dict[str, Any]:
     message = message.strip()
+    if not message:
+        return {
+            "reply": "Please type a message — try asking about movies, showtimes, or seats.",
+            "used_ai": False,
+        }
     messages = [{"role": "system", "content": _SYSTEM_PROMPT + "\n\n" + _build_context()}]
     for h in history[-8:]:
         role = h.get("role")
