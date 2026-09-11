@@ -110,6 +110,8 @@ def health_check() -> dict:
         "uptime_seconds": int(time.time() - _START_TIME),
         "total_requests": _REQUEST_COUNT,
         "payment_enabled": payment_enabled(),
+        "movies": len(get_movies()),
+        "showtimes": len(get_showtimes()),
         "cache": cache_instance.info(),
     }
 
