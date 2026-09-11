@@ -40,6 +40,7 @@ def create_payment_link(
             "short_url": None,
             "mock": True,
             "amount_inr": amount_inr,
+            "currency": "INR",
         }
 
     payload = {
