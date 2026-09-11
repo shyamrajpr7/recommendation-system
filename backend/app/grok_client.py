@@ -76,7 +76,7 @@ def grok_json(messages: List[Dict[str, str]], **kwargs) -> Optional[Dict[str, An
     if not content:
         return None
 
-    stripped = re.sub(r"```(?:json)?\s*", "", content).strip()
+    stripped = re.sub(r"```(?:json)?\s*|\s*```", "", content).strip()
     try:
         return json.loads(stripped)
     except Exception:
