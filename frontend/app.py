@@ -1432,6 +1432,10 @@ def render_payment_step(showtime, movie):
 
     if st.button("💳 Proceed to payment", use_container_width=True, type="primary",
                  disabled=not (name.strip() and email.strip())):
+        email_v = email.strip()
+        if "@" not in email_v or "." not in email_v.split("@")[-1]:
+            st.error("Please enter a valid email address.")
+            return
         try:
             result = api_post("/bookings", {
                 "showtime_id": showtime["id"],
