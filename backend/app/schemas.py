@@ -146,7 +146,7 @@ class BookingVerifyResponse(BaseModel):
     payment_id: Optional[str] = None
 
 class ChatRequest(BaseModel):
-    message: str = Field(..., min_length=1, max_length=2000)
+    message: str = Field(..., min_length=1, max_length=2000, description="User message to the concierge")
     history: List[dict] = Field(default_factory=list, description="Prior messages [{role, content}]")
 
 class ChatResponse(BaseModel):
