@@ -216,6 +216,8 @@ def list_movies(genre: Optional[str] = None):
 
 @app.get("/movies/{movie_id}", response_model=Movie)
 def movie_detail(movie_id: int):
+    if movie_id <= 0:
+        raise HTTPException(status_code=400, detail="Invalid movie id")
     movie = get_movie(movie_id)
     if not movie or movie["item_type"] != "Movie":
         raise HTTPException(status_code=404, detail="Movie not found")
