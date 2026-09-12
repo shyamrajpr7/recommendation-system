@@ -3,6 +3,7 @@
 import json
 import hashlib
 import logging
+from collections import Counter
 import os
 import re
 import time
@@ -279,7 +280,8 @@ def make_booking(payload: BookingRequest):
         raise HTTPException(status_code=404, detail="Showtime not found")
 
     if len(set(payload.seats)) != len(payload.seats):
-        raise HTTPException(status_code=400, detail="Duplicate seats in request: " + ", ".join(sorted(set(s for s in payload.seats if payload.seats.count(s) > 1))))
+        duplicates = sorted(seat for seat, count in Counter(payload.seats).items() if count > 1)
+        raise HTTPException(status_code=400, detail=f"Duplicate seats in request: {', '.join(duplicates)}")
 
     seat_map = get_seat_map(payload.showtime_id)
     available = {
