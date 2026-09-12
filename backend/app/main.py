@@ -252,6 +252,12 @@ def cache_stats() -> dict:
     return cache_instance.info()
 
 
+@app.delete("/cache")
+def clear_cache() -> dict:
+    cache_instance.clear()
+    return cache_instance.info()
+
+
 @app.get("/showtimes", response_model=ShowtimeListResponse)
 def list_showtimes(movie_id: Optional[int] = None, show_date: Optional[str] = None):
     showtimes = get_showtimes(movie_id=movie_id, show_date=show_date)
