@@ -37,7 +37,7 @@ def create_payment_link(
     if auth is None:
         return {
             "payment_link_id": f"mock_link_{booking_ref}",
-            "short_url": None,
+            "short_url": f"https://mock.razorpay.com/payment_link/{booking_ref}",
             "mock": True,
             "amount_inr": amount_inr,
             "currency": "INR",
